@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "strar"
+version = "0.1.0"
+description = ""
+authors = ["award28 <austin.ward@klaviyo.com>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+strar = "strar.main:app"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+typer = {extras = ["all"], version = "^0.7.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,3 @@
+class UpgradeException(Exception):
+    ...
+
