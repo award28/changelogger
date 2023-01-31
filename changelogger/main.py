@@ -64,4 +64,4 @@ def content(
     try:
         Changelogger(changelog_file).content_for_version(version, pretty=pretty)
     except CommandException as e:
-        print(str(e))
+        print(f"[bold red]Error[/bold red]: {str(e)}")

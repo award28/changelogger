@@ -161,8 +161,11 @@ class Changelogger:
 
     def content_for_version(self, version: str, pretty: bool) -> None:
         all_versions = self._get_all_versions()
+        if version not in all_versions:
+            raise CommandException(f"Could not find version {version}.")
+
         i = all_versions.index(version)
-        prev_version = all_versions[i + 1]
+        prev_version =  all_versions[i + 1] if i+1 < len(all_versions) else "LINKS"
         release_notes = self._get_release_notes(version, prev_version)
         if pretty:
             print(Markdown(release_notes.markdown()))
@@ -176,7 +179,7 @@ class Changelogger:
             raise ValidationException("Expected there to be at least 1 version; None found.")
 
         # Validate all release notes are parseable for all versions
-        changelog_versions = ["Unreleased", *all_versions, "NOTE"]
+        changelog_versions = ["Unreleased", *all_versions, "LINKS"]
         for version, prev_version in zip(changelog_versions, changelog_versions[1:]):
             try:
                 self._get_release_notes(version, prev_version)
