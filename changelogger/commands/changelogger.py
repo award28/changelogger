@@ -22,8 +22,8 @@ from .utils import (
 
 class Changelogger:
     def __init__(self, changelog_file: str) -> None:
-        if not Path(self.changelog_file).is_file():
-            raise CommandException(f"Could not find Changelog file {self.changelog_file}.")
+        if not Path(changelog_file).is_file():
+            raise CommandException(f"Could not find Changelog file {changelog_file}.")
 
         self.changelog_file = changelog_file
 

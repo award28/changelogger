@@ -6,7 +6,7 @@ authors = ["award28 <austin.ward@klaviyo.com>"]
 readme = "README.md"
 
 [tool.poetry.scripts]
-strar = "changelogger.main:app"
+changelogger = "changelogger.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.11"
