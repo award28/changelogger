@@ -2,7 +2,7 @@ from collections.abc import Callable
 from datetime import date
 from enum import Enum
 from pydantic import BaseModel, FilePath
-from jinja2 import FileSystemLoader, Environment, Template
+from jinja2 import BaseLoader, FileSystemLoader, Environment, Template
 from .utils import (
     cached_compile,
 )
@@ -78,6 +78,7 @@ class ChangelogUpdate(BaseModel):
 class VersionUpgradeFileConfig(BaseModel):
     rel_path: FilePath
     pattern: str
+    jinja: str | None
     jinja_rel_path: FilePath | None
     context: dict | None
 
@@ -88,8 +89,10 @@ class VersionUpgradeConfig(BaseModel):
     def versioned_files(self) -> list[tuple[VersionUpgradeFileConfig, Callable]]:
         versioned_files = []
         for file in self.files:
-            if file.jinja_rel_path:
+            if file.jinja:
                 versioned_files.append((file, self._update_with_jinja(file)))
+            if file.jinja_rel_path:
+                versioned_files.append((file, self._update_with_jinja_file(file)))
             else:
                 versioned_files.append((file, self._update_with_regex(file)))
 
@@ -107,6 +110,26 @@ class VersionUpgradeConfig(BaseModel):
 
     @classmethod
     def _update_with_jinja(cls, file: VersionUpgradeFileConfig) -> Callable:
+        def inner(content: str, update: ChangelogUpdate) -> str:
+            assert file.jinja, "This method cannot be called without a vaild jinja format."
+            tmpl = cls._jinja_from_string(file.jinja)
+            replacement = tmpl.render(
+                version=update.new_version,
+                prev_version=update.old_version,
+                today=date.today(),
+                sections=update.release_notes.dict(),
+                context=file.context,
+            )
+            return cached_compile(
+                file.pattern.replace("{{ version }}", update.old_version.replace('.', r'\.')),
+            ).sub(
+                replacement,
+                content,
+            )
+        return inner
+
+    @classmethod
+    def _update_with_jinja_file(cls, file: VersionUpgradeFileConfig) -> Callable:
         def inner(content: str, update: ChangelogUpdate) -> str:
             assert file.jinja_rel_path, "This method cannot be called without a vaild jinja file."
             tmpl = cls._tmpl(file.jinja_rel_path)
@@ -126,7 +149,12 @@ class VersionUpgradeConfig(BaseModel):
         return inner
 
     @staticmethod
+    def _jinja_from_string(jinja: str) -> Template:
+        template_env = Environment(loader=BaseLoader())
+        return template_env.from_string(jinja)
+
+    @staticmethod
     def _tmpl(jinja_rel_path: FilePath) -> Template:
-        templateLoader = FileSystemLoader(searchpath="./")
-        templateEnv = Environment(loader=templateLoader)
-        return templateEnv.get_template(str(jinja_rel_path))
+        template_loader = FileSystemLoader(searchpath="./")
+        template_env = Environment(loader=template_loader)
+        return template_env.get_template(str(jinja_rel_path))

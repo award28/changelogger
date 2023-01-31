@@ -4,6 +4,9 @@ files:
     jinja_rel_path: .CHANGELOG.md.overview.jinja2
   - rel_path: CHANGELOG.md
     pattern: '\[Unreleased\]:.*\n'
-    jinja_rel_path: .CHANGELOG.md.links.jinja2
+    jinja: |
+      [Unreleased]: https://github.com/{{ context.repo }}/compare/{{ version }}...HEAD
+      [{{ version }}]: https://github.com/{{ context.repo }}/compare/{{ prev_version }}...{{ version }}
+      {{ '' }}
     context:
       repo: klaviyo/woocommerce-klaviyo
