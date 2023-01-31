@@ -290,6 +290,5 @@ class Changelogger:
         if self.use_standard_upgrade_config:
             standard_upgrade_config = self._standard_upgrade_config()
             config.files.extend(standard_upgrade_config.files)
-        breakpoint()
         self._update_versioned_files(config, update)
         print("[bold green]Upgrade complete![/bold green] Please commit your changes to source control.")
