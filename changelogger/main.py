@@ -1,8 +1,8 @@
 import typer
+from rich import print
 
 from .commands.exceptions import (
     CommandException,
-    UpgradeException,
     ValidationException,
 )
 from .commands.domain_models import SemVerType
@@ -37,8 +37,9 @@ def upgrade(
             prompt_changelog,
             version_upgrade_config,
         )
-    except UpgradeException as e:
+    except CommandException as e:
         print(f"\n:boom:\n{str(e)}\n[bold red]Aborted![/bold red]")
+        raise
 
 
 @app.command()

@@ -98,27 +98,14 @@ class VersionUpgradeConfig(BaseModel):
     def versioned_files(self) -> list[tuple[VersionUpgradeFileConfig, Callable]]:
         versioned_files = []
         for file in self.files:
-            if file.jinja or file.jinja_rel_path:
-                versioned_files.append((file, self._update_with_jinja(file)))
-            else:
-                versioned_files.append((file, self._update_with_pattern(file)))
+            versioned_files.append((file, self._update_with_jinja(file)))
 
         return versioned_files
-
-    @staticmethod
-    def _update_with_pattern(file: VersionUpgradeFileConfig) -> Callable:
-
-        def inner(content: str, update: ChangelogUpdate) -> str:
-            old_version = file.pattern.replace("{{ version }}", update.old_version.replace('.', r'\.'))
-            new_version = file.pattern.replace("{{ version }}", update.new_version.replace('.', r'\.'))
-            return content.replace(old_version, new_version)
-
-        return inner
 
     @classmethod
     def _update_with_jinja(cls, file: VersionUpgradeFileConfig) -> Callable:
 
-        if not file.jinja or not file.jinja_rel_path:
+        if not (file.jinja or file.jinja_rel_path):
             raise Exception("No valid jinja template found.")
 
         replacement_str = file.jinja
@@ -126,6 +113,7 @@ class VersionUpgradeConfig(BaseModel):
             replacement_str = file.jinja_rel_path.read_text()
 
         def inner(content: str, update: ChangelogUpdate) -> str:
+            assert replacement_str
             render_kwargs = cls._render_kwargs(file, update)
 
             pattern = cls._tmpl(file.pattern).render(**render_kwargs)
@@ -145,8 +133,8 @@ class VersionUpgradeConfig(BaseModel):
         update: ChangelogUpdate,
     ) -> dict[str, Any]:
         return dict(
-                version=update.new_version,
-                prev_version=update.old_version,
+                new_version=update.new_version,
+                old_version=update.old_version,
                 today=date.today(),
                 sections=update.release_notes.dict(),
                 context=file.context,

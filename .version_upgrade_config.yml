@@ -1,6 +1,6 @@
 files:
   - rel_path: other.txt
-    pattern: '* Version: {{ old_version }}'
+    pattern: '* Version: {{ old_version.replace(".", "\.") }}'
     jinja: '* Version: {{ new_version }}'
 
   - rel_path: CHANGELOG.md

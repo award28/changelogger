@@ -70,7 +70,7 @@ class Changelogger:
                 with open(filename, "w") as f:
                     f.write(content)
 
-            raise UpgradeException(e)
+            raise
 
     def _get_all_links(self) -> dict[str, str]:
         with open(self.changelog_file) as f:
