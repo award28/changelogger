@@ -1,8 +1,11 @@
 from collections.abc import Callable
 from datetime import date
 from enum import Enum
-from pydantic import BaseModel, FilePath
-from jinja2 import BaseLoader, FileSystemLoader, Environment, Template
+from pathlib import Path
+from typing import Any
+from pydantic import BaseModel, FilePath, root_validator
+from jinja2 import BaseLoader, Environment, Template
+
 from .utils import (
     cached_compile,
 )
@@ -82,6 +85,12 @@ class VersionUpgradeFileConfig(BaseModel):
     jinja_rel_path: FilePath | None
     context: dict | None
 
+    @root_validator()
+    def mutually_exclusive_jinja(cls, values):
+        if not (values.get('jinja') or values.get("jinja_rel_path")):
+            raise ValueError('either `jinja` or `jinja_rel_path` is required')
+        return values
+
 
 class VersionUpgradeConfig(BaseModel):
     files: list[VersionUpgradeFileConfig]
@@ -89,17 +98,15 @@ class VersionUpgradeConfig(BaseModel):
     def versioned_files(self) -> list[tuple[VersionUpgradeFileConfig, Callable]]:
         versioned_files = []
         for file in self.files:
-            if file.jinja:
+            if file.jinja or file.jinja_rel_path:
                 versioned_files.append((file, self._update_with_jinja(file)))
-            if file.jinja_rel_path:
-                versioned_files.append((file, self._update_with_jinja_file(file)))
             else:
-                versioned_files.append((file, self._update_with_regex(file)))
+                versioned_files.append((file, self._update_with_pattern(file)))
 
         return versioned_files
 
     @staticmethod
-    def _update_with_regex(file: VersionUpgradeFileConfig) -> Callable:
+    def _update_with_pattern(file: VersionUpgradeFileConfig) -> Callable:
 
         def inner(content: str, update: ChangelogUpdate) -> str:
             old_version = file.pattern.replace("{{ version }}", update.old_version.replace('.', r'\.'))
@@ -110,51 +117,37 @@ class VersionUpgradeConfig(BaseModel):
 
     @classmethod
     def _update_with_jinja(cls, file: VersionUpgradeFileConfig) -> Callable:
-        def inner(content: str, update: ChangelogUpdate) -> str:
-            assert file.jinja, "This method cannot be called without a vaild jinja format."
-            tmpl = cls._jinja_from_string(file.jinja)
-            replacement = tmpl.render(
-                version=update.new_version,
-                prev_version=update.old_version,
-                today=date.today(),
-                sections=update.release_notes.dict(),
-                context=file.context,
-            )
-            return cached_compile(
-                file.pattern.replace("{{ version }}", update.old_version.replace('.', r'\.')),
-            ).sub(
-                replacement,
-                content,
-            )
-        return inner
 
-    @classmethod
-    def _update_with_jinja_file(cls, file: VersionUpgradeFileConfig) -> Callable:
+        if not file.jinja or not file.jinja_rel_path:
+            raise Exception("No valid jinja template found.")
+
+        replacement_str = file.jinja
+        if not replacement_str and file.jinja_rel_path:
+            replacement_str = file.jinja_rel_path.read_text()
+
         def inner(content: str, update: ChangelogUpdate) -> str:
-            assert file.jinja_rel_path, "This method cannot be called without a vaild jinja file."
-            tmpl = cls._tmpl(file.jinja_rel_path)
-            replacement = tmpl.render(
-                version=update.new_version,
-                prev_version=update.old_version,
-                today=date.today(),
-                sections=update.release_notes.dict(),
-                context=file.context,
-            )
-            return cached_compile(
-                file.pattern.replace("{{ version }}", update.old_version.replace('.', r'\.')),
-            ).sub(
-                replacement,
-                content,
-            )
+            render_kwargs = cls._render_kwargs(file, update)
+
+            pattern = cls._tmpl(file.pattern).render(**render_kwargs)
+            replacement = cls._tmpl(replacement_str).render(**render_kwargs)
+
+            return cached_compile(pattern).sub(replacement, content)
         return inner
 
     @staticmethod
-    def _jinja_from_string(jinja: str) -> Template:
+    def _tmpl(jinja: str) -> Template:
         template_env = Environment(loader=BaseLoader())
         return template_env.from_string(jinja)
 
     @staticmethod
-    def _tmpl(jinja_rel_path: FilePath) -> Template:
-        template_loader = FileSystemLoader(searchpath="./")
-        template_env = Environment(loader=template_loader)
-        return template_env.get_template(str(jinja_rel_path))
+    def _render_kwargs(
+        file: VersionUpgradeFileConfig,
+        update: ChangelogUpdate,
+    ) -> dict[str, Any]:
+        return dict(
+                version=update.new_version,
+                prev_version=update.old_version,
+                today=date.today(),
+                sections=update.release_notes.dict(),
+                context=file.context,
+        )

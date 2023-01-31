@@ -1,12 +1,17 @@
 files:
+  - rel_path: other.txt
+    pattern: '* Version: {{ old_version }}'
+    jinja: '* Version: {{ new_version }}'
+
   - rel_path: CHANGELOG.md
-    pattern: '### \[Unreleased\]([\s\S]*)### \[{{ version }}]'
+    pattern: '### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]'
     jinja_rel_path: .CHANGELOG.md.overview.jinja2
+
   - rel_path: CHANGELOG.md
     pattern: '\[Unreleased\]:.*\n'
     jinja: |
-      [Unreleased]: https://github.com/{{ context.repo }}/compare/{{ version }}...HEAD
-      [{{ version }}]: https://github.com/{{ context.repo }}/compare/{{ prev_version }}...{{ version }}
+      [Unreleased]: https://github.com/{{ context.repo }}/compare/{{ new_version }}...HEAD
+      [{{ new_version }}]: https://github.com/{{ context.repo }}/compare/{{ old_version }}...{{ new_version }}
       {{ '' }}
     context:
       repo: klaviyo/woocommerce-klaviyo
