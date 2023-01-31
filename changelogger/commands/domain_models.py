@@ -8,6 +8,11 @@ from .utils import (
 )
 
 
+class SemVerType(Enum):
+    MAJOR = "major"
+    MINOR = "minor"
+    PATCH = "patch"
+
 class ReleaseNotes(BaseModel):
     added: list[str] = []
     changed: list[str] = []
@@ -73,7 +78,7 @@ class ChangelogUpdate(BaseModel):
 class VersionUpgradeFileConfig(BaseModel):
     rel_path: FilePath
     pattern: str
-    jinja_file: FilePath | None
+    jinja_rel_path: FilePath | None
     context: dict | None
 
 
@@ -83,7 +88,7 @@ class VersionUpgradeConfig(BaseModel):
     def versioned_files(self) -> list[tuple[VersionUpgradeFileConfig, Callable]]:
         versioned_files = []
         for file in self.files:
-            if file.jinja_file:
+            if file.jinja_rel_path:
                 versioned_files.append((file, self._update_with_jinja(file)))
             else:
                 versioned_files.append((file, self._update_with_regex(file)))
@@ -103,8 +108,8 @@ class VersionUpgradeConfig(BaseModel):
     @classmethod
     def _update_with_jinja(cls, file: VersionUpgradeFileConfig) -> Callable:
         def inner(content: str, update: ChangelogUpdate) -> str:
-            assert file.jinja_file, "This method cannot be called without a vaild jinja file."
-            tmpl = cls._tmpl(file.jinja_file)
+            assert file.jinja_rel_path, "This method cannot be called without a vaild jinja file."
+            tmpl = cls._tmpl(file.jinja_rel_path)
             replacement = tmpl.render(
                 version=update.new_version,
                 prev_version=update.old_version,
@@ -121,13 +126,7 @@ class VersionUpgradeConfig(BaseModel):
         return inner
 
     @staticmethod
-    def _tmpl(jinja_file: FilePath) -> Template:
+    def _tmpl(jinja_rel_path: FilePath) -> Template:
         templateLoader = FileSystemLoader(searchpath="./")
         templateEnv = Environment(loader=templateLoader)
-        return templateEnv.get_template(str(jinja_file))
-
-
-class SemVerType(Enum):
-    MAJOR = "major"
-    MINOR = "minor"
-    PATCH = "patch"
+        return templateEnv.get_template(str(jinja_rel_path))
