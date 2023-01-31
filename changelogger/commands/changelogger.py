@@ -70,7 +70,10 @@ class Changelogger:
                 with open(filename, "w") as f:
                     f.write(content)
 
-            raise
+            print("Rollback successful.")
+            raise UpgradeException(
+                "There may be an issue with your search pattern."
+            ) from e
 
     def _get_all_links(self) -> dict[str, str]:
         with open(self.changelog_file) as f:
