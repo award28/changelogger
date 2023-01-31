@@ -99,6 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Displaying Email checkbox on checkout pages based on ListId set in Plugin settings. This will be displayed using the Email checkbox setting on the Plugin settings page, as done for SMS checkout checkbox
 
 ### [2.5.1] - 2021-07-23
+#### Changed
 - Adjusted add to cart hook priority to allow for line item calculations
 
 ### [2.5.0] - 2021-07-12
@@ -136,7 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ##### Fixed
 - Remove escaping backslashes from Started Checkout product names.
 
-##### *NOTE
+### [NOTE]
 - This CHANGELOG was created on 2020-12-01. For information on earlier versions please refer to the [plugin's readme.txt](https://github.com/klaviyo/woocommerce-klaviyo/blob/master/readme.txt).
 
 
