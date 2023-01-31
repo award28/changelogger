@@ -86,6 +86,8 @@ class VersionUpgradeConfig(BaseModel):
     files: list[VersionUpgradeFileConfig]
 
     def versioned_files(self) -> dict[FilePath, Callable]:
+        print("In versioned files...")
+        print(self.files)
         versioned_files = {}
         for file in self.files:
             if file.jinja_file:
@@ -116,7 +118,9 @@ class VersionUpgradeConfig(BaseModel):
                 sections=update.release_notes.dict(),
                 context=file.context,
             )
-            return cached_compile(file.pattern).sub(
+            return cached_compile(
+                file.pattern.replace("{{ version }}", update.old_version),
+            ).sub(
                 replacement,
                 content,
             )
