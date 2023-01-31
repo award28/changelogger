@@ -159,12 +159,15 @@ class Changelogger:
         return release_notes
 
 
-    def content_for_version(self, version: str) -> None:
+    def content_for_version(self, version: str, pretty: bool) -> None:
         all_versions = self._get_all_versions()
         i = all_versions.index(version)
         prev_version = all_versions[i + 1]
         release_notes = self._get_release_notes(version, prev_version)
-        print(release_notes.markdown())
+        if pretty:
+            print(Markdown(release_notes.markdown()))
+        else:
+            print(release_notes.markdown())
 
     def validate(self) -> None:
         # Validate there's at least 1 version

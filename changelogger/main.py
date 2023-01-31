@@ -58,9 +58,10 @@ def validate(
 @app.command()
 def content(
     version: str,
+    pretty: bool = True,
     changelog_file: str = 'CHANGELOG.md',
 ) -> None:
     try:
-        Changelogger(changelog_file).content_for_version(version)
+        Changelogger(changelog_file).content_for_version(version, pretty=pretty)
     except CommandException as e:
         print(str(e))
