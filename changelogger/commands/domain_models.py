@@ -61,10 +61,6 @@ class ChangelogUpdate(BaseModel):
             for title, (start, end) in links.items()
         ) + "\n"
 
-
-
-
-
     def overview_markdown(self) -> str:
         md = f"""### [Unreleased]
 
@@ -81,19 +77,18 @@ class VersionUpgradeFileConfig(BaseModel):
     context: dict | None
 
 
-
 class VersionUpgradeConfig(BaseModel):
     files: list[VersionUpgradeFileConfig]
 
-    def versioned_files(self) -> dict[FilePath, Callable]:
+    def versioned_files(self) -> list[tuple[VersionUpgradeFileConfig, Callable]]:
         print("In versioned files...")
         print(self.files)
-        versioned_files = {}
+        versioned_files = []
         for file in self.files:
             if file.jinja_file:
-                versioned_files[file.rel_path] = self._update_with_jinja(file)
+                versioned_files.append((file, self._update_with_jinja(file)))
             else:
-                versioned_files[file.rel_path] = self._update_with_regex(file)
+                versioned_files.append((file, self._update_with_regex(file)))
 
         return versioned_files
 
@@ -101,8 +96,8 @@ class VersionUpgradeConfig(BaseModel):
     def _update_with_regex(file: VersionUpgradeFileConfig) -> Callable:
 
         def inner(content: str, update: ChangelogUpdate) -> str:
-            old_version = file.pattern.replace("{{ version }}", update.old_version)
-            new_version = file.pattern.replace("{{ version }}", update.new_version)
+            old_version = file.pattern.replace("{{ version }}", update.old_version.replace('.', r'\.'))
+            new_version = file.pattern.replace("{{ version }}", update.new_version.replace('.', r'\.'))
             return content.replace(old_version, new_version)
 
         return inner
@@ -114,12 +109,13 @@ class VersionUpgradeConfig(BaseModel):
             tmpl = cls._tmpl(file.jinja_file)
             replacement = tmpl.render(
                 version=update.new_version,
+                prev_version=update.old_version,
                 today=date.today(),
                 sections=update.release_notes.dict(),
                 context=file.context,
             )
             return cached_compile(
-                file.pattern.replace("{{ version }}", update.old_version),
+                file.pattern.replace("{{ version }}", update.old_version.replace('.', r'\.')),
             ).sub(
                 replacement,
                 content,

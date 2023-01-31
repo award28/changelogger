@@ -56,9 +56,9 @@ class Changelogger:
     def _update_versioned_files(config: VersionUpgradeConfig, update: ChangelogUpdate) -> None:
         rollback = {}
         try:
-            for filename, update_fn in config.versioned_files().items():
-                with open_rw(filename) as (f, content):
-                    rollback[filename] = content
+            for file, update_fn in config.versioned_files():
+                with open_rw(file.rel_path) as (f, content):
+                    rollback[file.rel_path] = content
                     new_content = update_fn(content, update)
                     f.write(new_content)
         except Exception as e:
