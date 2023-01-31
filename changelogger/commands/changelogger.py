@@ -1,6 +1,8 @@
+from os import getcwd
 from pathlib import Path
 import yaml
 import semver
+from git import Repo
 from rich import print
 from rich.markdown import Markdown
 from .domain_models import (
@@ -18,14 +20,22 @@ from .utils import (
     cached_compile,
     open_rw,
 )
+from importlib import resources
 
 
 class Changelogger:
-    def __init__(self, changelog_file: str) -> None:
+    def __init__(
+        self,
+        changelog_file: str,
+        use_standard_upgrade_config: bool = True,
+    ) -> None:
         if not Path(changelog_file).is_file():
-            raise CommandException(f"Could not find Changelog file {changelog_file}.")
+            raise CommandException(
+                f"Could not find Changelog file {changelog_file}.",
+            )
 
         self.changelog_file = changelog_file
+        self.use_standard_upgrade_config = use_standard_upgrade_config
 
     @staticmethod
     def _confirm(new_version: str):
@@ -55,6 +65,7 @@ class Changelogger:
     @staticmethod
     def _update_versioned_files(config: VersionUpgradeConfig, update: ChangelogUpdate) -> None:
         rollback = {}
+
         try:
             for file, update_fn in config.versioned_files():
                 with open_rw(file.rel_path) as (f, content):
@@ -210,6 +221,37 @@ class Changelogger:
 
         print(":white_heavy_check_mark: [bold green]validated![/bold green]")
 
+    def _get_git_repo(self) -> str | None:
+        try:
+            git_url = Repo(getcwd()).remotes.origin.config_reader.get("url")
+        except Exception:
+            raise CommandException(
+                "You must be in a git repository to use the default upgrade config.",
+            )
+        else:
+            return git_url.lstrip(
+                "https://github.com/",
+            ).lstrip(
+                "git@github.com:",
+            ).rstrip(".git")
+
+    def _standard_upgrade_config(self) -> VersionUpgradeConfig:
+        assets = resources.files('assets')
+        raw_config = yaml.safe_load(
+            assets.joinpath('.version_upgrade_config.yml').read_text(),
+        )
+        for file in raw_config['files']:
+            file['jinja'] = assets.joinpath(
+                file.pop('jinja_rel_path'),
+            ).read_text()
+
+        config = VersionUpgradeConfig(**raw_config)
+        for file in config.files:
+            file.context['git'] = dict(
+                repo=self._get_git_repo(),
+            )
+        return config
+
     def upgrade(
         self,
         version_to_bump: SemVerType,
@@ -245,5 +287,9 @@ class Changelogger:
             raw_config = yaml.safe_load(f)
 
         config = VersionUpgradeConfig(**raw_config)
+        if self.use_standard_upgrade_config:
+            standard_upgrade_config = self._standard_upgrade_config()
+            config.files.extend(standard_upgrade_config.files)
+        breakpoint()
         self._update_versioned_files(config, update)
         print("[bold green]Upgrade complete![/bold green] Please commit your changes to source control.")

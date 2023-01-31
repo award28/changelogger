@@ -2,27 +2,3 @@ files:
   - rel_path: other.txt
     pattern: '\* Version: {{ old_version }}'
     jinja: '* Version: {{ new_version }}'
-
-  - rel_path: CHANGELOG.md
-    pattern: '### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]'
-    jinja: |
-      ### [Unreleased]
-
-      ### [{{ new_version }}] - {{ today }}
-      {% for name, notes in sections.items() -%}
-      {% if notes -%}
-      #### {{ name.title() }}
-      {% for note in notes -%}
-      - {{ note }}
-      {% endfor %}
-      {%- endif %}
-      {%- endfor %}
-      ### [{{ old_version }}]
-  - rel_path: CHANGELOG.md
-    pattern: '\[Unreleased\]:.*\n'
-    jinja: |
-      [Unreleased]: https://github.com/{{ context.repo }}/compare/{{ new_version }}...HEAD
-      [{{ new_version }}]: https://github.com/{{ context.repo }}/compare/{{ old_version }}...{{ new_version }}
-      {{ '' }}
-    context:
-      repo: klaviyo/woocommerce-klaviyo

@@ -6,6 +6,7 @@ from typing import Any
 from pydantic import BaseModel, FilePath, root_validator
 from jinja2 import BaseLoader, Environment, Template
 
+
 from .utils import (
     cached_compile,
 )
@@ -83,13 +84,13 @@ class VersionUpgradeFileConfig(BaseModel):
     pattern: str
     jinja: str | None
     jinja_rel_path: FilePath | None
-    context: dict | None
+    context: dict = {}
 
-    @root_validator()
-    def mutually_exclusive_jinja(cls, values):
-        if not (values.get('jinja') or values.get("jinja_rel_path")):
-            raise ValueError('either `jinja` or `jinja_rel_path` is required')
-        return values
+    # @root_validator()
+    # def mutually_exclusive_jinja(cls, values):
+    #     if not (values.get('jinja') or values.get("jinja_rel_path")):
+    #         raise ValueError('either `jinja` or `jinja_rel_path` is required')
+    #     return values
 
 
 class VersionUpgradeConfig(BaseModel):

@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
-### [2.0.0] - 2023-01-31
+#### Added
+- Yes
+- 
+- Yers
+- 
+- Other changes here
+#### Deprecated
+- Yes dep
+#### Removed
+- Removed
+#### Security
+- Security
 
 ### [1.0.0] - 2023-01-31
 
@@ -17,6 +28,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [LINKS]
 
-[Unreleased]: https://github.com/klaviyo/woocommerce-klaviyo/compare/2.0.0...HEAD
-[2.0.0]: https://github.com/klaviyo/woocommerce-klaviyo/compare/1.0.0...2.0.0
+[Unreleased]: https://github.com/award28/changelogger/compare/1.0.0...HEAD
 [1.0.0]: https://github.com/award28/changelogger/commit/a284a424df9fe41121f5101b9a9471aa91fad7c4

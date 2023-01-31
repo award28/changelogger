@@ -1,0 +1,8 @@
+files:
+  - rel_path: CHANGELOG.md
+    pattern: '### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]'
+    jinja_rel_path: .cl.overview.jinja2
+
+  - rel_path: CHANGELOG.md
+    pattern: '\[Unreleased\]:.*\n'
+    jinja_rel_path: .cl.links.jinja2

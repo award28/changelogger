@@ -11,10 +11,17 @@ from .commands.changelogger import Changelogger
 app = typer.Typer()
 
 @app.command()
+def files(
+    changelog_file: str = 'CHANGELOG.md',
+):
+    Changelogger(changelog_file)._version_upgrade_config()
+
+@app.command()
 def upgrade(
     version_to_bump: SemVerType,
     confirm: bool = True,
     prompt_changelog: bool = True,
+    use_standard_upgrade_config: bool = True,
     version_upgrade_config: str = '.version_upgrade_config.yml',
     changelog_file: str = 'CHANGELOG.md',
 ) -> None:
@@ -31,7 +38,10 @@ def upgrade(
     section.
     """
     try:
-        Changelogger(changelog_file).upgrade(
+        Changelogger(
+            changelog_file,
+            use_standard_upgrade_config,
+        ).upgrade(
             version_to_bump,
             confirm,
             prompt_changelog,
