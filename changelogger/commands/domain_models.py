@@ -81,8 +81,6 @@ class VersionUpgradeConfig(BaseModel):
     files: list[VersionUpgradeFileConfig]
 
     def versioned_files(self) -> list[tuple[VersionUpgradeFileConfig, Callable]]:
-        print("In versioned files...")
-        print(self.files)
         versioned_files = []
         for file in self.files:
             if file.jinja_file:
