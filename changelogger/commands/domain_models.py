@@ -8,7 +8,6 @@ from .utils import (
 )
 
 
-
 class ReleaseNotes(BaseModel):
     added: list[str] = []
     changed: list[str] = []
@@ -50,15 +49,6 @@ class ChangelogUpdate(BaseModel):
     new_version: str
     release_notes: ReleaseNotes
 
-    def overview_txt(self) -> str:
-        md = "== Changelog ==\n"
-        md += f"= {self.new_version} {date.today()} =\n"
-        sections = self.release_notes.dict()
-        for name, notes in sections.items():
-            for note in notes:
-                md += f"* {name.title()} - {note}\n"
-        return md
-
     def link_markdown(self) -> str:
         base_url = "https://github.com/klaviyo/woocommerce-klaviyo/compare"
         links = {
@@ -70,6 +60,10 @@ class ChangelogUpdate(BaseModel):
             f"[{title}]: {base_url}/{start}...{end}"
             for title, (start, end) in links.items()
         ) + "\n"
+
+
+
+
 
     def overview_markdown(self) -> str:
         md = f"""### [Unreleased]
@@ -84,6 +78,7 @@ class VersionUpgradeFileConfig(BaseModel):
     rel_path: FilePath
     pattern: str
     jinja_file: FilePath | None
+    context: dict | None
 
 
 
@@ -94,32 +89,34 @@ class VersionUpgradeConfig(BaseModel):
         versioned_files = {}
         for file in self.files:
             if file.jinja_file:
-                versioned_files[file.rel_path] = self._update_with_jinja(file.pattern, file.jinja_file)
+                versioned_files[file.rel_path] = self._update_with_jinja(file)
             else:
-                versioned_files[file.rel_path] = self._update_with_regex(file.pattern)
+                versioned_files[file.rel_path] = self._update_with_regex(file)
 
         return versioned_files
 
     @staticmethod
-    def _update_with_regex(pattern: str) -> Callable:
+    def _update_with_regex(file: VersionUpgradeFileConfig) -> Callable:
 
         def inner(content: str, update: ChangelogUpdate) -> str:
-            old_version = pattern.replace("{{ version }}", update.old_version)
-            new_version = pattern.replace("{{ version }}", update.new_version)
+            old_version = file.pattern.replace("{{ version }}", update.old_version)
+            new_version = file.pattern.replace("{{ version }}", update.new_version)
             return content.replace(old_version, new_version)
 
         return inner
 
     @classmethod
-    def _update_with_jinja(cls, pattern: str, jinja_file: FilePath) -> Callable:
+    def _update_with_jinja(cls, file: VersionUpgradeFileConfig) -> Callable:
         def inner(content: str, update: ChangelogUpdate) -> str:
-            tmpl = cls._tmpl(jinja_file)
+            assert file.jinja_file, "This method cannot be called without a vaild jinja file."
+            tmpl = cls._tmpl(file.jinja_file)
             replacement = tmpl.render(
                 version=update.new_version,
                 today=date.today(),
                 sections=update.release_notes.dict(),
+                context=file.context,
             )
-            return cached_compile(pattern).sub(
+            return cached_compile(file.pattern).sub(
                 replacement,
                 content,
             )

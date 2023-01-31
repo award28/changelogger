@@ -1,10 +1,12 @@
 import typer
 
-from .commands.exceptions import UpgradeException
+from .commands.exceptions import (
+    CommandException,
+    UpgradeException,
+    ValidationException,
+)
 from .commands.domain_models import SemVerType
-from .commands.cmd import upgrade as upgrade_cmd
-from .commands.cmd import validate as validate_cmd
-from .commands.cmd import changelog_content
+from .commands.changelogger import Changelogger
 
 app = typer.Typer()
 
@@ -14,6 +16,7 @@ def upgrade(
     confirm: bool = True,
     prompt_changelog: bool = True,
     version_upgrade_config: str = '.version_upgrade_config.yml',
+    changelog_file: str = 'CHANGELOG.md',
 ) -> None:
     """This command will bump the provided version_to_bump for all of the
     required files. This command expects there to be a CHANGELOG.md file at the
@@ -28,28 +31,35 @@ def upgrade(
     section.
     """
     try:
-        upgrade_cmd(version_to_bump, confirm, prompt_changelog, version_upgrade_config)
+        Changelogger(changelog_file).upgrade(
+            version_to_bump,
+            confirm,
+            prompt_changelog,
+            version_upgrade_config,
+        )
     except UpgradeException as e:
         print(f"\n:boom:\n{str(e)}\n[bold red]Aborted![/bold red]")
 
-changelog_app = typer.Typer()
-app.add_typer(changelog_app, name="changelog")
 
-@changelog_app.command()
-def validate(exit: bool = True) -> None:
+@app.command()
+def validate(
+    changelog_file: str = 'CHANGELOG.md',
+    exit_: bool = True,
+) -> None:
     try:
-        validate_cmd()
-    except Exception as e:
+        Changelogger(changelog_file).validate()
+    except ValidationException as e:
         print(str(e))
-        if exit:
-            raise
+        if exit_:
+            exit(1)
 
 
-@changelog_app.command()
-def content(version: str) -> None:
+@app.command()
+def content(
+    version: str,
+    changelog_file: str = 'CHANGELOG.md',
+) -> None:
     try:
-        changelog_content(version)
-    except Exception as e:
+        Changelogger(changelog_file).content_for_version(version)
+    except CommandException as e:
         print(str(e))
-        if exit:
-            raise

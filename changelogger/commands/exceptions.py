@@ -1,0 +1,9 @@
+class CommandException(Exception):
+    ...
+
+class UpgradeException(CommandException):
+    ...
+
+class ValidationException(CommandException):
+    ...
+

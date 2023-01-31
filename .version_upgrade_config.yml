@@ -1,0 +1,9 @@
+files:
+  - rel_path: "CHANGELOG.md"
+    pattern: "### \[Unreleased\][\s\S]*### \[{{ version }}\]"
+    jinja_file: ".CHANGELOG.md.overview.jinja2"
+  - rel_path: "CHANGELOG.md"
+    pattern: "### \[Unreleased\][\s\S]*### \[{{ version }}\]"
+    jinja_file: ".CHANGELOG.md.links.jinja2"
+    context:
+      repo: klaviyo/woocommerce-klaviyo
