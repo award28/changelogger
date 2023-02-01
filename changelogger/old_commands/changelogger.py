@@ -2,9 +2,11 @@ from os import getcwd
 from pathlib import Path
 import yaml
 import semver
-from git import Repo
+from git.repo import Repo
 from rich import print
 from rich.markdown import Markdown
+
+from changelogger.commands.consts import DEFAULT_UPGRADE_FILE
 from .domain_models import (
     ReleaseNotes,
     ChangelogUpdate,
@@ -22,20 +24,31 @@ from .utils import (
 )
 from importlib import resources
 
-
 class Changelogger:
     def __init__(
         self,
         changelog_file: str,
-        use_standard_upgrade_config: bool = True,
+        use_default_upgrade_config: bool = True,
+        changelogger_config_file: str | None = None,
     ) -> None:
         if not Path(changelog_file).is_file():
             raise CommandException(
                 f"Could not find Changelog file {changelog_file}.",
             )
 
+        self.changelogger_config = {}
+        if changelogger_config_file:
+            file = Path(changelogger_config_file)
+            if not file.is_file():
+                raise CommandException(
+                    f"Could not find changelogger config file `{changelogger_config_file}`",
+                )
+
+            self.changelogger_config = yaml.safe_load(file.read_text())
+
+
         self.changelog_file = changelog_file
-        self.use_standard_upgrade_config = use_standard_upgrade_config
+        self.use_default_upgrade_config = use_default_upgrade_config
 
     @staticmethod
     def _confirm(new_version: str):
@@ -235,7 +248,7 @@ class Changelogger:
                 "git@github.com:",
             ).rstrip(".git")
 
-    def _standard_upgrade_config(self) -> VersionUpgradeConfig:
+    def _default_upgrade_config(self) -> VersionUpgradeConfig:
         assets = resources.files('assets')
         raw_config = yaml.safe_load(
             assets.joinpath('.version_upgrade_config.yml').read_text(),
@@ -251,6 +264,13 @@ class Changelogger:
                 repo=self._get_git_repo(),
             )
         return config
+
+    def _get_upgrade_config(self) -> VersionUpgradeConfig:
+        config = None
+        if self.use_default_upgrade_config:
+            config = self._default_upgrade_config()
+
+
 
     def upgrade(
         self,
@@ -283,12 +303,22 @@ class Changelogger:
         if confirm:
             self._confirm(new_version)
 
-        with open(version_upgrade_config_file) as f:
-            raw_config = yaml.safe_load(f)
+        if version_upgrade_config_file:
+            file = Path(version_upgrade_config_file)
+            if not file.is_file():
+                raise UpgradeException(
+                    "Could not find the specified config file `{file}`",
+                )
+            with open(version_upgrade_config_file) as f:
+                raw_config = yaml.safe_load(f)
+
+
+        if version_upgrade_config_file or Path(DEFAULT_UPGRADE_FILE).is_file():
+            ...
 
         config = VersionUpgradeConfig(**raw_config)
-        if self.use_standard_upgrade_config:
-            standard_upgrade_config = self._standard_upgrade_config()
-            config.files.extend(standard_upgrade_config.files)
+        if self.use_default_upgrade_config:
+            default_upgrade_config = self._default_upgrade_config()
+            config.files.extend(default_upgrade_config.files)
         self._update_versioned_files(config, update)
         print("[bold green]Upgrade complete![/bold green] Please commit your changes to source control.")
