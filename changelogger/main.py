@@ -8,13 +8,9 @@ from .commands.exceptions import (
 from .commands.domain_models import SemVerType
 from .commands.changelogger import Changelogger
 
+
 app = typer.Typer()
 
-@app.command()
-def files(
-    changelog_file: str = 'CHANGELOG.md',
-):
-    Changelogger(changelog_file)._version_upgrade_config()
 
 @app.command()
 def upgrade(
