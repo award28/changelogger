@@ -1,7 +1,4 @@
-config:
-  changelog_file: "CHANGELOG.md"
-
 files:
-  - rel_path: other.txt
-    pattern: '\* Version: {{ old_version }}'
-    jinja: '* Version: {{ new_version }}'
+  - rel_path: "pyproject.toml"
+    pattern: 'version = "{{ old_version }}"'
+    jinja: 'version = "{{ new_version }}"'
