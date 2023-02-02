@@ -2,7 +2,8 @@ from os import getcwd
 import typer
 from rich import print
 
-import git
+from git.repo import Repo
+from git.exc import InvalidGitRepositoryError
 
 from .apps.manage import app as manage_app
 from changelogger import settings
@@ -24,8 +25,8 @@ def changelogger():
 
     if settings.DEFAULT_BEHAVIOR:
         try:
-            _ = git.Repo(getcwd()).git_dir
-        except git.exc.InvalidGitRepositoryError:
+            _ = Repo(getcwd()).git_dir
+        except InvalidGitRepositoryError:
             print(
                 "[bold red]Error: [/bold red]"
                 "Must be in a git repo to use the default behavior."

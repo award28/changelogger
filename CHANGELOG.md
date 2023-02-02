@@ -15,5 +15,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [LINKS]
 
-[Unreleased]: https://github.com/award28/changelogger/compare/1.0.0...HEAD
-[1.0.0]: https://github.com/award28/changelogger/commit/a284a424df9fe41121f5101b9a9471aa91fad7c4
+[Unreleased]: https://github.com/award28/changelogger/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/award28/changelogger/commit/a284a424df9fe41121f5101b9a9471aa91fad7c4

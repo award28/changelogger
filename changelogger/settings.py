@@ -1,11 +1,21 @@
+from importlib import resources
 from pathlib import Path
 
 from pydantic import BaseModel
 
 import yaml
 
+
+CHANGELOGGER_FILE_NAME = ".changelogger.yml"
 DEFAULT_CHANGELOG_FILE = "CHANGELOG.md"
-CHANGELOGGER_FILE = ".changelogger.yml"
+CHANGELOGGER_FILE = Path(CHANGELOGGER_FILE_NAME)
+
+
+_assets = resources.files('assets')
+DEFAULT_CHANGELOGGER_FILE = _assets.joinpath(CHANGELOGGER_FILE_NAME)
+CHANGELOG_LINKS_JINJA_FILE = _assets.joinpath(".cl.links.jinja2")
+CHANGELOG_OVERVIEW_JINJA_FILE = _assets.joinpath(".cl.overview.jinja2")
+
 
 class _Config(BaseModel):
     changelog_file: Path = Path(DEFAULT_CHANGELOG_FILE)
@@ -13,8 +23,8 @@ class _Config(BaseModel):
 
 
 _config = _Config()
-if (changelogger_file := Path(CHANGELOGGER_FILE)).exists():
-    changelogger = yaml.safe_load(changelogger_file.read_text())
+if CHANGELOGGER_FILE.exists():
+    changelogger = yaml.safe_load(CHANGELOGGER_FILE.read_text())
     _config = _Config(**changelogger.get('config', {}))
 
 
