@@ -1,46 +1,41 @@
-from contextvars import ContextVar
-from dataclasses import dataclass
 from pathlib import Path
 
+from pydantic import BaseModel
 
-@dataclass
-class _Ctx:
-    config_file: Path | None
-    changelog_file: Path
+import yaml
+
+DEFAULT_CHANGELOG_FILE = "CHANGELOG.md"
+CHANGELOGGER_FILE = ".changelogger.yml"
+
+class _Config(BaseModel):
+    changelog_file: Path = Path(DEFAULT_CHANGELOG_FILE)
     default_behavior: bool = True
 
 
-class ManageCtx:
-    _ctx = ContextVar('manage_context')
+_config = _Config()
+if (changelogger_file := Path(CHANGELOGGER_FILE)).exists():
+    changelogger = yaml.safe_load(changelogger_file.read_text())
+    _config = _Config(**changelogger.get('config', {}))
 
-    @classmethod
-    def set(
-        cls,
-        config_file: str = "",
-        changelog_file: str = "CHANGELOG.md",
-        default_behavior: bool = True,
-    ) -> None:
-        ctx = _Ctx(
-            default_behavior=default_behavior,
-            config_file=Path(config_file) if config_file else None,
-            changelog_file=Path(changelog_file),
-        )
-        cls._ctx.set(ctx)
 
-    @classmethod
-    def _get(cls) -> _Ctx:
-        return cls._ctx.get(
-            _Ctx(None, Path("CHANGELOG.md")),
-        )
+CHANGELOG_FILE = _config.changelog_file
+DEFAULT_BEHAVIOR = _config.default_behavior
 
-    @classmethod
-    def get_default_behavior(cls) -> bool:
-        return cls._get().default_behavior
 
-    @classmethod
-    def get_config_file(cls) -> Path | None:
-        return cls._get().config_file
-
-    @classmethod
-    def get_changelog_file(cls) -> Path:
-        return cls._get().changelog_file
+"""
+default_behavior: bool = typer.Option(
+    True,
+    envvar="CHANGELOGGER_DEFAULT_BEHAVIOR",
+    help="If true, the default behaviour for the changelog file will be used.",
+),
+config_file: str = typer.Option(
+    ".changelogger.yml",
+    envvar="CHANGELOGGER_FILE",
+    help="The relative path of the changelogger config file.",
+),
+changelog_file: str = typer.Option(
+    "CHANGELOG.md",
+    envvar="CHANGELOGGER_CHANGELOG_FILE",
+    help="The relative path of the changelog file.",
+)
+"""

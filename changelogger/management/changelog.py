@@ -1,11 +1,11 @@
 from changelogger.commands.domain_models import ReleaseNotes
 from changelogger.commands.exceptions import UpgradeException
 from changelogger.commands.utils import cached_compile
-from changelogger.management.context import ManageCtx
+from changelogger import settings
 
 
 def get_all_links() -> dict[str, str]:
-    with open(ManageCtx.get_changelog_file()) as f:
+    with open(settings.CHANGELOG_FILE) as f:
         lines = f.readlines()
 
     links = {}
@@ -25,7 +25,7 @@ def get_all_links() -> dict[str, str]:
 
 
 def get_all_versions() -> list[str]:
-    with open(ManageCtx.get_changelog_file()) as f:
+    with open(settings.CHANGELOG_FILE) as f:
         lines = f.readlines()
 
     versions = []
@@ -60,7 +60,7 @@ def get_latest_version() -> str:
 def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
     version = version.replace(".", r"\.")
 
-    with open(ManageCtx.get_changelog_file()) as f:
+    with open(settings.CHANGELOG_FILE) as f:
         content = f.read()
 
     match = cached_compile(
