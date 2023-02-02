@@ -8,9 +8,17 @@ from .commands.exceptions import (
 from .commands.domain_models import SemVerType
 from .commands.changelogger import Changelogger
 
+def pre_cmd():
+    print("First")
 
-app = typer.Typer()
+def post_cmd():
+    print("Last")
 
+app = typer.Typer(callback=pre_cmd, result_callback=post_cmd)
+
+@app.command()
+def hello(ctx: typer.Context):
+    print(ctx)
 
 @app.command()
 def upgrade(
