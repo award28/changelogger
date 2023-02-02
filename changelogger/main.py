@@ -7,14 +7,11 @@ from .commands.exceptions import (
 )
 from .commands.domain_models import SemVerType
 from .commands.changelogger import Changelogger
+from .manage import app as manage_app
 
-def pre_cmd():
-    print("First")
 
-def post_cmd():
-    print("Last")
-
-app = typer.Typer(callback=pre_cmd, result_callback=post_cmd)
+app = typer.Typer()
+app.add_typer(manage_app)
 
 @app.command()
 def hello(ctx: typer.Context):

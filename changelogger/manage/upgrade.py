@@ -1,25 +1,37 @@
-from pydantic import BaseModel
-import typer
+import semver
 
-app = typer.Typer()
+from dataclasses import dataclass
+from changelogger.commands.domain_models import SemVerType
 
-class UpgradeCmd(BaseModel):
-    version_to_bump: str
+from changelogger.manage import utils
+
+
+@dataclass
+class UpgradeRequest:
+    version_to_bump: SemVerType
     confirm: bool = True
     prompt_changelog: bool = True
-    use_default_upgrade_config: bool = True
-    changelogger_config_file: str | None = None
-    changelog_file: str = 'CHANGELOG.md'
 
 
-def config(
-    version_to_bump: str,
+def upgrade(
+    version_to_bump: SemVerType,
     confirm: bool = True,
     prompt_changelog: bool = True,
-    use_default_upgrade_config: bool = True,
-    changelogger_config_file: str | None = None,
-    changelog_file: str = 'CHANGELOG.md',
-) -> 
+) -> None:
+    """Upgrades all versioned files, as specified in the changelogger config file.
+    """
+    req = UpgradeRequest(
+        version_to_bump=version_to_bump,
+        confirm=confirm,
+        prompt_changelog=prompt_changelog,
+    )
+    _upgrade(req)
 
-@app.command()
-def upgrade(
+def _upgrade(req: UpgradeRequest) -> None:
+    old_version = utils.get_latest_version()
+    bump = getattr(semver, f"bump_{req.version_to_bump.value}")
+    new_version = bump(old_version)
+    print(new_version)
+
+    release_notes = utils.get_release_notes("Unreleased", old_version)
+    print(release_notes)
