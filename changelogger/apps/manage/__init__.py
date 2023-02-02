@@ -1,9 +1,9 @@
 import typer
 
-from changelogger.manage.context import ManageCtx
-from changelogger.manage.upgrade import upgrade
-from changelogger.manage.check import check
-from changelogger.manage.content import content
+from changelogger.management.context import ManageCtx
+from .upgrade import upgrade
+from .check import check
+from .content import content
 
 
 app = typer.Typer()

@@ -1,8 +1,7 @@
 from changelogger.commands.domain_models import ReleaseNotes
 from changelogger.commands.exceptions import UpgradeException
 from changelogger.commands.utils import cached_compile
-from changelogger.manage.context import ManageCtx
-
+from changelogger.management.context import ManageCtx
 
 
 def get_all_links() -> dict[str, str]:
