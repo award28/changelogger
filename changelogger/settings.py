@@ -11,10 +11,8 @@ DEFAULT_CHANGELOG_FILE = "CHANGELOG.md"
 CHANGELOGGER_FILE = Path(CHANGELOGGER_FILE_NAME)
 
 
-_assets = resources.files('assets')
-DEFAULT_CHANGELOGGER_FILE = _assets.joinpath(CHANGELOGGER_FILE_NAME)
-CHANGELOG_LINKS_JINJA_FILE = _assets.joinpath(".cl.links.jinja2")
-CHANGELOG_OVERVIEW_JINJA_FILE = _assets.joinpath(".cl.overview.jinja2")
+ASSETS = resources.files('assets')
+DEFAULT_CHANGELOGGER_FILE = ASSETS.joinpath(CHANGELOGGER_FILE_NAME)
 
 
 class _Config(BaseModel):

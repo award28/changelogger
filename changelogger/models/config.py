@@ -39,6 +39,8 @@ class _DefaultConfig(BaseModel):
             ctx = d.get('context', {})
             ctx['git'] = dict(repo=repo)
             d['context'] = ctx
+            if (jinja_rel_path := d.get('jinja_rel_path')):
+                d['jinja_rel_path'] = settings.ASSETS.joinpath(jinja_rel_path)
 
         return v
 

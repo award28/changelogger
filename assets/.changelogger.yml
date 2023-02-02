@@ -1,6 +1,6 @@
 changelog:
   - pattern: '### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]'
-    jinja_rel_path: assets/.cl.overview.jinja2
+    jinja_rel_path: .cl.overview.jinja2
 
   - pattern: '\[Unreleased\]:.*\n'
-    jinja_rel_path: assets/.cl.links.jinja2
+    jinja_rel_path: .cl.links.jinja2
