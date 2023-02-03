@@ -10,21 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
-### [0.2.0] - 2023-02-02
+### [0.1.0] - 2023-02-03
 
 #### Added
-- Upgrade command, to automatically manage upgrades of all versioned files.
-- Check command, which will validate the changelog file. Optionally can trigger a system exit.
-- Content command, which will display the changelog content for a specific version.
-
-### [0.1.0] - 2023-01-31
-
-#### Changed
-
-- Initial Workings of the Changelog file.
+- `manage` command, with management subcommands.
+- `manage content`, which lists the content for the specified version.
+- `manage check`, which checks the versioned files are parsable.
+- `manage ugprade`, which performs the specified semantic version upgrade across the specified versioned files.
+- `unreleased` command, with unreleased subcommands.
+- `unreleased content`, which lists the unreleased content.
+- `unreleased add`, which allows inline or prompted adding of unreleased changes.
 
 ### [LINKS]
 
-[Unreleased]: https://github.com/award28/changelogger/compare/0.2.0...HEAD
-[0.2.0]: https://github.com/award28/changelogger/compare/0.1.0...0.2.0
-[0.1.0]: https://github.com/award28/changelogger/commit/a284a424df9fe41121f5101b9a9471aa91fad7c4
+[Unreleased]: https://github.com/award28/changelogger/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/award28/changelogger/commit/fc688488620df4fe014c9d1b55782b75a674fa15
