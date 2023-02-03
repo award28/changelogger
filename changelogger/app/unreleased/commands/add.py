@@ -1,6 +1,6 @@
 import typer
-from rich import print
 from changelogger import changelog
+from changelogger.app.prompts import prompt_unreleased_changelog, rollback_handler
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.models.domain_models import ChangelogUpdate
@@ -22,21 +22,9 @@ def add(
 ) -> None:
     """Retrieves the changelog content for the specified version.
     """
-    if not (added or changed or deprecated or removed or fixed or security):
-        print("No changes to apply.")
-        raise typer.Abort()
-
     all_versions = changelog.get_all_versions()
     topmost_version = all_versions[0]
     release_notes = changelog.get_release_notes("Unreleased", topmost_version)
-
-    # Update the existing unreleased changes with the added notes
-    release_notes.added.extend(added)
-    release_notes.changed.extend(changed)
-    release_notes.deprecated.extend(deprecated)
-    release_notes.removed.extend(removed)
-    release_notes.fixed.extend(fixed)
-    release_notes.security.extend(security)
 
     update = ChangelogUpdate(
         new_version="",
@@ -44,13 +32,25 @@ def add(
         release_notes=release_notes,
     )
 
-    chnagelog_file = VersionedFile(
+    if (added or changed or deprecated or removed or fixed or security):
+        # Update the existing unreleased changes with the added notes
+        update.release_notes.added.extend(added)
+        update.release_notes.changed.extend(changed)
+        update.release_notes.deprecated.extend(deprecated)
+        update.release_notes.removed.extend(removed)
+        update.release_notes.fixed.extend(fixed)
+        update.release_notes.security.extend(security)
+    else:
+        update = prompt_unreleased_changelog(update)
+
+    changelog_file = VersionedFile(
         rel_path=settings.CHANGELOG_PATH,
         pattern=settings.OVERVIEW_JINJA_PATTERN,
         jinja_rel_path=settings.OVERVIEW_JINJA_PATH,
     )
 
-    changelog.update_versioned_files(
-        update=update,
-        versioned_files=[chnagelog_file],
-    )
+    with rollback_handler():
+        changelog.update_versioned_files(
+            update=update,
+            versioned_files=[changelog_file],
+        )

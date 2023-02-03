@@ -95,8 +95,8 @@ def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
 
 
 
-def _rollback(rollback: dict[Path, str]) -> None:
-    for filename, content in rollback.items():
+def _rollback(rollback: list[tuple[Path, str]]) -> None:
+    for filename, content in rollback:
         with open(filename, "w") as f:
             f.write(content)
 
@@ -105,12 +105,12 @@ def update_versioned_files(
     update: ChangelogUpdate,
     versioned_files: list[VersionedFile],
 ) -> dict[Path, str] | None:
-    rollback: dict[Path, str] = {}
+    rollback: list[tuple[Path, str]] = []
     try:
         for file in versioned_files:
             update_fn = update_with_jinja(file)
             with open_rw(file.rel_path) as (f, content):
-                rollback[file.rel_path] = content
+                rollback.append((file.rel_path, content))
                 new_content = update_fn(content, update)
                 f.write(new_content)
         typer.confirm("Do these changes look good?", abort=True)
