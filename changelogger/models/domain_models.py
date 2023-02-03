@@ -1,4 +1,5 @@
 from enum import Enum
+
 from pydantic import BaseModel
 
 
@@ -33,7 +34,7 @@ class ReleaseNotes(BaseModel):
             if not notes:
                 continue
 
-            formatted_notes = "- " + '\n- '.join(notes)
+            formatted_notes = "- " + "\n- ".join(notes)
             md += f"""#### {name.title()}
 
             {formatted_notes}

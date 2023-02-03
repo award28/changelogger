@@ -1,10 +1,12 @@
+from collections.abc import Callable
 from datetime import date
 from typing import Any
-from changelogger.conf.models import VersionedFile
+
 from jinja2 import BaseLoader, Environment, Template
+
+from changelogger.conf.models import VersionedFile
 from changelogger.models.domain_models import ChangelogUpdate
 from changelogger.utils import cached_compile
-from collections.abc import Callable
 
 
 def _tmpl(jinja: str) -> Template:
@@ -28,7 +30,6 @@ def _render_variables(
 def update_with_jinja(
     file: VersionedFile,
 ) -> Callable:
-
     assert file.jinja or file.jinja_rel_path, "No valid jinja template found."
 
     replacement_str = file.jinja
@@ -43,4 +44,5 @@ def update_with_jinja(
         replacement = _tmpl(replacement_str).render(**render_kwargs)
 
         return cached_compile(pattern).sub(replacement, content)
+
     return inner

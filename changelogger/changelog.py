@@ -1,16 +1,17 @@
 from pathlib import Path
 
 import typer
+
+from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
-from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
 from changelogger.exceptions import RollbackException, UpgradeException
+from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
 from changelogger.templating import update_with_jinja
 from changelogger.utils import cached_compile, open_rw
-from changelogger.conf import settings
 
 
 def get_all_links() -> dict[str, str]:
-    lines = settings.CHANGELOG_PATH.read_text().split('\n')
+    lines = settings.CHANGELOG_PATH.read_text().split("\n")
 
     links = {}
     for line in lines:
@@ -29,7 +30,7 @@ def get_all_links() -> dict[str, str]:
 
 
 def get_all_versions() -> list[str]:
-    lines = settings.CHANGELOG_PATH.read_text().split('\n')
+    lines = settings.CHANGELOG_PATH.read_text().split("\n")
 
     versions = []
     for line in lines:
@@ -49,28 +50,25 @@ def get_all_versions() -> list[str]:
 def get_sorted_versions() -> list[str]:
     versions = get_all_versions()
     sorted_versions = sorted(
-        (tuple(map(int, version.split('.'))) for version in versions)
+        (tuple(map(int, version.split("."))) for version in versions)
     )
-    return ['.'.join(map(str, v)) for v in sorted_versions]
+    return [".".join(map(str, v)) for v in sorted_versions]
 
 
 def get_latest_version() -> str:
     versions = get_sorted_versions()
     if not versions:
-        raise UpgradeException(
-            f"This changelog has no versions currently."
-        )
+        raise UpgradeException(f"This changelog has no versions currently.")
     return versions[-1]
 
 
 def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
     version = version.replace(".", r"\.")
 
-
     content = settings.CHANGELOG_PATH.read_text()
 
     match = cached_compile(
-        fr"### \[{version}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{prev_version}\]",
+        rf"### \[{version}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{prev_version}\]",
     ).search(
         content,
     )
@@ -86,13 +84,12 @@ def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
         if not section:
             continue
 
-        section_name, *notes = section.split('-')
+        section_name, *notes = section.split("-")
         attr = section_name.lower()
         notes = [note.lstrip() for note in notes]
         release_notes[attr] = notes
 
     return release_notes
-
 
 
 def _rollback(rollback: list[tuple[Path, str]]) -> None:
