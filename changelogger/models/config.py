@@ -8,20 +8,10 @@ import yaml
 from changelogger import settings
 
 from changelogger.models.domain_models import ChangelogUpdate
-from changelogger.utils import cached_compile
-from os import getcwd
-from git.repo import Repo
-
-
-# TODO: Move this somewhere better...
-def get_git_repo() -> str:
-    git_url = Repo(getcwd()).remotes.origin.config_reader.get("url")
-    return git_url.lstrip(
-        "https://github.com/",
-    ).lstrip(
-        "git@github.com:",
-    ).rstrip(".git")
-
+from changelogger.utils import (
+    cached_compile,
+    get_git_repo,
+)
 
 class ChangeloggerFileConfig(BaseModel):
     rel_path: Path
