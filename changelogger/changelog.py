@@ -10,13 +10,11 @@ from changelogger.conf import settings
 
 
 def get_all_links() -> dict[str, str]:
-    lines = settings.CHANGELOG_PATH.read_text().split('\n')
+    lines = settings.CHANGELOG_PATH.read_text().split("\n")
 
     links = {}
     for line in lines:
-        match = cached_compile(
-            r"\[([\d.]+|Unreleased)]: (.*)",
-        ).search(
+        match = cached_compile(r"\[([\d.]+|Unreleased)]: (.*)",).search(
             line,
         )
 
@@ -29,13 +27,11 @@ def get_all_links() -> dict[str, str]:
 
 
 def get_all_versions() -> list[str]:
-    lines = settings.CHANGELOG_PATH.read_text().split('\n')
+    lines = settings.CHANGELOG_PATH.read_text().split("\n")
 
     versions = []
     for line in lines:
-        match = cached_compile(
-            r"### \[([\d.]+)]",
-        ).search(
+        match = cached_compile(r"### \[([\d.]+)]",).search(
             line,
         )
 
@@ -49,28 +45,25 @@ def get_all_versions() -> list[str]:
 def get_sorted_versions() -> list[str]:
     versions = get_all_versions()
     sorted_versions = sorted(
-        (tuple(map(int, version.split('.'))) for version in versions)
+        (tuple(map(int, version.split("."))) for version in versions)
     )
-    return ['.'.join(map(str, v)) for v in sorted_versions]
+    return [".".join(map(str, v)) for v in sorted_versions]
 
 
 def get_latest_version() -> str:
     versions = get_sorted_versions()
     if not versions:
-        raise UpgradeException(
-            f"This changelog has no versions currently."
-        )
+        raise UpgradeException(f"This changelog has no versions currently.")
     return versions[-1]
 
 
 def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
     version = version.replace(".", r"\.")
 
-
     content = settings.CHANGELOG_PATH.read_text()
 
     match = cached_compile(
-        fr"### \[{version}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{prev_version}\]",
+        rf"### \[{version}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{prev_version}\]",
     ).search(
         content,
     )
@@ -86,13 +79,12 @@ def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
         if not section:
             continue
 
-        section_name, *notes = section.split('-')
+        section_name, *notes = section.split("-")
         attr = section_name.lower()
         notes = [note.lstrip() for note in notes]
         release_notes[attr] = notes
 
     return release_notes
-
 
 
 def _rollback(rollback: list[tuple[Path, str]]) -> None:

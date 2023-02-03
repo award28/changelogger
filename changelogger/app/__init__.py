@@ -14,10 +14,10 @@ app = typer.Typer()
 app.add_typer(manage_app)
 app.add_typer(unrealeased_app)
 
+
 @app.callback()
 def changelogger():
-    """Changelogger app help goes here.
-    """
+    """Changelogger app help goes here."""
     if not settings.CHANGELOG_PATH.exists():
         print(
             "[bold red]Error: [/bold red]"

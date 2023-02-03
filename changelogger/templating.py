@@ -43,4 +43,5 @@ def update_with_jinja(
         replacement = _tmpl(replacement_str).render(**render_kwargs)
 
         return cached_compile(pattern).sub(replacement, content)
+
     return inner

@@ -20,13 +20,11 @@ class VersionedFileConfig(BaseModel):
 
     @root_validator
     def xor_jinja(cls, values: dict) -> dict:
-        jinja = values.get('jinja')
-        jinja_rel_path = values.get('jinja_rel_path')
+        jinja = values.get("jinja")
+        jinja_rel_path = values.get("jinja_rel_path")
 
         if jinja and jinja_rel_path:
-            raise ValueError(
-                "Both `jinja` and `jinja_rel_path` can't be set"
-            )
+            raise ValueError("Both `jinja` and `jinja_rel_path` can't be set")
         elif jinja_rel_path and not jinja_rel_path.exists():
             raise ValueError(
                 "The jinja template `{jinja_rel_path}` could not be found."
@@ -60,6 +58,7 @@ class ChangeloggerConfig(BaseModel):
             replacement = cls._tmpl(replacement_str).render(**render_kwargs)
 
             return cached_compile(pattern).sub(replacement, content)
+
         return inner
 
     @staticmethod
@@ -73,9 +72,9 @@ class ChangeloggerConfig(BaseModel):
         update: ChangelogUpdate,
     ) -> dict[str, Any]:
         return dict(
-                new_version=update.new_version,
-                old_version=update.old_version,
-                today=date.today(),
-                sections=update.release_notes.dict(),
-                context=file.context,
+            new_version=update.new_version,
+            old_version=update.old_version,
+            today=date.today(),
+            sections=update.release_notes.dict(),
+            context=file.context,
         )

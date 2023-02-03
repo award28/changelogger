@@ -13,10 +13,14 @@ def get_git_repo() -> str:
     git_url = Repo(
         getcwd(),
     ).remotes.origin.config_reader.get(KEY_URL)
-    return git_url.lstrip(
-        GITHUB_HTTPS_PREFIX,
-    ).lstrip(
-        GITHUB_SSH_PREFIX,
-    ).rstrip(
-        GIT_SUFFIX,
+    return (
+        git_url.lstrip(
+            GITHUB_HTTPS_PREFIX,
+        )
+        .lstrip(
+            GITHUB_SSH_PREFIX,
+        )
+        .rstrip(
+            GIT_SUFFIX,
+        )
     )

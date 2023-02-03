@@ -10,11 +10,9 @@ def prompt_unreleased_changelog(update: ChangelogUpdate) -> ChangelogUpdate:
         done = False
         print(Markdown(f"## Updating **{name.title()}**"))
         while not done:
-            print(
-                f"Any further additions for [bold]{name.title()}[/bold]?"
-            )
+            print(f"Any further additions for [bold]{name.title()}[/bold]?")
             print(notes)
-            if (new_note := input("New note [Enter to continue]: ")):
+            if new_note := input("New note [Enter to continue]: "):
                 notes.append(new_note)
             else:
                 done = True
@@ -25,11 +23,9 @@ def prompt_unreleased_changelog(update: ChangelogUpdate) -> ChangelogUpdate:
 @contextmanager
 def rollback_handler():
     try:
-       yield
+        yield
     except UpgradeException as e:
-        print(
-            f"[bold red]Failed to update.[/bold red] {str(e)}"
-        )
+        print(f"[bold red]Failed to update.[/bold red] {str(e)}")
         if isinstance(e, RollbackException):
             note = "MANUAL INTERVENTION REQUIRED to fix versioned files."
             print(f"\n[bold red]{note}[/bold red]")

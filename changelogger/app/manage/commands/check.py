@@ -2,6 +2,7 @@ from rich import print
 from changelogger.exceptions import ValidationException
 from changelogger import changelog
 
+
 def check(
     sys_exit: bool = False,
 ) -> None:
@@ -12,13 +13,15 @@ def check(
         if sys_exit:
             exit(1)
 
+
 def _check() -> None:
-    """Validates the specified versioned files are parsable and updatable.
-    """
+    """Validates the specified versioned files are parsable and updatable."""
     # Validate there's at least 1 version
     all_versions = changelog.get_all_versions()
     if not all_versions:
-        raise ValidationException("Expected there to be at least 1 version; None found.")
+        raise ValidationException(
+            "Expected there to be at least 1 version; None found."
+        )
 
     # Validate all release notes are parseable for all versions
     changelog_versions = ["Unreleased", *all_versions, "LINKS"]
@@ -48,6 +51,10 @@ def _check() -> None:
         raise ValidationException(f"Link is incorrect for the unreleased changes.")
 
     if sorted_versions[0] not in all_links:
-        raise ValidationException(f"Could not find the link for version {sorted_versions[0]}")
+        raise ValidationException(
+            f"Could not find the link for version {sorted_versions[0]}"
+        )
 
-    print(":white_heavy_check_mark: [bold green]All versioned files are valid![/bold green]")
+    print(
+        ":white_heavy_check_mark: [bold green]All versioned files are valid![/bold green]"
+    )

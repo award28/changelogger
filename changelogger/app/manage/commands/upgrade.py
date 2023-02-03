@@ -16,13 +16,12 @@ def upgrade(
         True,
         help="Confirm the release notes before applying them.",
     ),
-    prompt_changelog: bool =  typer.Option(
+    prompt_changelog: bool = typer.Option(
         True,
         help="Prompt for additional release notes before applying them.",
     ),
 ) -> None:
-    """Upgrades all versioned files, as specified in the changelogger config file.
-    """
+    """Upgrades all versioned files, as specified in the changelogger config file."""
     old_version = changelog.get_latest_version()
     bump = getattr(semver, f"bump_{version_to_bump.value}")
     new_version = bump(old_version)
@@ -39,7 +38,7 @@ def upgrade(
 
     print(f"Upgrading {old_version} ==> {new_version}")
     md = f"\n# Changelog updates for [{new_version}]\n"
-    if (update_md := update.release_notes.markdown()):
+    if update_md := update.release_notes.markdown():
         md += update_md
     else:
         md += "\n*No notes found or added*"

@@ -8,7 +8,7 @@ app = typer.Typer()
 app.command()(add)
 app.command()(content)
 
+
 @app.callback()
 def unreleased():
-    """Commands for the unreleased section of the changelog.
-    """
+    """Commands for the unreleased section of the changelog."""

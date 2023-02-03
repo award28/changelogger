@@ -12,4 +12,3 @@ class RollbackException(UpgradeException):
 
 class ValidationException(Exception):
     ...
-

@@ -10,6 +10,7 @@ app.command()(upgrade)
 app.command()(check)
 app.command()(content)
 
+
 @app.callback()
 def manage():
     """Management commands for changelog and other versioned files,
