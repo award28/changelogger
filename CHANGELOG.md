@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
+### [0.2.0] - 2023-02-03
+
+#### Changed
+- Add pre-commit and formatted all files'
+
 ### [0.1.0] - 2023-02-03
 
 #### Added
@@ -23,5 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [LINKS]
 
-[Unreleased]: https://github.com/award28/changelogger/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/award28/changelogger/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/award28/changelogger/commit/fc688488620df4fe014c9d1b55782b75a674fa15
