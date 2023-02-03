@@ -43,6 +43,6 @@ class ReleaseNotes(BaseModel):
 
 
 class ChangelogUpdate(BaseModel):
-    old_version: str
     new_version: str
+    old_version: str
     release_notes: ReleaseNotes

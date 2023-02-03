@@ -1,7 +1,9 @@
 import typer
 from rich import print
-from rich.markdown import Markdown
 from changelogger import changelog
+from changelogger.conf import settings
+from changelogger.conf.models import VersionedFile
+from changelogger.models.domain_models import ChangelogUpdate
 
 ADDED_HELP = "For new features."
 CHANGED_HELP = "For changes in existing functionality."
@@ -25,9 +27,8 @@ def add(
         raise typer.Abort()
 
     all_versions = changelog.get_all_versions()
-
-    # all_versions[0] is the topmost version in the changelog file.
-    release_notes = changelog.get_release_notes("Unreleased", all_versions[0])
+    topmost_version = all_versions[0]
+    release_notes = changelog.get_release_notes("Unreleased", topmost_version)
 
     # Update the existing unreleased changes with the added notes
     release_notes.added.extend(added)
@@ -37,4 +38,19 @@ def add(
     release_notes.fixed.extend(fixed)
     release_notes.security.extend(security)
 
-    print(Markdown(release_notes.markdown()))
+    update = ChangelogUpdate(
+        new_version="",
+        old_version=topmost_version,
+        release_notes=release_notes,
+    )
+
+    chnagelog_file = VersionedFile(
+        rel_path=settings.CHANGELOG_PATH,
+        pattern=settings.OVERVIEW_JINJA_PATTERN,
+        jinja_rel_path=settings.OVERVIEW_JINJA_PATH,
+    )
+
+    changelog.update_versioned_files(
+        update=update,
+        versioned_files=[chnagelog_file],
+    )

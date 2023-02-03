@@ -1,6 +1,4 @@
-from datetime import date
 from pathlib import Path
-from typing import Any
 
 import typer
 from changelogger.conf.models import VersionedFile
@@ -103,10 +101,13 @@ def _rollback(rollback: dict[Path, str]) -> None:
             f.write(content)
 
 
-def update_versioned_files(update: ChangelogUpdate) -> dict[Path, str] | None:
+def update_versioned_files(
+    update: ChangelogUpdate,
+    versioned_files: list[VersionedFile],
+) -> dict[Path, str] | None:
     rollback: dict[Path, str] = {}
     try:
-        for file in settings.VERSIONED_FILES:
+        for file in versioned_files:
             update_fn = update_with_jinja(file)
             with open_rw(file.rel_path) as (f, content):
                 rollback[file.rel_path] = content

@@ -1,6 +1,8 @@
 ### [Unreleased]
 
+{%- if new_version - %}
 ### [{{ new_version }}] - {{ today }}
+{%- endif -%}
 
 {% for name, notes in sections.items() -%}
 {% if notes -%}
