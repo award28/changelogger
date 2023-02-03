@@ -1,9 +1,9 @@
 from pathlib import Path
-from changelogger.commands.domain_models import ChangelogUpdate, ReleaseNotes
-from changelogger.commands.exceptions import UpgradeException
-from changelogger.commands.utils import cached_compile, open_rw
+from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
+from changelogger.exceptions import UpgradeException
+from changelogger.utils import cached_compile, open_rw
 from changelogger import settings
-from changelogger.models.config import ChangeloggerConfig, get_git_repo
+from changelogger.models.config import ChangeloggerConfig
 
 
 def get_all_links() -> dict[str, str]:
@@ -44,12 +44,14 @@ def get_all_versions() -> list[str]:
         versions.append(match[1])
     return versions
 
+
 def get_sorted_versions() -> list[str]:
     versions = get_all_versions()
     sorted_versions = sorted(
         (tuple(map(int, version.split('.'))) for version in versions)
     )
     return ['.'.join(map(str, v)) for v in sorted_versions]
+
 
 def get_latest_version() -> str:
     versions = get_sorted_versions()
@@ -58,6 +60,7 @@ def get_latest_version() -> str:
             f"This changelog has no versions currently."
         )
     return versions[-1]
+
 
 def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
     version = version.replace(".", r"\.")
@@ -113,7 +116,6 @@ def update_versioned_files(config: ChangeloggerConfig, update: ChangelogUpdate) 
         _rollback(rollback)
 
         print("Rollback successful.")
-        raise
         raise UpgradeException(
             "There may be an issue with your search pattern."
         ) from e

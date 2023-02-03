@@ -6,10 +6,10 @@ from pydantic import BaseModel
 import yaml
 
 
-CHANGELOGGER_FILE_NAME = ".changelogger.yml"
 DEFAULT_CHANGELOG_FILE = "CHANGELOG.md"
-CHANGELOGGER_FILE = Path(CHANGELOGGER_FILE_NAME)
 
+CHANGELOGGER_FILE_NAME = ".changelogger.yml"
+CHANGELOGGER_FILE = Path(CHANGELOGGER_FILE_NAME)
 
 ASSETS = resources.files('assets')
 DEFAULT_CHANGELOGGER_FILE = ASSETS.joinpath(CHANGELOGGER_FILE_NAME)
@@ -28,22 +28,3 @@ if CHANGELOGGER_FILE.exists():
 
 CHANGELOG_FILE = _config.changelog_file
 DEFAULT_BEHAVIOR = _config.default_behavior
-
-
-"""
-default_behavior: bool = typer.Option(
-    True,
-    envvar="CHANGELOGGER_DEFAULT_BEHAVIOR",
-    help="If true, the default behaviour for the changelog file will be used.",
-),
-config_file: str = typer.Option(
-    ".changelogger.yml",
-    envvar="CHANGELOGGER_FILE",
-    help="The relative path of the changelogger config file.",
-),
-changelog_file: str = typer.Option(
-    "CHANGELOG.md",
-    envvar="CHANGELOGGER_CHANGELOG_FILE",
-    help="The relative path of the changelog file.",
-)
-"""

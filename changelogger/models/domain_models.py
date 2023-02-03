@@ -1,21 +1,19 @@
 from collections.abc import Callable
 from datetime import date
 from enum import Enum
-from pathlib import Path
 from typing import Any
-from pydantic import BaseModel, FilePath, root_validator
+from pydantic import BaseModel, FilePath
 from jinja2 import BaseLoader, Environment, Template
 
 
-from .utils import (
-    cached_compile,
-)
+from changelogger.utils import cached_compile
 
 
 class SemVerType(Enum):
     MAJOR = "major"
     MINOR = "minor"
     PATCH = "patch"
+
 
 class ReleaseNotes(BaseModel):
     added: list[str] = []
@@ -28,10 +26,8 @@ class ReleaseNotes(BaseModel):
     def __getitem__(self, attr: str) -> list[str]:
         return getattr(self, attr)
 
-
     def __setitem__(self, attr: str, value: list[str]) -> None:
         return setattr(self, attr, value)
-
 
     @classmethod
     def sections(cls) -> list[str]:
@@ -85,12 +81,6 @@ class VersionUpgradeFileConfig(BaseModel):
     jinja: str | None
     jinja_rel_path: FilePath | None
     context: dict = {}
-
-    # @root_validator()
-    # def mutually_exclusive_jinja(cls, values):
-    #     if not (values.get('jinja') or values.get("jinja_rel_path")):
-    #         raise ValueError('either `jinja` or `jinja_rel_path` is required')
-    #     return values
 
 
 class VersionUpgradeConfig(BaseModel):
