@@ -13,7 +13,11 @@ def content(
 
     # all_versions[0] is the topmost version in the changelog file.
     release_notes = changelog.get_release_notes("Unreleased", all_versions[0])
+    md = release_notes.markdown()
+    if not md:
+        md = f"{'# ' if pretty else ''}There are no unreleased changes."
+
     if pretty:
-        print(Markdown(release_notes.markdown()))
-    else:
-        print(release_notes.markdown())
+        md =Markdown(md)
+
+    print(md)
