@@ -1,16 +1,13 @@
 from collections.abc import Callable
 from datetime import date
 from pathlib import Path
-from typing import Any, Self
+from typing import Any
 from jinja2 import BaseLoader, Environment, Template
-from pydantic import BaseModel, Field, root_validator, validator
-import yaml
-from changelogger import settings
+from pydantic import BaseModel, root_validator
 
 from changelogger.models.domain_models import ChangelogUpdate
 from changelogger.utils import (
     cached_compile,
-    get_git_repo,
 )
 
 
@@ -38,42 +35,8 @@ class VersionedFileConfig(BaseModel):
         return values
 
 
-class _DefaultConfig(BaseModel):
-    files: list[VersionedFileConfig] = Field([], alias="changelog")
-
-    @validator('files', pre=True)
-    def set_rel_path_to_changelog(cls, v):
-        repo = get_git_repo()
-        for d in v:
-            d['rel_path'] = settings.CHANGELOG_FILE
-            ctx = d.get('context', {})
-            ctx['git'] = dict(repo=repo)
-            d['context'] = ctx
-            if (jinja_rel_path := d.get('jinja_rel_path')):
-                d['jinja_rel_path'] = settings.ASSETS.joinpath(jinja_rel_path)
-
-        return v
-
-
 class ChangeloggerConfig(BaseModel):
     files: list[VersionedFileConfig] = []
-
-    @classmethod
-    def from_settings(cls) -> Self:
-        config = cls(
-            **yaml.safe_load(
-                settings.CHANGELOGGER_FILE.read_text(),
-            ),
-        )
-        if settings.DEFAULT_BEHAVIOR:
-            default_config = _DefaultConfig(
-                **yaml.safe_load(
-                    settings.DEFAULT_CHANGELOGGER_FILE.read_text(),
-                )
-            )
-            config.files.extend(default_config.files)
-
-        return config
 
     def versioned_files(self) -> list[tuple[VersionedFileConfig, Callable]]:
         versioned_files = []

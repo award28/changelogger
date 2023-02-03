@@ -1,7 +1,6 @@
 import typer
 from rich import print
 from rich.markdown import Markdown
-from changelogger.exceptions import CommandException
 from changelogger import changelog
 
 ADDED_HELP = "For new features."
@@ -21,6 +20,10 @@ def add(
 ) -> None:
     """Retrieves the changelog content for the specified version.
     """
+    if not (added or changed or deprecated or removed or fixed or security):
+        print("No changes to apply.")
+        raise typer.Abort()
+
     all_versions = changelog.get_all_versions()
 
     # all_versions[0] is the topmost version in the changelog file.

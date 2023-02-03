@@ -7,7 +7,7 @@ from git.exc import InvalidGitRepositoryError
 
 from changelogger.app.manage import app as manage_app
 from changelogger.app.unreleased import app as unrealeased_app
-from changelogger import settings
+from changelogger.conf import settings
 
 
 app = typer.Typer()
@@ -18,14 +18,14 @@ app.add_typer(unrealeased_app)
 def changelogger():
     """Changelogger app help goes here.
     """
-    if not settings.CHANGELOG_FILE.exists():
+    if not settings.CHANGELOG_PATH.exists():
         print(
             "[bold red]Error: [/bold red]"
-            f"Could not find changelog file [bold]{settings.CHANGELOG_FILE}[/bold]."
+            f"Could not find changelog file [bold]{settings.CHANGELOG_PATH}[/bold]."
         )
         exit(1)
 
-    if settings.DEFAULT_BEHAVIOR:
+    if settings.HAS_DEFAULTS:
         try:
             _ = Repo(getcwd()).git_dir
         except InvalidGitRepositoryError:

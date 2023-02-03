@@ -2,13 +2,12 @@ from pathlib import Path
 from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
 from changelogger.exceptions import UpgradeException
 from changelogger.utils import cached_compile, open_rw
-from changelogger import settings
+from changelogger.conf import settings
 from changelogger.models.config import ChangeloggerConfig
 
 
 def get_all_links() -> dict[str, str]:
-    with open(settings.CHANGELOG_FILE) as f:
-        lines = f.readlines()
+    lines = settings.CHANGELOG_PATH.read_text().split('\n')
 
     links = {}
     for line in lines:
@@ -27,8 +26,7 @@ def get_all_links() -> dict[str, str]:
 
 
 def get_all_versions() -> list[str]:
-    with open(settings.CHANGELOG_FILE) as f:
-        lines = f.readlines()
+    lines = settings.CHANGELOG_PATH.read_text().split('\n')
 
     versions = []
     for line in lines:
@@ -65,8 +63,8 @@ def get_latest_version() -> str:
 def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
     version = version.replace(".", r"\.")
 
-    with open(settings.CHANGELOG_FILE) as f:
-        content = f.read()
+
+    content = settings.CHANGELOG_PATH.read_text()
 
     match = cached_compile(
         fr"### \[{version}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{prev_version}\]",
