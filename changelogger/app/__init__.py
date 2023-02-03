@@ -6,11 +6,13 @@ from git.repo import Repo
 from git.exc import InvalidGitRepositoryError
 
 from changelogger.app.manage import app as manage_app
+from changelogger.app.unreleased import app as unrealeased_app
 from changelogger import settings
 
 
 app = typer.Typer()
 app.add_typer(manage_app)
+app.add_typer(unrealeased_app)
 
 @app.callback()
 def changelogger():

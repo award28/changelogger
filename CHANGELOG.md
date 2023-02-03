@@ -1,4 +1,7 @@
-<!-- This file is maintained using the changelogger cli tool. Do not modify this file by hand.-->
+<!-- 
+  !! THIS FILE IS MAINTAINED USING THE CHANGELOGGER TOOL. 
+  !! MODIFICATION OF THIS FILE BY HAND MAY BREAK USAGE WITH THE CHANGELOGGER TOOL.
+-->
 # Changelog
 *All notable changes to this project will be documented in this file.
 

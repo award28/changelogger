@@ -15,4 +15,3 @@ def manage():
     """Management commands for changelog and other versioned files,
     as specified in the changelogger config file.
     """
-
