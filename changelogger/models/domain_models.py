@@ -96,8 +96,7 @@ class VersionUpgradeConfig(BaseModel):
     @classmethod
     def _update_with_jinja(cls, file: VersionUpgradeFileConfig) -> Callable:
 
-        if not (file.jinja or file.jinja_rel_path):
-            raise Exception("No valid jinja template found.")
+        assert file.jinja or file.jinja_rel_path, "No valid jinja template found."
 
         replacement_str = file.jinja
         if not replacement_str and file.jinja_rel_path:

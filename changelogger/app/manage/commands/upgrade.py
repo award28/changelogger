@@ -5,6 +5,7 @@ from rich import print
 from rich.markdown import Markdown
 
 from changelogger import changelog
+from changelogger.exceptions import RollbackException, UpgradeException
 from changelogger.models.config import ChangeloggerConfig
 from changelogger.models.domain_models import ChangelogUpdate, SemVerType
 
@@ -49,8 +50,16 @@ def upgrade(
     if confirm:
         typer.confirm("Do these changes look correct?", abort=True)
 
-    config = ChangeloggerConfig.from_settings()
-    changelog.update_versioned_files(config, update)
+    try:
+        changelog.update_versioned_files(update)
+    except UpgradeException as e:
+        print(
+            f"[bold red]Failed to update.[/bold red] {str(e)}"
+        )
+        if isinstance(e, RollbackException):
+            note = "MANUAL INTERVENTION REQUIRED to fix versioned files."
+            print(f"\n[bold red]{note}[/bold red]")
+
 
 def _prompt_unreleased_changelog(update: ChangelogUpdate) -> ChangelogUpdate:
     for name, notes in update.release_notes.dict().items():
