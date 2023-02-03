@@ -44,12 +44,14 @@ def get_all_versions() -> list[str]:
         versions.append(match[1])
     return versions
 
+
 def get_sorted_versions() -> list[str]:
     versions = get_all_versions()
     sorted_versions = sorted(
         (tuple(map(int, version.split('.'))) for version in versions)
     )
     return ['.'.join(map(str, v)) for v in sorted_versions]
+
 
 def get_latest_version() -> str:
     versions = get_sorted_versions()
@@ -58,6 +60,7 @@ def get_latest_version() -> str:
             f"This changelog has no versions currently."
         )
     return versions[-1]
+
 
 def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
     version = version.replace(".", r"\.")
