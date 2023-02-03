@@ -1,9 +1,12 @@
 from datetime import date
 from pathlib import Path
 from typing import Any
+
+import typer
 from changelogger.conf.models import VersionedFile
 from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
 from changelogger.exceptions import RollbackException, UpgradeException
+from changelogger.templating import update_with_jinja
 from changelogger.utils import cached_compile, open_rw
 from changelogger.conf import settings
 
@@ -93,18 +96,6 @@ def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
     return release_notes
 
 
-# def _render_variables(
-#     versioned_file: VersionedFile,
-#     update: ChangelogUpdate,
-# ) -> dict[str, Any]:
-#     return dict(
-#         new_version=update.new_version,
-#         old_version=update.old_version,
-#         today=date.today(),
-#         sections=update.release_notes.dict(),
-#         context=versioned_file.context,
-#     )
-
 
 def _rollback(rollback: dict[Path, str]) -> None:
     for filename, content in rollback.items():
@@ -116,7 +107,7 @@ def update_versioned_files(update: ChangelogUpdate) -> dict[Path, str] | None:
     rollback: dict[Path, str] = {}
     try:
         for file in settings.VERSIONED_FILES:
-            update_fn = lambda content, _: content
+            update_fn = update_with_jinja(file)
             with open_rw(file.rel_path) as (f, content):
                 rollback[file.rel_path] = content
                 new_content = update_fn(content, update)
