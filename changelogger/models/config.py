@@ -12,6 +12,8 @@ from changelogger.commands.utils import cached_compile
 from os import getcwd
 from git.repo import Repo
 
+
+# TODO: Move this somewhere better...
 def get_git_repo() -> str:
     git_url = Repo(getcwd()).remotes.origin.config_reader.get("url")
     return git_url.lstrip(
@@ -19,6 +21,7 @@ def get_git_repo() -> str:
     ).lstrip(
         "git@github.com:",
     ).rstrip(".git")
+
 
 class ChangeloggerFileConfig(BaseModel):
     rel_path: Path

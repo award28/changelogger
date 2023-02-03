@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "changelogger"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["award28 <austin.ward@klaviyo.com>"]
 readme = "README.md"
 
 [tool.poetry.scripts]
-changelogger = "changelogger.main:app"
+changelogger = "changelogger.main"
 
 [tool.poetry.dependencies]
 python = "^3.11"
