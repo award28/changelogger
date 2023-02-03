@@ -50,4 +50,4 @@ def _check() -> None:
     if sorted_versions[0] not in all_links:
         raise ValidationException(f"Could not find the link for version {sorted_versions[0]}")
 
-    print(":white_heavy_check_mark: [bold green]validated![/bold green]")
+    print(":white_heavy_check_mark: [bold green]All versioned files are valid![/bold green]")
