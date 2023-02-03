@@ -14,5 +14,3 @@ VERSIONED_FILES = _config.versioned_files
 VERSIONED_FILES.extend(_config.changelog.as_versioned_files())
 
 HAS_DEFAULTS = _config.changelog.has_defaults()
-
-DEBUG = True

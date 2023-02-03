@@ -53,7 +53,10 @@ def upgrade(
         typer.confirm("Do these changes look correct?", abort=True)
 
     try:
-        changelog.update_versioned_files(update)
+        changelog.update_versioned_files(
+            update,
+            settings.VERSIONED_FILES,
+        )
     except UpgradeException as e:
         print(
             f"[bold red]Failed to update.[/bold red] {str(e)}"
@@ -62,9 +65,6 @@ def upgrade(
             note = "MANUAL INTERVENTION REQUIRED to fix versioned files."
             print(f"\n[bold red]{note}[/bold red]")
 
-        if settings.DEBUG:
-            print(e.__cause__)
-            traceback.print_exception(e.__cause__)
 
 def _prompt_unreleased_changelog(update: ChangelogUpdate) -> ChangelogUpdate:
     for name, notes in update.release_notes.dict().items():
