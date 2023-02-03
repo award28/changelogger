@@ -7,8 +7,8 @@ from pydantic import BaseModel, Field, validator
 import yaml
 from changelogger import settings
 
-from changelogger.commands.domain_models import ChangelogUpdate
-from changelogger.commands.utils import cached_compile
+from changelogger.models.domain_models import ChangelogUpdate
+from changelogger.utils import cached_compile
 from os import getcwd
 from git.repo import Repo
 

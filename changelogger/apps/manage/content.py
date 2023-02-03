@@ -1,6 +1,6 @@
 from rich import print
 from rich.markdown import Markdown
-from changelogger.commands.exceptions import CommandException
+from changelogger.exceptions import CommandException
 from changelogger.management import changelog
 
 

@@ -5,7 +5,7 @@ from rich import print
 from git.repo import Repo
 from git.exc import InvalidGitRepositoryError
 
-from .apps.manage import app as manage_app
+from changelogger.apps.manage import app as manage_app
 from changelogger import settings
 
 

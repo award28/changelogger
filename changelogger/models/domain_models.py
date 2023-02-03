@@ -1,15 +1,12 @@
 from collections.abc import Callable
 from datetime import date
 from enum import Enum
-from pathlib import Path
 from typing import Any
-from pydantic import BaseModel, FilePath, root_validator
+from pydantic import BaseModel, FilePath
 from jinja2 import BaseLoader, Environment, Template
 
 
-from .utils import (
-    cached_compile,
-)
+from changelogger.utils import cached_compile
 
 
 class SemVerType(Enum):

@@ -1,9 +1,9 @@
 from pathlib import Path
-from changelogger.commands.domain_models import ChangelogUpdate, ReleaseNotes
-from changelogger.commands.exceptions import UpgradeException
-from changelogger.commands.utils import cached_compile, open_rw
+from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
+from changelogger.exceptions import UpgradeException
+from changelogger.utils import cached_compile, open_rw
 from changelogger import settings
-from changelogger.models.config import ChangeloggerConfig, get_git_repo
+from changelogger.models.config import ChangeloggerConfig
 
 
 def get_all_links() -> dict[str, str]:
@@ -113,7 +113,6 @@ def update_versioned_files(config: ChangeloggerConfig, update: ChangelogUpdate) 
         _rollback(rollback)
 
         print("Rollback successful.")
-        raise
         raise UpgradeException(
             "There may be an issue with your search pattern."
         ) from e

@@ -1,5 +1,5 @@
 from rich import print
-from changelogger.commands.exceptions import ValidationException
+from changelogger.exceptions import ValidationException
 from changelogger.management import changelog
 
 def check(

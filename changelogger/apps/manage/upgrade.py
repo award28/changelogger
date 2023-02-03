@@ -3,10 +3,10 @@ import semver
 
 from rich import print
 from rich.markdown import Markdown
-from changelogger.commands.domain_models import ChangelogUpdate, SemVerType
 
 from changelogger.management import changelog
 from changelogger.models.config import ChangeloggerConfig
+from changelogger.models.domain_models import ChangelogUpdate, SemVerType
 
 
 def upgrade(
