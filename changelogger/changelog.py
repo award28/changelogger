@@ -116,7 +116,8 @@ def update_versioned_files(
         typer.confirm("Do these changes look good?", abort=True)
     except Exception as upgrade_exc:
         try:
-            _rollback(rollback)
+            # Need to reverse rollback list for proper rollback
+            _rollback(rollback[::-1])
         except Exception as rollback_exc:
             raise RollbackException(
                 "An exception occured while upgrading; rollback unsuccessful."
