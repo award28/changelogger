@@ -4,6 +4,6 @@ class CommandException(Exception):
 class UpgradeException(CommandException):
     ...
 
-class ValidationException(CommandException):
+class ValidationException(Exception):
     ...
 

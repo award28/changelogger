@@ -1,4 +1,0 @@
-files:
-  - rel_path: other.txt
-    pattern: '\* Version: {{ old_version }}'
-    jinja: '* Version: {{ new_version }}'
