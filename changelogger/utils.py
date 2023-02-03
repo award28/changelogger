@@ -22,7 +22,9 @@ def cached_compile(pattern: str) -> Pattern:
 
 
 @contextmanager
-def open_rw(filename: str | Path) -> Generator[tuple[TextIO, str], None, None]:
+def open_rw(
+    filename: str | Path,
+) -> Generator[tuple[TextIO, str], None, None]:
     with open(filename, MODE_READ_AND_WRITE) as f:
         content = f.read()
         f.seek(0)
@@ -30,7 +32,9 @@ def open_rw(filename: str | Path) -> Generator[tuple[TextIO, str], None, None]:
 
 
 def get_git_repo() -> str:
-    git_url = Repo(getcwd()).remotes.origin.config_reader.get(KEY_URL)
+    git_url = Repo(
+        getcwd(),
+    ).remotes.origin.config_reader.get(KEY_URL)
     return git_url.lstrip(
         GITHUB_HTTPS_PREFIX,
     ).lstrip(
