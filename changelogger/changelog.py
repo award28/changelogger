@@ -112,6 +112,7 @@ def update_versioned_files(update: ChangelogUpdate) -> dict[Path, str] | None:
                 rollback[file.rel_path] = content
                 new_content = update_fn(content, update)
                 f.write(new_content)
+        typer.confirm("Do these changes look good?", abort=True)
     except Exception as upgrade_exc:
         try:
             _rollback(rollback)

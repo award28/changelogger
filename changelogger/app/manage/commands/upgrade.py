@@ -1,10 +1,12 @@
 import typer
 import semver
+import traceback
 
 from rich import print
 from rich.markdown import Markdown
 
 from changelogger import changelog
+from changelogger.conf import settings
 from changelogger.exceptions import RollbackException, UpgradeException
 from changelogger.models.config import ChangeloggerConfig
 from changelogger.models.domain_models import ChangelogUpdate, SemVerType
@@ -60,6 +62,9 @@ def upgrade(
             note = "MANUAL INTERVENTION REQUIRED to fix versioned files."
             print(f"\n[bold red]{note}[/bold red]")
 
+        if settings.DEBUG:
+            print(e.__cause__)
+            traceback.print_exception(e.__cause__)
 
 def _prompt_unreleased_changelog(update: ChangelogUpdate) -> ChangelogUpdate:
     for name, notes in update.release_notes.dict().items():

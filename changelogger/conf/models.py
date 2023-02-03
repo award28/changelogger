@@ -1,3 +1,4 @@
+from collections import defaultdict
 from pathlib import Path
 from typing import Self
 
@@ -27,29 +28,32 @@ class VersionedFile(BaseModel):
 class ChangelogSegment(BaseModel):
     pattern: str
     jinja_rel_path: Path
-    _default: bool = False
 
+_default_overview = ChangelogSegment(
+    pattern=DEFAULT_OVERVIEW_JINJA_PATTERN,
+    jinja_rel_path=DEFAULT_OVERVIEW_JINJA_PATH,
+)
+
+_default_links = ChangelogSegment(
+    pattern=DEFAULT_LINKS_JINJA_PATTERN,
+    jinja_rel_path=DEFAULT_LINKS_JINJA_PATH,
+)
 
 class Changelog(BaseModel):
     rel_path: Path = Path(DEFAULT_CHANGELOG_PATH)
-    overview: ChangelogSegment = ChangelogSegment(
-        pattern=DEFAULT_OVERVIEW_JINJA_PATTERN,
-        jinja_rel_path=DEFAULT_OVERVIEW_JINJA_PATH,
-        _default = True,
-    )
-    links: ChangelogSegment = ChangelogSegment(
-        pattern=DEFAULT_LINKS_JINJA_PATTERN,
-        jinja_rel_path=DEFAULT_LINKS_JINJA_PATH,
-        _default = True,
-    )
+    overview: ChangelogSegment = _default_overview
+    links: ChangelogSegment = _default_links
 
     def has_defaults(self) -> bool:
-        return self.overview._default or self.links._default
+        return (
+            self.overview == _default_overview or
+            self.links == _default_links
+        )
 
     def as_versioned_files(self) -> list[VersionedFile]:
-        context = {}
+        context = defaultdict(dict)
         if self.has_defaults():
-            context['git']['repo'] =get_git_repo()
+            context['git']['repo'] = get_git_repo()
 
         return [
             VersionedFile(
