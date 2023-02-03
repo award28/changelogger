@@ -3,7 +3,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Self
 from jinja2 import BaseLoader, Environment, Template
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, root_validator, validator
 import yaml
 from changelogger import settings
 
@@ -13,16 +13,33 @@ from changelogger.utils import (
     get_git_repo,
 )
 
-class ChangeloggerFileConfig(BaseModel):
+
+class VersionedFileConfig(BaseModel):
     rel_path: Path
     pattern: str
     jinja: str | None
     jinja_rel_path: Path | None
     context: dict = {}
 
+    @root_validator
+    def xor_jinja(cls, values: dict) -> dict:
+        jinja = values.get('jinja')
+        jinja_rel_path = values.get('jinja_rel_path')
+
+        if jinja and jinja_rel_path:
+            raise ValueError(
+                "Both `jinja` and `jinja_rel_path` can't be set"
+            )
+        elif jinja_rel_path and not jinja_rel_path.exists():
+            raise ValueError(
+                "The jinja template `{jinja_rel_path}` could not be found."
+            )
+
+        return values
+
 
 class _DefaultConfig(BaseModel):
-    files: list[ChangeloggerFileConfig] = Field([], alias="changelog")
+    files: list[VersionedFileConfig] = Field([], alias="changelog")
 
     @validator('files', pre=True)
     def set_rel_path_to_changelog(cls, v):
@@ -39,7 +56,7 @@ class _DefaultConfig(BaseModel):
 
 
 class ChangeloggerConfig(BaseModel):
-    files: list[ChangeloggerFileConfig] = []
+    files: list[VersionedFileConfig] = []
 
     @classmethod
     def from_settings(cls) -> Self:
@@ -58,7 +75,7 @@ class ChangeloggerConfig(BaseModel):
 
         return config
 
-    def versioned_files(self) -> list[tuple[ChangeloggerFileConfig, Callable]]:
+    def versioned_files(self) -> list[tuple[VersionedFileConfig, Callable]]:
         versioned_files = []
         for file in self.files:
             versioned_files.append((file, self._update_with_jinja(file)))
@@ -66,10 +83,7 @@ class ChangeloggerConfig(BaseModel):
         return versioned_files
 
     @classmethod
-    def _update_with_jinja(cls, file: ChangeloggerFileConfig) -> Callable:
-
-        if not (file.jinja or file.jinja_rel_path):
-            raise Exception("No valid jinja template found.")
+    def _update_with_jinja(cls, file: VersionedFileConfig) -> Callable:
 
         replacement_str = file.jinja
         if not replacement_str and file.jinja_rel_path:
@@ -92,7 +106,7 @@ class ChangeloggerConfig(BaseModel):
 
     @staticmethod
     def _render_kwargs(
-        file: ChangeloggerFileConfig,
+        file: VersionedFileConfig,
         update: ChangelogUpdate,
     ) -> dict[str, Any]:
         return dict(

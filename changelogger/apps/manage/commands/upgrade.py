@@ -25,7 +25,6 @@ def upgrade(
     old_version = changelog.get_latest_version()
     bump = getattr(semver, f"bump_{version_to_bump.value}")
     new_version = bump(old_version)
-    print(new_version)
 
     release_notes = changelog.get_release_notes("Unreleased", old_version)
     update = ChangelogUpdate(
