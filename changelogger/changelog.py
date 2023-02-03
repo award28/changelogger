@@ -1,12 +1,13 @@
 from pathlib import Path
 
 import typer
+
+from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
-from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
 from changelogger.exceptions import RollbackException, UpgradeException
+from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
 from changelogger.templating import update_with_jinja
 from changelogger.utils import cached_compile, open_rw
-from changelogger.conf import settings
 
 
 def get_all_links() -> dict[str, str]:
@@ -14,7 +15,9 @@ def get_all_links() -> dict[str, str]:
 
     links = {}
     for line in lines:
-        match = cached_compile(r"\[([\d.]+|Unreleased)]: (.*)",).search(
+        match = cached_compile(
+            r"\[([\d.]+|Unreleased)]: (.*)",
+        ).search(
             line,
         )
 
@@ -31,7 +34,9 @@ def get_all_versions() -> list[str]:
 
     versions = []
     for line in lines:
-        match = cached_compile(r"### \[([\d.]+)]",).search(
+        match = cached_compile(
+            r"### \[([\d.]+)]",
+        ).search(
             line,
         )
 

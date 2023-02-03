@@ -1,6 +1,7 @@
+import typer
 from rich import print
 from rich.markdown import Markdown
-import typer
+
 from changelogger import changelog
 
 

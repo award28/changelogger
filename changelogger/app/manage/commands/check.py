@@ -1,6 +1,7 @@
 from rich import print
-from changelogger.exceptions import ValidationException
+
 from changelogger import changelog
+from changelogger.exceptions import ValidationException
 
 
 def check(
@@ -25,11 +26,15 @@ def _check() -> None:
 
     # Validate all release notes are parseable for all versions
     changelog_versions = ["Unreleased", *all_versions, "LINKS"]
-    for version, prev_version in zip(changelog_versions, changelog_versions[1:]):
+    for version, prev_version in zip(
+        changelog_versions, changelog_versions[1:]
+    ):
         try:
             changelog.get_release_notes(version, prev_version)
         except:
-            raise ValidationException(f"Failed to validate notes for version {version}")
+            raise ValidationException(
+                f"Failed to validate notes for version {version}"
+            )
 
     # Validate there are links in the expected format for all versions
     sorted_versions = changelog.get_sorted_versions()
@@ -37,18 +42,26 @@ def _check() -> None:
     for prev_idx, version in enumerate(sorted_versions[1:]):
         link = all_links.get(version)
         if not link:
-            raise ValidationException(f"Could not find the link for version {version}")
+            raise ValidationException(
+                f"Could not find the link for version {version}"
+            )
 
         prev_version = sorted_versions[prev_idx]
         if f"{prev_version}...{version}" not in link:
-            raise ValidationException(f"Link is incorrect for version {version}")
+            raise ValidationException(
+                f"Link is incorrect for version {version}"
+            )
 
     link = all_links.get("Unreleased")
     if not link:
-        raise ValidationException(f"Could not find the link for unreleased changes.")
+        raise ValidationException(
+            f"Could not find the link for unreleased changes."
+        )
 
     if f"{all_versions[0]}...HEAD" not in link:
-        raise ValidationException(f"Link is incorrect for the unreleased changes.")
+        raise ValidationException(
+            f"Link is incorrect for the unreleased changes."
+        )
 
     if sorted_versions[0] not in all_links:
         raise ValidationException(

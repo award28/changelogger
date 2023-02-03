@@ -1,14 +1,13 @@
 from os import getcwd
-import typer
-from rich import print
 
-from git.repo import Repo
+import typer
 from git.exc import InvalidGitRepositoryError
+from git.repo import Repo
+from rich import print
 
 from changelogger.app.manage import app as manage_app
 from changelogger.app.unreleased import app as unrealeased_app
 from changelogger.conf import settings
-
 
 app = typer.Typer()
 app.add_typer(manage_app)

@@ -1,6 +1,8 @@
 from contextlib import contextmanager
+
 from rich import print
 from rich.markdown import Markdown
+
 from changelogger.exceptions import RollbackException, UpgradeException
 from changelogger.models.domain_models import ChangelogUpdate
 

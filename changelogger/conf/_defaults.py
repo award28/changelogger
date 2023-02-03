@@ -1,10 +1,11 @@
 from importlib import resources
 from pathlib import Path
 
-
 DEFAULT_CHANGELOG_PATH = Path("CHANGELOG.md")
 
-DEFAULT_OVERVIEW_JINJA_PATTERN = r"### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]"
+DEFAULT_OVERVIEW_JINJA_PATTERN = (
+    r"### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]"
+)
 DEFAULT_LINKS_JINJA_PATTERN = r"\[Unreleased\]:.*\n"
 
 with (

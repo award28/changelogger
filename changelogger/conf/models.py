@@ -4,17 +4,16 @@ from typing import Self
 
 import yaml
 from pydantic import BaseModel
-from changelogger.conf.git import get_git_repo
-
 
 from changelogger.conf._defaults import (
     CHANGELOGGER_PATH,
     DEFAULT_CHANGELOG_PATH,
-    DEFAULT_OVERVIEW_JINJA_PATTERN,
-    DEFAULT_OVERVIEW_JINJA_PATH,
-    DEFAULT_LINKS_JINJA_PATTERN,
     DEFAULT_LINKS_JINJA_PATH,
+    DEFAULT_LINKS_JINJA_PATTERN,
+    DEFAULT_OVERVIEW_JINJA_PATH,
+    DEFAULT_OVERVIEW_JINJA_PATTERN,
 )
+from changelogger.conf.git import get_git_repo
 
 
 class VersionedFile(BaseModel):
@@ -47,7 +46,9 @@ class Changelog(BaseModel):
     links: ChangelogSegment = _default_links
 
     def has_defaults(self) -> bool:
-        return self.overview == _default_overview or self.links == _default_links
+        return (
+            self.overview == _default_overview or self.links == _default_links
+        )
 
     def as_versioned_files(self) -> list[VersionedFile]:
         context = defaultdict(dict)

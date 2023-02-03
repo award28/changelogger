@@ -1,8 +1,8 @@
-from pathlib import Path
 import re
-from functools import cache
-from typing import Generator, Pattern, TextIO
 from contextlib import contextmanager
+from functools import cache
+from pathlib import Path
+from typing import Generator, Pattern, TextIO
 
 MODE_READ_AND_WRITE = "r+"
 

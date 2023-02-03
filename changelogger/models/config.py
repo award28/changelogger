@@ -2,13 +2,12 @@ from collections.abc import Callable
 from datetime import date
 from pathlib import Path
 from typing import Any
+
 from jinja2 import BaseLoader, Environment, Template
 from pydantic import BaseModel, root_validator
 
 from changelogger.models.domain_models import ChangelogUpdate
-from changelogger.utils import (
-    cached_compile,
-)
+from changelogger.utils import cached_compile
 
 
 class VersionedFileConfig(BaseModel):
@@ -45,7 +44,6 @@ class ChangeloggerConfig(BaseModel):
 
     @classmethod
     def _update_with_jinja(cls, file: VersionedFileConfig) -> Callable:
-
         replacement_str = file.jinja
         if not replacement_str and file.jinja_rel_path:
             replacement_str = file.jinja_rel_path.read_text()

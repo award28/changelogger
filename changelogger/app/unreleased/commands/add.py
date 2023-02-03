@@ -1,6 +1,10 @@
 import typer
+
 from changelogger import changelog
-from changelogger.app.prompts import prompt_unreleased_changelog, rollback_handler
+from changelogger.app.prompts import (
+    prompt_unreleased_changelog,
+    rollback_handler,
+)
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.models.domain_models import ChangelogUpdate

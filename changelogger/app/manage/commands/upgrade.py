@@ -1,11 +1,13 @@
-import typer
 import semver
-
+import typer
 from rich import print
 from rich.markdown import Markdown
 
 from changelogger import changelog
-from changelogger.app.prompts import prompt_unreleased_changelog, rollback_handler
+from changelogger.app.prompts import (
+    prompt_unreleased_changelog,
+    rollback_handler,
+)
 from changelogger.conf import settings
 from changelogger.models.domain_models import ChangelogUpdate, SemVerType
 
