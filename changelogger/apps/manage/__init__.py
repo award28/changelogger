@@ -1,8 +1,8 @@
 import typer
 
-from .upgrade import upgrade
-from .check import check
-from .content import content
+from changelogger.apps.manage.commands.upgrade import upgrade
+from changelogger.apps.manage.commands.check import check
+from changelogger.apps.manage.commands.content import content
 
 
 app = typer.Typer()

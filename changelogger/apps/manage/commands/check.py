@@ -1,6 +1,6 @@
 from rich import print
 from changelogger.exceptions import ValidationException
-from changelogger.management import changelog
+from changelogger import changelog
 
 def check(
     sys_exit: bool = False,
