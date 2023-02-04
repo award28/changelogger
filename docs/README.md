@@ -11,6 +11,10 @@ section. The next section will go over how this works, and you can use
 changelogger to help manage your versioned files.
 
 
+## Installation
+
+```TODO```
+
 ## Motivation
 
 With any software that is versioned, it is typically necessary to include the
