@@ -7,69 +7,6 @@ from changelogger.exceptions import ValidationException
 from changelogger.models.domain_models import ReleaseNotes
 
 
-def validation_stepper(mock_changelog: MagicMock, pof: int):
-    # Point of Failure 0
-    if pof < 1:
-        mock_changelog.get_all_versions.side_effect = ([],)
-        return
-
-    versions = ["0.2.0", "0.1.0"]
-    mock_changelog.get_all_versions.side_effect = (versions,)
-
-    # Point of Failure 1
-    if pof < 2:
-        mock_changelog.get_release_notes.side_effect = Exception()
-        return
-
-    release_notes = ReleaseNotes(added=["added something"])
-    mock_changelog.get_release_notes.side_effect = lambda *_: release_notes
-
-    sorted_versions = sorted(versions)
-    mock_changelog.get_sorted_versions.side_effect = (sorted_versions,)
-
-    # Point of Failure 2
-    if pof < 3:
-        mock_changelog.get_all_links.side_effect = (dict(),)
-        return
-
-    # Point of Failure 3
-    if pof < 4:
-        all_links = {
-            version: f"https://example.com/" for version in sorted_versions
-        }
-        mock_changelog.get_all_links.side_effect = (all_links,)
-
-        return
-
-    all_links = {
-        version: f"https://example.com/{old_version}...{version}"
-        for old_version, version in zip(sorted_versions, sorted_versions[1:])
-    }
-
-    # Point of Failure 4
-    if pof < 5:
-        mock_changelog.get_all_links.side_effect = (all_links,)
-        return
-
-    all_links["Unreleased"] = "https://example.com/"
-
-    # Point of Failure 5
-    if pof < 6:
-        mock_changelog.get_all_links.side_effect = (all_links,)
-        return
-
-    all_links["Unreleased"] = f"https://example.com/{versions[0]}...HEAD"
-
-    # Point of Failure 6
-    if pof < 7:
-        mock_changelog.get_all_links.side_effect = (all_links,)
-        return
-
-    # No point of failure (7+)
-    all_links[sorted_versions[0]] = "https://example.com/commit/abc123"
-    mock_changelog.get_all_links.side_effect = (all_links,)
-
-
 class TestManageCheckCommand:
     @pytest.fixture
     def mock_check(self):
@@ -154,3 +91,66 @@ class TestManageCheckCommand:
     ):
         validation_stepper(mock_changelog, 7)
         _check()
+
+
+def validation_stepper(mock_changelog: MagicMock, pof: int):
+    # Point of Failure 0
+    if pof < 1:
+        mock_changelog.get_all_versions.side_effect = ([],)
+        return
+
+    versions = ["0.2.0", "0.1.0"]
+    mock_changelog.get_all_versions.side_effect = (versions,)
+
+    # Point of Failure 1
+    if pof < 2:
+        mock_changelog.get_release_notes.side_effect = Exception()
+        return
+
+    release_notes = ReleaseNotes(added=["added something"])
+    mock_changelog.get_release_notes.side_effect = lambda *_: release_notes
+
+    sorted_versions = sorted(versions)
+    mock_changelog.get_sorted_versions.side_effect = (sorted_versions,)
+
+    # Point of Failure 2
+    if pof < 3:
+        mock_changelog.get_all_links.side_effect = (dict(),)
+        return
+
+    # Point of Failure 3
+    if pof < 4:
+        all_links = {
+            version: f"https://example.com/" for version in sorted_versions
+        }
+        mock_changelog.get_all_links.side_effect = (all_links,)
+
+        return
+
+    all_links = {
+        version: f"https://example.com/{old_version}...{version}"
+        for old_version, version in zip(sorted_versions, sorted_versions[1:])
+    }
+
+    # Point of Failure 4
+    if pof < 5:
+        mock_changelog.get_all_links.side_effect = (all_links,)
+        return
+
+    all_links["Unreleased"] = "https://example.com/"
+
+    # Point of Failure 5
+    if pof < 6:
+        mock_changelog.get_all_links.side_effect = (all_links,)
+        return
+
+    all_links["Unreleased"] = f"https://example.com/{versions[0]}...HEAD"
+
+    # Point of Failure 6
+    if pof < 7:
+        mock_changelog.get_all_links.side_effect = (all_links,)
+        return
+
+    # No point of failure (7+)
+    all_links[sorted_versions[0]] = "https://example.com/commit/abc123"
+    mock_changelog.get_all_links.side_effect = (all_links,)
