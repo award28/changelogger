@@ -1,9 +1,13 @@
 [tool.poetry]
-name = "changelogger"
+name = "changelogged"
 version = "0.3.0"
 description = ""
 authors = ["award28 <austin.ward@klaviyo.com>"]
 readme = "README.md"
+
+packages = [
+    { include = "changelogger" },
+]
 
 [tool.poetry.scripts]
 changelogger = "changelogger.__main__:app"
