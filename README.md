@@ -57,7 +57,7 @@ this project, so all we need is that name.
 The `pattern` field lets Changelogger know how to find the versioned segment in
 this file. The `pattern` field supports Python's flavor of regular expressions,
 as well as the use of Jinja with pre-determined variables. More on these can be
-found [below](#Jinja Variables). The combination of these two allow for a strong
+found [below](#jinja-variables). The combination of these two allow for a strong
 yet simple pattern matching interface.
 
 ##### `jinja: 'version = "{{ new_version }}"'`
