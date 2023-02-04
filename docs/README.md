@@ -112,7 +112,7 @@ configuration file. For a more streamlined introduction, review the
 [introduction](#introduction) section.
 
 The [JSON Schema Core](https://json-schema.org/latest/json-schema-core.html)
-compliant schema can be found in the [config.schema.json](config.schema.json) file.
+compliant schema can be found in the [config.schema.json](../config.schema.json) file.
 
 # Jinja Variables
 The following is an overview of the jinja variables available in the `pattern`
