@@ -17,6 +17,9 @@ semver = "2.13.0"
 jinja2 = "3.1.2"
 pyyaml = "6.0"
 gitpython = "3.1.30"
+pytest = "^7.2.1"
+freezegun = "^1.2.2"
+mypy = "^0.991"
 
 
 [build-system]

@@ -1,8 +1,8 @@
 from collections import defaultdict
 from pathlib import Path
-from typing import Self
+from typing import DefaultDict
 
-import yaml
+import yaml  # type: ignore
 from pydantic import BaseModel
 
 from changelogger.conf._defaults import (
@@ -51,7 +51,7 @@ class Changelog(BaseModel):
         )
 
     def as_versioned_files(self) -> list[VersionedFile]:
-        context = defaultdict(dict)
+        context: DefaultDict = defaultdict(dict)
         if self.has_defaults():
             context["git"]["repo"] = get_git_repo()
 
@@ -71,7 +71,7 @@ class ChangeloggerConfig(BaseModel):
     versioned_files: list[VersionedFile] = []
 
     @classmethod
-    def from_config_or_default(cls) -> Self:
+    def from_config_or_default(cls) -> "ChangeloggerConfig":
         if not CHANGELOGGER_PATH.exists():
             return cls()
 
