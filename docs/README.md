@@ -10,6 +10,17 @@ about this, checkout the [`.changelogger.yml` Syntax](#changelogger-syntax)
 section. The next section will go over how this works, and you can use
 changelogger to help manage your versioned files.
 
+## Motivation
+
+With any software that is versioned, it is typically necessary to include the
+version number in more than one file. In addition to the version changes, there
+is also a need for certain projects to include their changelog contents in
+multiple locations. **Maintaining these files by hand is tedious and error prone.**
+
+By automating the upgrade of each of these files, we can reduce the risk of
+out-of-sync files, validate these changes in our CI/CD pipelines, and save
+ourselves some time.
+
 ## Installation
 
 ```
@@ -40,17 +51,6 @@ Run `changelog [SUBCOMMANDS] --help` to understand the usage for any command.
 │ unreleased  Commands for the unreleased section of the changelog.                             │
 ╰───────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
-
-## Motivation
-
-With any software that is versioned, it is typically necessary to include the
-version number in more than one file. In addition to the version changes, there
-is also a need for certain projects to include their changelog contents in
-multiple locations. **Maintaining these files by hand is tedious and error prone.**
-
-By automating the upgrade of each of these files, we can reduce the risk of
-out-of-sync files, validate these changes in our CI/CD pipelines, and save
-ourselves some time.
 
 ## Introduction
 
