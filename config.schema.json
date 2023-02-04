@@ -1,0 +1,123 @@
+{
+  "title": "ChangeloggerConfig",
+  "type": "object",
+  "properties": {
+    "changelog": {
+      "title": "Changelog",
+      "default": {
+        "rel_path": "CHANGELOG.md",
+        "overview": {
+          "pattern": "### \\[Unreleased\\]([\\s\\S]*)### \\[{{ old_version }}]",
+          "jinja_rel_path": "./assets/.cl.overview.jinja2"
+        },
+        "links": {
+          "pattern": "\\[Unreleased\\]:.*\\n",
+          "jinja_rel_path": "./assets/.cl.links.jinja2"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "./config.schema.json/#/definitions/Changelog"
+        }
+      ]
+    },
+    "versioned_files": {
+      "title": "Versioned Files",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "./config.schema.json/#/definitions/VersionedFile"
+      }
+    }
+  },
+  "definitions": {
+    "ChangelogSegment": {
+      "title": "ChangelogSegment",
+      "type": "object",
+      "properties": {
+        "pattern": {
+          "title": "Pattern",
+          "type": "string"
+        },
+        "jinja_rel_path": {
+          "title": "Jinja Rel Path",
+          "type": "string",
+          "format": "path"
+        }
+      },
+      "required": [
+        "pattern",
+        "jinja_rel_path"
+      ]
+    },
+    "Changelog": {
+      "title": "Changelog",
+      "type": "object",
+      "properties": {
+        "rel_path": {
+          "title": "Rel Path",
+          "default": "CHANGELOG.md",
+          "type": "string",
+          "format": "path"
+        },
+        "overview": {
+          "title": "Overview",
+          "default": {
+            "pattern": "### \\[Unreleased\\]([\\s\\S]*)### \\[{{ old_version }}]",
+            "jinja_rel_path": "./assets/.cl.overview.jinja2"
+          },
+          "allOf": [
+            {
+              "$ref": "./config.schema.json/#/definitions/ChangelogSegment"
+            }
+          ]
+        },
+        "links": {
+          "title": "Links",
+          "default": {
+            "pattern": "\\[Unreleased\\]:.*\\n",
+            "jinja_rel_path": "./assets/.cl.links.jinja2"
+          },
+          "allOf": [
+            {
+              "$ref": "./config.schema.json/#/definitions/ChangelogSegment"
+            }
+          ]
+        }
+      }
+    },
+    "VersionedFile": {
+      "title": "VersionedFile",
+      "type": "object",
+      "properties": {
+        "rel_path": {
+          "title": "Rel Path",
+          "type": "string",
+          "format": "path"
+        },
+        "pattern": {
+          "title": "Pattern",
+          "type": "string"
+        },
+        "jinja": {
+          "title": "Jinja",
+          "type": "string"
+        },
+        "jinja_rel_path": {
+          "title": "Jinja Rel Path",
+          "type": "string",
+          "format": "path"
+        },
+        "context": {
+          "title": "Context",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "rel_path",
+        "pattern"
+      ]
+    }
+  }
+}

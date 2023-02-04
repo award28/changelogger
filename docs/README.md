@@ -5,9 +5,10 @@ Automated management for your CHANGELOG.md, following the principles of
 
 
 This project uses [Jinja](https://jinja.palletsprojects.com/) for simple yet
-powerful templating and regular expressions for pattern matching within
-versioned files. The next section will go over how this works, and you can
-use changelogger to help manage your versioned files.
+powerful templating and regular expressions for pattern matching. To learn more
+about this, checkout the [`.changelogger.yml` Syntax](#changelogger-syntax)
+section. The next section will go over how this works, and you can use
+changelogger to help manage your versioned files.
 
 
 ## Motivation
@@ -21,7 +22,7 @@ By automating the upgrade of each of these files, we can reduce the risk of
 out-of-sync files, validate these changes in our CI/CD pipelines, and save
 ourselves some time.
 
-## `.changelogger.yml` Syntax
+## Introduction
 
 The `.changelogger.yml` configuration file allows you to customize what files
 are versioned and maintained by Changelogger. Let's say you have a `pyproject.toml`
@@ -103,6 +104,15 @@ release_date = "{{ today }}"
 
 Examples of Jinja templates used by this project can be found in the `./assets`
 directory.
+
+## `.changelogger.yml` Syntax
+
+This section reviews all available configuration sections of the Changelogger
+configuration file. For a more streamlined introduction, review the
+[introduction](#introduction) section.
+
+The [JSON Schema Core](https://json-schema.org/latest/json-schema-core.html)
+compliant schema can be found in the [config.schema.json](config.schema.json) file.
 
 # Jinja Variables
 The following is an overview of the jinja variables available in the `pattern`
