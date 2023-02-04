@@ -7,6 +7,10 @@ from changelogger.exceptions import ValidationException
 def check(
     sys_exit: bool = False,
 ) -> None:
+    """Checks the Changelog file for any parts which do not meet changelogger's
+    expectations and reports them to the user. Can optionally system exit
+    for CI/CD failure.
+    """
     try:
         _check()
     except ValidationException as e:

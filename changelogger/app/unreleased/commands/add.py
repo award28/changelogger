@@ -25,7 +25,9 @@ def add(
     fixed: list[str] = typer.Option([], help=FIXED_HELP),
     security: list[str] = typer.Option([], help=SECURITY_HELP),
 ) -> None:
-    """Retrieves the changelog content for the specified version."""
+    """Add changes to the unreleased section of your changelog file. If no
+    section options are provided, the user will be prompted for any changes.
+    """
     all_versions = changelog.get_all_versions()
     topmost_version = all_versions[0]
     release_notes = changelog.get_release_notes("Unreleased", topmost_version)

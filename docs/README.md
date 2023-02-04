@@ -13,13 +13,32 @@ changelogger to help manage your versioned files.
 ## Installation
 
 ```
-TODO
+pip install changelogged
 ```
 
 ## Usage
 
+Run `changelog [SUBCOMMANDS] --help` to understand the usage for any command.
+
 ```
-TODO
+❯ changelogger --help
+
+ Usage: changelogger [OPTIONS] COMMAND [ARGS]...
+
+ Automated management of your CHANGELOG.md and other versioned files, following the principles
+ of Keep a Changelog and Semantic Versioning.
+
+╭─ Options ─────────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                       │
+│ --show-completion             Show completion for the current shell, to copy it or customize  │
+│                               the installation.                                               │
+│ --help                        Show this message and exit.                                     │
+╰───────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ────────────────────────────────────────────────────────────────────────────────────╮
+│ manage      Management commands for changelog and other versioned files, as specified in the  │
+│             changelogger config file.                                                         │
+│ unreleased  Commands for the unreleased section of the changelog.                             │
+╰───────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ## Motivation

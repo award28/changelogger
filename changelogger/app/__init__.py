@@ -16,7 +16,8 @@ app.add_typer(unrealeased_app)
 
 @app.callback()
 def changelogger():
-    """Changelogger app help goes here."""
+    """Automated management of your CHANGELOG.md and other versioned files,
+    following the principles of Keep a Changelog and Semantic Versioning."""
     if not settings.CHANGELOG_PATH.exists():
         print(
             "[bold red]Error: [/bold red]"
