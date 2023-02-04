@@ -19,7 +19,9 @@ def content(
         all_versions[i + 1] if i + 1 < len(all_versions) else "LINKS"
     )
     release_notes = changelog.get_release_notes(version, prev_version)
+
+    md = release_notes.markdown()
     if pretty:
-        print(Markdown(release_notes.markdown()))
+        print(Markdown(md))
     else:
-        print(release_notes.markdown())
+        print(md)

@@ -23,6 +23,6 @@ def content(
         md = f"{prefix}There are no unreleased changes."
 
     if pretty:
-        md = Markdown(md)
-
-    print(md)
+        print(Markdown(md))
+    else:
+        print(md)

@@ -23,6 +23,16 @@ class ReleaseNotes(BaseModel):
     def __setitem__(self, attr: str, value: list[str]) -> None:
         return setattr(self, attr, value)
 
+    def __bool__(self) -> bool:
+        return bool(
+            self.added
+            or self.changed
+            or self.deprecated
+            or self.removed
+            or self.fixed
+            or self.security
+        )
+
     @classmethod
     def sections(cls) -> list[str]:
         return list(cls.__fields__.keys())

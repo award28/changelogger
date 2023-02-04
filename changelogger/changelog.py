@@ -1,13 +1,11 @@
 from pathlib import Path
 
-import typer
-
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.exceptions import RollbackException, UpgradeException
 from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
 from changelogger.templating import update_with_jinja
-from changelogger.utils import cached_compile, open_rw
+from changelogger.utils import cached_compile
 
 
 def get_all_links() -> dict[str, str]:
@@ -93,24 +91,22 @@ def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
 
 
 def _rollback(rollback: list[tuple[Path, str]]) -> None:
-    for filename, content in rollback:
-        with open(filename, "w") as f:
-            f.write(content)
+    for path, content in rollback:
+        path.write_text(content)
 
 
 def update_versioned_files(
     update: ChangelogUpdate,
     versioned_files: list[VersionedFile],
-) -> dict[Path, str] | None:
+) -> None:
     rollback: list[tuple[Path, str]] = []
     try:
         for file in versioned_files:
             update_fn = update_with_jinja(file)
-            with open_rw(file.rel_path) as (f, content):
-                rollback.append((file.rel_path, content))
-                new_content = update_fn(content, update)
-                f.write(new_content)
-        typer.confirm("Do these changes look good?", abort=True)
+            content = file.rel_path.read_text()
+            rollback.append((file.rel_path, content))
+            new_content = update_fn(content, update)
+            file.rel_path.write_text(new_content)
     except Exception as upgrade_exc:
         try:
             # Need to reverse rollback list for proper rollback

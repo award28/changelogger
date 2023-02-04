@@ -36,7 +36,7 @@ def update_with_jinja(
     if not replacement_str and file.jinja_rel_path:
         replacement_str = file.jinja_rel_path.read_text()
 
-    def inner(content: str, update: ChangelogUpdate) -> str:
+    def update_fn(content: str, update: ChangelogUpdate) -> str:
         assert replacement_str
         render_kwargs = _render_variables(file, update)
 
@@ -45,4 +45,4 @@ def update_with_jinja(
 
         return cached_compile(pattern).sub(replacement, content)
 
-    return inner
+    return update_fn
