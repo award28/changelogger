@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
+### [0.4.0] - 2023-02-04
+
+#### Added
+- Docstrings for different subcommands.
+
+#### Changed
+- README installation and usage sections.
+
 ### [0.3.4] - 2023-02-04
 
 #### Changed
@@ -53,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [LINKS]
 
-[Unreleased]: https://github.com/award28/changelogger/compare/0.3.4...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/award28/changelogger/compare/0.3.4...0.4.0
 [0.3.4]: https://github.com/award28/changelogger/compare/0.3.3...0.3.4
 [0.3.3]: https://github.com/award28/changelogger/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/award28/changelogger/compare/0.3.1...0.3.2
