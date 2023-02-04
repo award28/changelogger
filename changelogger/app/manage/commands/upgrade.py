@@ -1,4 +1,4 @@
-import semver
+import semver  # type: ignore
 import typer
 from rich import print
 from rich.markdown import Markdown

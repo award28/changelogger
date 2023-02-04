@@ -101,7 +101,7 @@ def _rollback(rollback: list[tuple[Path, str]]) -> None:
 def update_versioned_files(
     update: ChangelogUpdate,
     versioned_files: list[VersionedFile],
-) -> dict[Path, str] | None:
+) -> None:
     rollback: list[tuple[Path, str]] = []
     try:
         for file in versioned_files:
