@@ -111,7 +111,7 @@ the right IDE support, we can get Jinja syntax highlighting. Examples of Jinja
 templates used by this project can be found in the [`./assets`](../assets)
 directory.
 
---
+---
 
 With that, we now understand how the Changelogger configuration file works.
 Now all you need to do is let Changelogger do the heavy lifting for any
