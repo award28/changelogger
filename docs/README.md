@@ -112,7 +112,27 @@ configuration file. For a more streamlined introduction, review the
 [introduction](#introduction) section.
 
 The [JSON Schema Core](https://json-schema.org/latest/json-schema-core.html)
-compliant schema can be found in the [config.schema.json](../config.schema.json) file.
+compliant schema can be found in the
+[config.schema.json](../config.schema.json) file.
+
+
+*Example File with All Required Fields*
+```yml
+changelog:
+  rel_path: "CHANGELOG.md"
+  overview:
+    pattern: '### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]'
+    jinja_rel_path: ./assets/.cl.overview.jinja2
+  links:
+    pattern: '\[Unreleased\]:.*\n'
+    jinja_rel_path: ./assets/.cl.links.jinja2
+
+versioned_files:
+  - rel_path: "pyproject.toml"
+    pattern: 'version = "{{ old_version }}"'
+    jinja: 'version = "{{ new_version }}"'
+```
+
 
 # Jinja Variables
 The following is an overview of the jinja variables available in the `pattern`
