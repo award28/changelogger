@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
+### [0.3.2] - 2023-02-04
+
+#### Added
+- Configuration information to pyproject.toml
+
 ### [0.3.1] - 2023-02-04
 
 #### Changed
@@ -38,7 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [LINKS]
 
-[Unreleased]: https://github.com/award28/changelogger/compare/0.3.1...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.3.2...HEAD
+[0.3.2]: https://github.com/award28/changelogger/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/award28/changelogger/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/award28/changelogger/compare/0.2.0...0.3.0
 [0.2.1]: https://github.com/award28/changelogger/compare/0.2.0...0.2.1
