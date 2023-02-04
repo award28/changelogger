@@ -6,7 +6,8 @@ Automated management for your CHANGELOG.md, following the principles of
 
 This project uses [Jinja](https://jinja.palletsprojects.com/) for simple yet
 powerful templating and regular expressions for pattern matching within
-versioned files. Read the next section to learn more about how this works.
+versioned files. The next section will go over how this works, and you can
+use changelogger to help manage your versioned files.
 
 ## .changelogger.yml Format
 
@@ -95,7 +96,7 @@ directory.
 The following is an overview of the jinja variables available in the `pattern`
 field and the `jinja` templating for managed replacement.
 
-## new_version: string
+## `new_version`: string
 
 The new version after the requested semantic version bump type has been applied.
 
@@ -106,7 +107,7 @@ The new version after the requested semantic version bump type has been applied.
 New Version: {{ new_version }}
 ```
 
-## old_version: string
+## `old_version`: string
 
 The current version of the project, which the requested semantic version bump type
 will be applied on.
@@ -118,7 +119,7 @@ will be applied on.
 Old Version: {{ old_version }}
 ```
 
-## today: datetime.date
+## `today`: datetime.date
 
 A [datetime.date](https://docs.python.org/3/library/datetime.html#date-objects)
 object with today's date.
@@ -130,7 +131,7 @@ object with today's date.
 Todays Date: {{ today }}
 ```
 
-## sections: dict[str, list[str]]
+## `sections`: dict[str, list[str]]
 
 A map from each section of the Keep a Changelog standard to the notes included for
 that section.
@@ -149,7 +150,7 @@ that section.
 
 {%- endfor -%}
 ```
-## context: dict[str, Any]
+## `context`: dict[str, Any]
 
 User specified context in the `.changelogger.yml` configuration file, available in
 both the pattern and jinja through dot notation.
