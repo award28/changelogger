@@ -9,7 +9,19 @@ powerful templating and regular expressions for pattern matching within
 versioned files. The next section will go over how this works, and you can
 use changelogger to help manage your versioned files.
 
-## `.changelogger.yml` Format
+
+## Motivation
+
+With any software that is versioned, it is typically necessary to include the
+version number in more than one file. In addition to the version changes, there
+is also a need for certain projects to include their changelog contents in
+multiple locations. **Maintaining these files by hand is tedious and error prone.**
+
+By automating the upgrade of each of these files, we can reduce the risk of
+out-of-sync files, validate these changes in our CI/CD pipelines, and save
+ourselves some time.
+
+## `.changelogger.yml` Syntax
 
 The `.changelogger.yml` configuration file allows you to customize what files
 are versioned and maintained by Changelogger. Let's say you have a `pyproject.toml`
