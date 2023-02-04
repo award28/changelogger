@@ -10,10 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
+### [0.3.3] - 2023-02-04
+
+#### Fixed
+- `assets` directory not included with build.
+
 ### [0.3.2] - 2023-02-04
 
 #### Added
-- Configuration information to pyproject.toml
+- Configuration information to pyproject.toml.
 
 ### [0.3.1] - 2023-02-04
 
@@ -23,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [0.3.0] - 2023-02-04
 
 #### Added
-- Documentation on Changelogger configuration syntax
+- Documentation on Changelogger configuration syntax.
 
 ### [0.2.0] - 2023-02-03
 
