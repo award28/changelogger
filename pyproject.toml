@@ -11,7 +11,7 @@ packages = [
     { include = "changelogger" },
 ]
 include = [
-    { path = "assets", format = "jinja2" },
+    { path = "assets" },
 ]
 keywords = ["changelog", "version", "semver", "changelogger"]
 
