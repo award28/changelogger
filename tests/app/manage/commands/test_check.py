@@ -1,0 +1,156 @@
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+from changelogger.app.manage.commands.check import _check, check
+from changelogger.exceptions import ValidationException
+from changelogger.models.domain_models import ReleaseNotes
+
+
+def validation_stepper(mock_changelog: MagicMock, pof: int):
+    # Point of Failure 0
+    if pof < 1:
+        mock_changelog.get_all_versions.side_effect = ([],)
+        return
+
+    versions = ["0.2.0", "0.1.0"]
+    mock_changelog.get_all_versions.side_effect = (versions,)
+
+    # Point of Failure 1
+    if pof < 2:
+        mock_changelog.get_release_notes.side_effect = Exception()
+        return
+
+    release_notes = ReleaseNotes(added=["added something"])
+    mock_changelog.get_release_notes.side_effect = lambda *_: release_notes
+
+    sorted_versions = sorted(versions)
+    mock_changelog.get_sorted_versions.side_effect = (sorted_versions,)
+
+    # Point of Failure 2
+    if pof < 3:
+        mock_changelog.get_all_links.side_effect = (dict(),)
+        return
+
+    # Point of Failure 3
+    if pof < 4:
+        all_links = {
+            version: f"https://example.com/" for version in sorted_versions
+        }
+        mock_changelog.get_all_links.side_effect = (all_links,)
+
+        return
+
+    all_links = {
+        version: f"https://example.com/{old_version}...{version}"
+        for old_version, version in zip(sorted_versions, sorted_versions[1:])
+    }
+
+    # Point of Failure 4
+    if pof < 5:
+        mock_changelog.get_all_links.side_effect = (all_links,)
+        return
+
+    all_links["Unreleased"] = "https://example.com/"
+
+    # Point of Failure 5
+    if pof < 6:
+        mock_changelog.get_all_links.side_effect = (all_links,)
+        return
+
+    all_links["Unreleased"] = f"https://example.com/{versions[0]}...HEAD"
+
+    # Point of Failure 6
+    if pof < 7:
+        mock_changelog.get_all_links.side_effect = (all_links,)
+        return
+
+    # No point of failure (7+)
+    all_links[sorted_versions[0]] = "https://example.com/commit/abc123"
+    mock_changelog.get_all_links.side_effect = (all_links,)
+
+
+class TestManageCheckCommand:
+    @pytest.fixture
+    def mock_check(self):
+        with patch("changelogger.app.manage.commands.check._check") as mock:
+            yield mock
+
+    @pytest.fixture
+    def mock_changelog(self):
+        with patch("changelogger.app.manage.commands.check.changelog") as mock:
+            yield mock
+
+    @pytest.fixture
+    def mock_print(self):
+        with patch("changelogger.app.manage.commands.check.print") as mock:
+            yield mock
+
+    def test_check_no_errors(
+        self,
+        mock_check: MagicMock,
+        mock_print: MagicMock,
+    ) -> None:
+        check()
+        mock_check.assert_called_once_with()
+        mock_print.assert_called_once()
+        assert "All versioned files are valid!" in mock_print.call_args.args[0]
+
+    def test_check_with_errors(
+        self,
+        mock_check: MagicMock,
+        mock_print: MagicMock,
+    ) -> None:
+        exc_note = "Some validation exception"
+        mock_check.side_effect = ValidationException(exc_note)
+        check()
+        mock_print.assert_called_once()
+        assert exc_note in mock_print.call_args.args[0]
+
+    def test_check_with_error_and_exit(
+        self,
+        mock_check: MagicMock,
+        mock_print: MagicMock,
+    ) -> None:
+        exc_note = "Some validation exception"
+        mock_check.side_effect = ValidationException(exc_note)
+
+        with pytest.raises(SystemExit):
+            check(sys_exit=True)
+
+        mock_print.assert_called_once()
+        assert exc_note in mock_print.call_args.args[0]
+
+    @pytest.mark.parametrize(
+        "point_of_failure,exc_note",
+        enumerate(
+            [
+                "Expected there to be at least 1 version; None found.",
+                "Failed to validate notes for version",
+                "Could not find the link for version",
+                "Link is incorrect for version",
+                "Could not find the link for unreleased changes.",
+                "Link is incorrect for the unreleased changes.",
+                "Could not find the link for version",
+            ]
+        ),
+        # range(5),
+    )
+    def test_check_point_of_failure(
+        self,
+        point_of_failure: int,
+        exc_note: str,
+        mock_changelog: MagicMock,
+    ):
+        validation_stepper(mock_changelog, point_of_failure)
+        with pytest.raises(ValidationException) as exc_info:
+            _check()
+
+        assert exc_note in exc_info.value.args[0]
+
+    def test_check_valid(
+        self,
+        mock_changelog: MagicMock,
+    ):
+        validation_stepper(mock_changelog, 7)
+        _check()
