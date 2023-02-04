@@ -1,6 +1,6 @@
 # Changelogger
-Automated management for your CHANGELOG.md, following the principles of
-[Keep a Changelog](https://keepachangelog.com) and
+Automated management of your CHANGELOG.md and other versioned files, following
+the principles of [Keep a Changelog](https://keepachangelog.com) and
 [Semantic Versioning](https://semver.org).
 
 
