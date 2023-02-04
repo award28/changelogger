@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [Unreleased]
 
+### [0.3.0] - 2023-02-04
+
+#### Added
+- Documentation on Changelogger configuration syntax
+
 ### [0.2.0] - 2023-02-03
 
 #### Changed
@@ -28,7 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [LINKS]
 
-[Unreleased]: https://github.com/award28/changelogger/compare/0.2.1...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/award28/changelogger/compare/0.2.0...0.3.0
 [0.2.1]: https://github.com/award28/changelogger/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/award28/changelogger/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/award28/changelogger/commit/fc688488620df4fe014c9d1b55782b75a674fa15
