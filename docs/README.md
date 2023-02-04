@@ -10,8 +10,11 @@ about this, checkout the [`.changelogger.yml` Syntax](#changelogger-syntax)
 section. The next section will go over how this works, and you can use
 changelogger to help manage your versioned files.
 
-
 ## Installation
+
+```TODO```
+
+## Usage
 
 ```TODO```
 
