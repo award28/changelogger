@@ -29,13 +29,7 @@ class TestUnreleasedContent:
                 VERSIONS, VERSIONS[1:] + ["LINKS"]
             )
             for pretty in (True, False)
-        ]
-        # [
-        #     (True, "", "# There are no unreleased changes."),
-        #     (True, "content", "content"),
-        #     (False, "", "There are no unreleased changes."),
-        #     (False, "content", "content"),
-        # ],
+        ],
     )
     def test_content(
         self,
