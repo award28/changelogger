@@ -9,7 +9,7 @@ powerful templating and regular expressions for pattern matching within
 versioned files. The next section will go over how this works, and you can
 use changelogger to help manage your versioned files.
 
-## .changelogger.yml Format
+## `.changelogger.yml` Format
 
 The `.changelogger.yml` configuration file allows you to customize what files
 are versioned and maintained by Changelogger. Let's say you have a `pyproject.toml`
