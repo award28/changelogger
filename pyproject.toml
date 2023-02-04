@@ -10,6 +10,9 @@ repository = "https://github.com/award28/changelogger"
 packages = [
     { include = "changelogger" },
 ]
+include = [
+    { path = "assets", format = "jinja2" },
+]
 keywords = ["changelog", "version", "semver", "changelogger"]
 
 [tool.poetry.scripts]
