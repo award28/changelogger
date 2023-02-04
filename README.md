@@ -25,12 +25,12 @@ versioned_files:
 In fact, that's the exact yaml used by this project! Let's breakdown what each
 link means.
 
-### `versioned_files:`
+##### `versioned_files:`
 This line let's Changelogger know that you have a list of files you would like
 Changelogger to maintain. This list can be one or more, but if it doesn't exist,
 Changelogger will only manage the `CHANGELOG.md` file.
 
-### `- rel_path: "pyproject.toml"`
+##### `- rel_path: "pyproject.toml"`
 The `-` is the start of a new versioned file section; it's unimportant that this
 is on the `rel_path` field, but is important that this section is separated from
 other versioned files and that all other related fields are below the `-`'d field.
@@ -40,14 +40,14 @@ to the `.changelogger.yml` file, that you would like Changelogger to maintain th
 version in said file. In this case, the `pyproject.toml` file is at the root of
 this project, so all we need is that name.
 
-### `pattern: 'version = "{{ old_version }}"'`
+##### `pattern: 'version = "{{ old_version }}"'`
 The `pattern` field lets Changelogger know how to find the versioned segment in
 this file. The `pattern` field supports Python's flavor of regular expressions,
 as well as the use of Jinja with pre-determined variables. More on these can be
 found [below](#Jinja Variables). The combination of these two allow for a strong
 yet simple pattern matching interface.
 
-### `jinja: 'version = "{{ new_version }}"'`
+##### `jinja: 'version = "{{ new_version }}"'`
 The `jinja` field is used as a jinja template to replace the matched pattern.
 The same rendered variables which are available for the `pattern` field can
 be utilized by this field.
