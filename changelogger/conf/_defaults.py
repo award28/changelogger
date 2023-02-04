@@ -8,12 +8,11 @@ DEFAULT_OVERVIEW_JINJA_PATTERN = (
 )
 DEFAULT_LINKS_JINJA_PATTERN = r"\[Unreleased\]:.*\n"
 
-with (
-    resources.path("assets", ".cl.overview.jinja2") as overview_path,
-    resources.path("assets", ".cl.links.jinja2") as links_path,
-):
-    DEFAULT_OVERVIEW_JINJA_PATH = overview_path
-    DEFAULT_LINKS_JINJA_PATH = links_path
-
+DEFAULT_OVERVIEW_JINJA_PATH = resources.files("changelogger").joinpath(
+    "assets/.cl.overview.jinja2"
+)
+DEFAULT_LINKS_JINJA_PATH = resources.files("changelogger").joinpath(
+    "assets/.cl.links.jinja2"
+)
 
 CHANGELOGGER_PATH = Path(".changelogger.yml")
