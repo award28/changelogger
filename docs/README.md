@@ -37,7 +37,7 @@ versioned_files:
 ```
 
 In fact, that's the exact yaml used by this project! Let's breakdown what each
-link means.
+line means.
 
 ##### `versioned_files:`
 This line let's Changelogger know that you have a list of files you would like
@@ -53,6 +53,10 @@ The `rel_path` lets Changelogger know that there is a file in the path, relative
 to the `.changelogger.yml` file, that you would like Changelogger to maintain the
 version in said file. In this case, the `pyproject.toml` file is at the root of
 this project, so all we need is that name.
+
+**Note** that you can list a file multiple times within the configuration file;
+this can reduce the complexity of pattern matching while keeping all versioned
+sections of a file in-sync.
 
 ##### `pattern: 'version = "{{ old_version }}"'`
 The `pattern` field lets Changelogger know how to find the versioned segment in
@@ -102,19 +106,34 @@ version = "{{ new_version }}"
 release_date = "{{ today }}"
 ```
 
-Examples of Jinja templates used by this project can be found in the `./assets`
+Now we have our multiline Jinja outside of our configuration file and, with
+the right IDE support, we can get Jinja syntax highlighting. Examples of Jinja
+templates used by this project can be found in the [`./assets`](../assets)
 directory.
+
+--
+
+With that, we now understand how the Changelogger configuration file works.
+Now all you need to do is let Changelogger do the heavy lifting for any
+upgrade with the `manage upgrade`. Make sure to explore what commands are
+available by using the `changelogger --help` command!
 
 ## `.changelogger.yml` Syntax
 
 This section reviews all available configuration sections of the Changelogger
 configuration file. For a more streamlined introduction, review the
-[introduction](#introduction) section.
-
-The [JSON Schema Core](https://json-schema.org/latest/json-schema-core.html)
+[introduction](#introduction) section. The
+[JSON Schema Core](https://json-schema.org/latest/json-schema-core.html)
 compliant schema can be found in the
 [config.schema.json](../config.schema.json) file.
 
+
+The `changelog` field is used for managing and updating the `CHANGELOG.md`.
+If your project doesn't follow the standard changelog file format prescribed
+by Changelogger, you will need to upate this section. **Note** that the changelog
+section requires both the overview and links sub sections be provided. However,
+if there are other versioned changes you would like to require Changelogger manage
+on your behalf, you can add those to the `versioned_files` section.
 
 *Example File with All Required Fields*
 ```yml
