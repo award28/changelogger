@@ -82,7 +82,7 @@ versioned_files:
       release_date = "{{ today }}"
 ```
 
-*.pyproject.tml.jinja2*
+*.pyproject.toml.jinja2*
 ```jinja
 version = "{{ new_version }}"
 release_date = "{{ today }}"
