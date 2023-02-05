@@ -22,7 +22,7 @@ jobs:
     - name: Run Tests
       run: |
         poetry run coverage run -m pytest
-        coverage xml
+        poetry run coverage xml
     - name: Get Coverage
       uses: orgoro/coverage@v3
       with:
