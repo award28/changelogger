@@ -110,6 +110,5 @@ jobs:
     #----------------------------------------------
     #         check the versioned files
     #----------------------------------------------
-    - name: Install dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      run: poetry install --no-interaction
+    - name: Check Versioned Files
+      run: changelogger manage check
