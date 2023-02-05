@@ -1,12 +1,10 @@
 name: "Continuous Integration"
 
 on:
+  push:
+    branches: main
   pull_request:
-    types:
-      - opened
-    branches:
-      - 'main'
-      - 'release/**'
+    branches: main
 
 jobs:
   test:
