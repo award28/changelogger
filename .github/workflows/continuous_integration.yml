@@ -111,7 +111,9 @@ jobs:
     #            install changelogger
     #----------------------------------------------
     - name: Check Versioned Files
-      run: pip install .
+      run: |
+        source .venv/bin/activate
+        pip install .
 
     #----------------------------------------------
     #         check the versioned files
