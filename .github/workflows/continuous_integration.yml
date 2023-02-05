@@ -108,15 +108,9 @@ jobs:
       run: poetry install --no-interaction
 
     #----------------------------------------------
-    #            install changelogger
+    #         check the versioned files
     #----------------------------------------------
     - name: Check Versioned Files
       run: |
         source .venv/bin/activate
-        pip install .
-
-    #----------------------------------------------
-    #         check the versioned files
-    #----------------------------------------------
-    - name: Check Versioned Files
-      run: changelogger manage check
+        changelogger manage check
