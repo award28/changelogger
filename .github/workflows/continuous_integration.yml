@@ -108,6 +108,12 @@ jobs:
       run: poetry install --no-interaction
 
     #----------------------------------------------
+    #            install changelogger
+    #----------------------------------------------
+    - name: Check Versioned Files
+      run: pip install .
+
+    #----------------------------------------------
     #         check the versioned files
     #----------------------------------------------
     - name: Check Versioned Files
