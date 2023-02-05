@@ -1,4 +1,7 @@
 # Changelogger
+
+[![Continuous Deployment](https://github.com/award28/changelogger/actions/workflows/continuous_deployment.yml/badge.svg)](https://github.com/award28/changelogger/actions/workflows/continuous_deployment.yml)
+
 Automated management of your CHANGELOG.md and other versioned files, following
 the principles of [Keep a Changelog](https://keepachangelog.com) and
 [Semantic Versioning](https://semver.org).
@@ -56,7 +59,7 @@ Run `changelog [SUBCOMMANDS] --help` to understand the usage for any command.
 
 The `.changelogger.yml` configuration file allows you to customize what files
 are versioned and maintained by Changelogger. Let's say you have a `pyproject.toml`
-file which is versioned in addition to you `CHANGELOG.md` file. You would add the
+file which is versioned in addition to your `CHANGELOG.md` file. You would add the
 `.changelogger.yml` file to the root of your project, with the following configuration.
 
 ```yml
@@ -66,18 +69,18 @@ versioned_files:
     jinja: 'version = "{{ new_version }}"'
 ```
 
-In fact, that's the exact yaml used by this project! Let's breakdown what each
-line means.
+In fact, that's the exact configuration used by this project! Let's breakdown
+what each line means.
 
 ##### `versioned_files:`
-This line let's Changelogger know that you have a list of files you would like
+This line lets Changelogger know that you have a list of files you would like
 Changelogger to maintain. This list can be one or more, but if it doesn't exist,
 Changelogger will only manage the `CHANGELOG.md` file.
 
 ##### `- rel_path: "pyproject.toml"`
 The `-` is the start of a new versioned file section; it's unimportant that this
 is on the `rel_path` field, but is important that this section is separated from
-other versioned files and that all other related fields are below the `-`'d field.
+other versioned files, and that all other related fields are below the `-`'d field.
 
 The `rel_path` lets Changelogger know that there is a file in the path, relative
 to the `.changelogger.yml` file, that you would like Changelogger to maintain the
