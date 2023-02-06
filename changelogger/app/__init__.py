@@ -23,7 +23,7 @@ def changelogger(ctx: typer.Context):
     following the principles of Keep a Changelog and Semantic Versioning."""
     if (
         not ctx.invoked_subcommand == init.__name__
-        and settings.CHANGELOG_PATH.exists()
+        and not settings.CHANGELOG_PATH.exists()
     ):
         print(
             "[bold red]Error: [/bold red]"
