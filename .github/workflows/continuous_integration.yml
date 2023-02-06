@@ -69,13 +69,16 @@ jobs:
     #----------------------------------------------
     #              get coverage
     #----------------------------------------------
-    - name: Get Coverage
-      uses: orgoro/coverage@v3
+    - uses: codecov/codecov-action@v3
       with:
-          coverageFile: coverage.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          thresholdAll: 0.9
-          thresholdNew: 0.9
+        files: ./coverage.xml
+    # - name: Get Coverage
+    #   uses: orgoro/coverage@v3
+    #   with:
+    #       coverageFile: coverage.xml
+    #       token: ${{ secrets.GITHUB_TOKEN }}
+    #       thresholdAll: 0.9
+    #       thresholdNew: 0.9
 
   check:
     runs-on: ubuntu-latest
