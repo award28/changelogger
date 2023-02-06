@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from changelogger.app.manage.commands.check import _check, check
+from changelogger.app.manage._commands.check import _check, check
 from changelogger.exceptions import ValidationException
 from changelogger.models.domain_models import ReleaseNotes
 
@@ -10,17 +10,19 @@ from changelogger.models.domain_models import ReleaseNotes
 class TestManageCheckCommand:
     @pytest.fixture
     def mock_check(self):
-        with patch("changelogger.app.manage.commands.check._check") as mock:
+        with patch("changelogger.app.manage._commands.check._check") as mock:
             yield mock
 
     @pytest.fixture
     def mock_changelog(self):
-        with patch("changelogger.app.manage.commands.check.changelog") as mock:
+        with patch(
+            "changelogger.app.manage._commands.check.changelog"
+        ) as mock:
             yield mock
 
     @pytest.fixture
     def mock_print(self):
-        with patch("changelogger.app.manage.commands.check.print") as mock:
+        with patch("changelogger.app.manage._commands.check.print") as mock:
             yield mock
 
     def test_check_no_errors(

@@ -1,7 +1,7 @@
 import typer
 
-from changelogger.app.unreleased.commands.add import add
-from changelogger.app.unreleased.commands.content import content
+from changelogger.app.unreleased._commands.add import add
+from changelogger.app.unreleased._commands.content import content
 
 app = typer.Typer()
 app.command()(add)

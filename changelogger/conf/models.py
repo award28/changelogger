@@ -5,7 +5,7 @@ from typing import DefaultDict
 import yaml  # type: ignore
 from pydantic import BaseModel
 
-from changelogger.conf._defaults import (
+from changelogger.conf.defaults import (
     CHANGELOGGER_PATH,
     DEFAULT_CHANGELOG_PATH,
     DEFAULT_LINKS_JINJA_PATH,
@@ -22,6 +22,13 @@ class VersionedFile(BaseModel):
     jinja: str | None = None
     jinja_rel_path: Path | None = None
     context: dict = {}
+
+    def simple_dict(self) -> dict:
+        return {
+            k: v if not isinstance(v, Path) else str(v)
+            for k, v in self.dict().items()
+            if v
+        }
 
 
 class ChangelogSegment(BaseModel):

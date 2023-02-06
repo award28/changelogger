@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from changelogger.app.manage.commands.content import content
+from changelogger.app.manage._commands.content import content
 from changelogger.exceptions import CommandException
 
 
@@ -12,13 +12,13 @@ class TestManageContentCommand:
     @pytest.fixture
     def mock_changelog(self):
         with patch(
-            "changelogger.app.manage.commands.content.changelog"
+            "changelogger.app.manage._commands.content.changelog"
         ) as mock:
             yield mock
 
     @pytest.fixture
     def mock_print(self):
-        with patch("changelogger.app.manage.commands.content.print") as mock:
+        with patch("changelogger.app.manage._commands.content.print") as mock:
             yield mock
 
     @pytest.mark.parametrize(
