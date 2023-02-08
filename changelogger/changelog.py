@@ -14,7 +14,7 @@ def get_all_links() -> dict[str, str]:
     links = {}
     for line in lines:
         match = cached_compile(
-            r"\[([\d.]+|Unreleased)]: (.*)",
+            r"\[(.*)]: (.*)",
         ).search(
             line,
         )
@@ -32,7 +32,7 @@ def get_all_versions() -> list[VersionInfo]:
     versions = []
     for line in lines:
         match = cached_compile(
-            r"### \[([\d.]+)]",
+            r"### \[(.*)]",
         ).search(
             line,
         )

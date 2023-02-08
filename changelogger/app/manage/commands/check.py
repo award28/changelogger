@@ -35,15 +35,15 @@ def _check() -> None:
 
     # Validate all release notes are parseable for all versions
     # Point of Failure 1
-    changelog_versions = ["Unreleased", *all_versions, "LINKS"]
+    changelog_versions = all_versions
     for version, prev_version in zip(
         changelog_versions, changelog_versions[1:]
     ):
         try:
             changelog.get_release_notes(version, prev_version)
-        except:
+        except Exception as e:
             raise ValidationException(
-                f"Failed to validate notes for version {version}"
+                f"Failed to validate notes for version {version}: {str(e)}."
             )
 
     # Validate there are links in the expected format for all versions
@@ -51,7 +51,7 @@ def _check() -> None:
     sorted_versions = changelog.get_sorted_versions()
     all_links = changelog.get_all_links()
     for prev_version, version in zip(sorted_versions, sorted_versions[1:]):
-        link = all_links.get(version)
+        link = all_links.get(str(version))
         if not link:
             raise ValidationException(
                 f"Could not find the link for version {version}"
@@ -77,7 +77,7 @@ def _check() -> None:
         )
 
     # Point of Failure 6
-    if sorted_versions[0] not in all_links:
+    if str(sorted_versions[0]) not in all_links:
         raise ValidationException(
             f"Could not find the link for version {sorted_versions[0]}"
         )
