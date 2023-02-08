@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Union
 
 import semver
 from pydantic import BaseModel, validator
@@ -60,7 +61,7 @@ class VersionInfo(semver.VersionInfo):
         yield cls.validate
 
     @validator("*")
-    def validate(cls, v: str | "VersionInfo") -> "VersionInfo":
+    def validate(cls, v: Union[str, "VersionInfo"]) -> "VersionInfo":
         if isinstance(v, VersionInfo):
             return v
         return cls.parse(v)
