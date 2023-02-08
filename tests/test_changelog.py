@@ -65,6 +65,7 @@ class TestChangelog:
         v410 = "4.1.0"
         v400 = "4.0.0"
         content = f"""
+        ### [Unreleased]
         ### [{v420}]
         ### [{v410}]
         ### [{v400}]
