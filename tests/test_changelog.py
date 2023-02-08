@@ -34,9 +34,9 @@ class TestChangelog:
         mock_settings: MagicMock,
         mock_get_changelog_partition: MagicMock,
     ) -> None:
-        v420 = "4.2.0"
-        v410 = "4.1.0"
-        v400 = "4.0.0"
+        v420 = VersionInfo(4, 2)
+        v410 = VersionInfo(4, 1)
+        v400 = VersionInfo(4)
         content = f"""
         [{v420}]: https://some-link.com/{v420}
         [{v410}]: https://some-link.com/{v410}

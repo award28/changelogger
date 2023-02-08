@@ -51,7 +51,7 @@ def _check() -> None:
     sorted_versions = changelog.get_sorted_versions()
     all_links = changelog.get_all_links()
     for prev_version, version in zip(sorted_versions, sorted_versions[1:]):
-        link = all_links.get(str(version))
+        link = all_links.get(version)
         if not link:
             raise ValidationException(
                 f"Could not find the link for version {version}"
@@ -77,7 +77,7 @@ def _check() -> None:
         )
 
     # Point of Failure 6
-    if str(sorted_versions[0]) not in all_links:
+    if sorted_versions[0] not in all_links:
         raise ValidationException(
             f"Could not find the link for version {sorted_versions[0]}"
         )

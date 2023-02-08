@@ -45,7 +45,7 @@ def _get_links_parition() -> str:
     return _get_changelog_parition(CHANGELOG_PARTITION_LINKS)
 
 
-def get_all_links() -> dict[str, str]:
+def get_all_links() -> dict[VersionInfo | str, str]:
     lines = _get_links_parition().split("\n")
 
     links = {}
@@ -59,7 +59,18 @@ def get_all_links() -> dict[str, str]:
         if not match:
             continue
 
-        links[match[1]] = match[2]
+        version_str = match[1]
+        link = match[2]
+
+        if version_str == "Unreleased":
+            links[version_str] = link
+            continue
+
+        match = VersionInfo._REGEX.fullmatch(version_str)
+        if not match:
+            continue
+
+        links[VersionInfo.parse(version_str)] = link
 
     return links
 
