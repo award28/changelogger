@@ -1,15 +1,52 @@
 from pathlib import Path
+from typing import Literal
 
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
-from changelogger.exceptions import RollbackException, UpgradeException
-from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes, VersionInfo
+from changelogger.exceptions import (
+    CommandException,
+    RollbackException,
+    UpgradeException,
+)
+from changelogger.models.domain_models import (
+    ChangelogUpdate,
+    ReleaseNotes,
+    VersionInfo,
+)
 from changelogger.templating import update_with_jinja
 from changelogger.utils import cached_compile
 
+CHANGELOG_PARTITION_RELEASE_NOTES = "RELEASE NOTES"
+CHANGELOG_PARTITION_LINKS = "LINKS"
+
+
+def _get_changelog_parition(delimiter: str) -> str:
+    changelog_content = settings.CHANGELOG_PATH.read_text()
+
+    start_partition = f"<!-- BEGIN {delimiter} -->"
+    end_partition = f"<!-- END {delimiter} -->"
+    partition_re = cached_compile(
+        rf"{start_partition}([\s\S]*){end_partition}"
+    )
+
+    match = partition_re.search(changelog_content)
+    if not match:
+        raise CommandException(
+            f"Expected patition with delimiter `{delimiter}`; None found."
+        )
+    return match[1]
+
+
+def _get_release_notes_parition() -> str:
+    return _get_changelog_parition(CHANGELOG_PARTITION_RELEASE_NOTES)
+
+
+def _get_links_parition() -> str:
+    return _get_changelog_parition(CHANGELOG_PARTITION_LINKS)
+
 
 def get_all_links() -> dict[str, str]:
-    lines = settings.CHANGELOG_PATH.read_text().split("\n")
+    lines = _get_links_parition().split("\n")
 
     links = {}
     for line in lines:
@@ -28,7 +65,7 @@ def get_all_links() -> dict[str, str]:
 
 
 def get_all_versions() -> list[VersionInfo]:
-    lines = settings.CHANGELOG_PATH.read_text().split("\n")
+    lines = _get_release_notes_parition().split("\n")
     versions = []
     for line in lines:
         match = cached_compile(
@@ -62,16 +99,19 @@ def get_latest_version() -> VersionInfo:
 
 
 def get_release_notes(
-    new_version: VersionInfo,
-    old_version: VersionInfo,
+    new_version: VersionInfo | Literal["Unreleased"],
+    old_version: VersionInfo | None,
 ) -> ReleaseNotes:
     new_version_pattern = str(new_version).replace(".", r"\.")
-    old_version_pattern = str(old_version).replace(".", r"\.")
 
-    content = settings.CHANGELOG_PATH.read_text()
+    content = _get_release_notes_parition()
 
+    pattern = rf"### \[{new_version_pattern}\]( - \d+-\d+-\d+)?([\s\S]*)"
+    if old_version:
+        old_version_pattern = str(old_version).replace(".", r"\.")
+        pattern += rf"### \[{old_version_pattern}\]"
     match = cached_compile(
-        rf"### \[{new_version_pattern}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{old_version_pattern}\]",
+        pattern,
     ).search(
         content,
     )

@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Self
 
 import semver
 from pydantic import BaseModel, validator
@@ -60,9 +59,8 @@ class VersionInfo(semver.VersionInfo):
     def __get_validators__(cls):
         yield cls.validate
 
-
-    @validator('*')
-    def validate(cls, v: str | Self) -> Self:
+    @validator("*")
+    def validate(cls, v: str | "VersionInfo") -> "VersionInfo":
         if isinstance(v, VersionInfo):
             return v
         return cls.parse(v)
