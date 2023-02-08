@@ -37,10 +37,12 @@ class TestChangelog:
         self,
         mock_get_changelog_partition: MagicMock,
     ) -> None:
+        unreleased = "Unreleased"
         v420 = VersionInfo(4, 2)
         v410 = VersionInfo(4, 1)
         v400 = VersionInfo(4)
         content = f"""
+        [{unreleased}]: https://some-link.com/{unreleased}
         [{v420}]: https://some-link.com/{v420}
         [{v410}]: https://some-link.com/{v410}
         [{v400}]: https://some-link.com/{v400}
@@ -48,13 +50,10 @@ class TestChangelog:
         """
         mock_get_changelog_partition.side_effect = (content,)
         links = changelog.get_all_links()
-        versions = [v420, v410, v400]
+        versions = [unreleased, v420, v410, v400]
         for v in versions:
             assert v in links
-            assert links[v] == f"https://some-link.com/{v}"
-
-        for key in links.keys():
-            assert key in versions
+            assert links[v] == f"https://some-link.com/{v}"  # type: ignore
 
     def test_get_all_versions(
         self,
