@@ -7,7 +7,7 @@ from changelogger.app.prompts import (
 )
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
-from changelogger.models.domain_models import ChangelogUpdate
+from changelogger.models.domain_models import ChangelogUpdate, VersionInfo
 
 ADDED_HELP = "For new features."
 CHANGED_HELP = "For changes in existing functionality."
@@ -33,8 +33,8 @@ def add(
     release_notes = changelog.get_release_notes("Unreleased", topmost_version)
 
     update = ChangelogUpdate(
-        new_version="",
-        old_version=topmost_version,
+        new_version=VersionInfo(0,0,0),
+        old_version=VersionInfo.parse(topmost_version),
         release_notes=release_notes,
     )
 

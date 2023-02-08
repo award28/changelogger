@@ -10,7 +10,7 @@ from changelogger.models.domain_models import (
 )
 
 
-class TestManageContentCommand:
+class TestManageUpgradeCommand:
     VERSIONS = ["0.1.1", "0.2.0", "0.1.0"]
 
     @pytest.fixture

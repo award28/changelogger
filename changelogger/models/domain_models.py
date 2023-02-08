@@ -1,6 +1,8 @@
 from enum import Enum
+from typing import Self
 
-from pydantic import BaseModel
+import semver
+from pydantic import BaseModel, validator
 
 
 class SemVerType(Enum):
@@ -53,7 +55,20 @@ class ReleaseNotes(BaseModel):
         return "\n".join(s.lstrip() for s in md.split("\n"))
 
 
+class VersionInfo(semver.VersionInfo):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+
+    @validator('*')
+    def validate(cls, v: str | Self) -> Self:
+        if isinstance(v, VersionInfo):
+            return v
+        return cls.parse(v)
+
+
 class ChangelogUpdate(BaseModel):
-    new_version: str
-    old_version: str
+    new_version: VersionInfo
+    old_version: VersionInfo
     release_notes: ReleaseNotes

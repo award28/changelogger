@@ -3,7 +3,7 @@ from pathlib import Path
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.exceptions import RollbackException, UpgradeException
-from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
+from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes, VersionInfo
 from changelogger.templating import update_with_jinja
 from changelogger.utils import cached_compile
 
@@ -27,9 +27,8 @@ def get_all_links() -> dict[str, str]:
     return links
 
 
-def get_all_versions() -> list[str]:
+def get_all_versions() -> list[VersionInfo]:
     lines = settings.CHANGELOG_PATH.read_text().split("\n")
-
     versions = []
     for line in lines:
         match = cached_compile(
@@ -41,32 +40,38 @@ def get_all_versions() -> list[str]:
         if not match:
             continue
 
-        versions.append(match[1])
+        version_str = match[1]
+
+        match = VersionInfo._REGEX.fullmatch(version_str)
+        if not match:
+            continue
+
+        versions.append(VersionInfo.parse(version_str))
     return versions
 
 
-def get_sorted_versions() -> list[str]:
-    versions = get_all_versions()
-    sorted_versions = sorted(
-        (tuple(map(int, version.split("."))) for version in versions)
-    )
-    return [".".join(map(str, v)) for v in sorted_versions]
+def get_sorted_versions() -> list[VersionInfo]:
+    return sorted(get_all_versions())
 
 
-def get_latest_version() -> str:
+def get_latest_version() -> VersionInfo:
     versions = get_sorted_versions()
     if not versions:
         raise UpgradeException(f"This changelog has no versions currently.")
     return versions[-1]
 
 
-def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
-    version = version.replace(".", r"\.")
+def get_release_notes(
+    new_version: VersionInfo,
+    old_version: VersionInfo,
+) -> ReleaseNotes:
+    new_version_pattern = str(new_version).replace(".", r"\.")
+    old_version_pattern = str(old_version).replace(".", r"\.")
 
     content = settings.CHANGELOG_PATH.read_text()
 
     match = cached_compile(
-        rf"### \[{version}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{prev_version}\]",
+        rf"### \[{new_version_pattern}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{old_version_pattern}\]",
     ).search(
         content,
     )
