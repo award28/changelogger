@@ -68,6 +68,6 @@ class VersionInfo(semver.VersionInfo):
 
 
 class ChangelogUpdate(BaseModel):
-    new_version: VersionInfo
-    old_version: VersionInfo
+    new_version: VersionInfo | None
+    old_version: VersionInfo | None
     release_notes: ReleaseNotes
