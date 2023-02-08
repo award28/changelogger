@@ -1,20 +1,57 @@
 from pathlib import Path
+from typing import Literal
 
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
-from changelogger.exceptions import RollbackException, UpgradeException
-from changelogger.models.domain_models import ChangelogUpdate, ReleaseNotes
+from changelogger.exceptions import (
+    CommandException,
+    RollbackException,
+    UpgradeException,
+)
+from changelogger.models.domain_models import (
+    ChangelogUpdate,
+    ReleaseNotes,
+    VersionInfo,
+)
 from changelogger.templating import update_with_jinja
 from changelogger.utils import cached_compile
 
+CHANGELOG_PARTITION_RELEASE_NOTES = "RELEASE NOTES"
+CHANGELOG_PARTITION_LINKS = "LINKS"
 
-def get_all_links() -> dict[str, str]:
-    lines = settings.CHANGELOG_PATH.read_text().split("\n")
+
+def _get_changelog_parition(partition: str) -> str:
+    changelog_content = settings.CHANGELOG_PATH.read_text()
+
+    start_partition = f"<!-- BEGIN {partition} -->"
+    end_partition = f"<!-- END {partition} -->"
+    partition_re = cached_compile(
+        rf"{start_partition}([\s\S]*){end_partition}"
+    )
+
+    match = partition_re.search(changelog_content)
+    if not match:
+        raise CommandException(
+            f"Expected partition for `{partition}`; None found."
+        )
+    return match[1]
+
+
+def _get_release_notes_parition() -> str:
+    return _get_changelog_parition(CHANGELOG_PARTITION_RELEASE_NOTES)
+
+
+def _get_links_parition() -> str:
+    return _get_changelog_parition(CHANGELOG_PARTITION_LINKS)
+
+
+def get_all_links() -> dict[VersionInfo | str, str]:
+    lines = _get_links_parition().split("\n")
 
     links = {}
     for line in lines:
         match = cached_compile(
-            r"\[([\d.]+|Unreleased)]: (.*)",
+            r"\[(.*)]: (.*)",
         ).search(
             line,
         )
@@ -22,18 +59,28 @@ def get_all_links() -> dict[str, str]:
         if not match:
             continue
 
-        links[match[1]] = match[2]
+        version_str = match[1]
+        link = match[2]
+
+        if version_str == "Unreleased":
+            links[version_str] = link
+            continue
+
+        match = VersionInfo._REGEX.fullmatch(version_str)
+        if not match:
+            continue
+
+        links[VersionInfo.parse(version_str)] = link
 
     return links
 
 
-def get_all_versions() -> list[str]:
-    lines = settings.CHANGELOG_PATH.read_text().split("\n")
-
+def get_all_versions() -> list[VersionInfo]:
+    lines = _get_release_notes_parition().split("\n")
     versions = []
     for line in lines:
         match = cached_compile(
-            r"### \[([\d.]+)]",
+            r"### \[(.*)]",
         ).search(
             line,
         )
@@ -41,32 +88,41 @@ def get_all_versions() -> list[str]:
         if not match:
             continue
 
-        versions.append(match[1])
+        version_str = match[1]
+
+        match = VersionInfo._REGEX.fullmatch(version_str)
+        if not match:
+            continue
+
+        versions.append(VersionInfo.parse(version_str))
     return versions
 
 
-def get_sorted_versions() -> list[str]:
-    versions = get_all_versions()
-    sorted_versions = sorted(
-        (tuple(map(int, version.split("."))) for version in versions)
-    )
-    return [".".join(map(str, v)) for v in sorted_versions]
+def get_sorted_versions() -> list[VersionInfo]:
+    return sorted(get_all_versions())
 
 
-def get_latest_version() -> str:
+def get_latest_version() -> VersionInfo:
     versions = get_sorted_versions()
     if not versions:
         raise UpgradeException(f"This changelog has no versions currently.")
     return versions[-1]
 
 
-def get_release_notes(version: str, prev_version: str) -> ReleaseNotes:
-    version = version.replace(".", r"\.")
+def get_release_notes(
+    new_version: VersionInfo | Literal["Unreleased"],
+    old_version: VersionInfo | None,
+) -> ReleaseNotes:
+    new_version_pattern = str(new_version).replace(".", r"\.")
 
-    content = settings.CHANGELOG_PATH.read_text()
+    content = _get_release_notes_parition()
 
+    pattern = rf"### \[{new_version_pattern}\]( - \d+-\d+-\d+)?([\s\S]*)"
+    if old_version:
+        old_version_pattern = str(old_version).replace(".", r"\.")
+        pattern += rf"### \[{old_version_pattern}\]"
     match = cached_compile(
-        rf"### \[{version}\]( - \d+-\d+-\d+)?([\s\S]*)### \[{prev_version}\]",
+        pattern,
     ).search(
         content,
     )

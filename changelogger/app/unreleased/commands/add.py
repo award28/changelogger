@@ -33,7 +33,7 @@ def add(
     release_notes = changelog.get_release_notes("Unreleased", topmost_version)
 
     update = ChangelogUpdate(
-        new_version="",
+        new_version=None,
         old_version=topmost_version,
         release_notes=release_notes,
     )

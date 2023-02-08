@@ -25,9 +25,7 @@ class TestManageContentCommand:
         "version,prev_version,pretty",
         [
             (version, prev_version, pretty)
-            for version, prev_version in zip(
-                VERSIONS, VERSIONS[1:] + ["LINKS"]
-            )
+            for version, prev_version in zip(VERSIONS, VERSIONS[1:] + [None])
             for pretty in (True, False)
         ],
     )
@@ -68,7 +66,7 @@ class TestManageContentCommand:
         mock_changelog,
     ) -> None:
         mock_changelog.get_all_versions.side_effect = (self.VERSIONS,)
-        version = "VERSION_DNE"
+        version = "0.0.0"
         with pytest.raises(CommandException) as excinfo:
             content(version)
 
