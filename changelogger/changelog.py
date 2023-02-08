@@ -20,11 +20,11 @@ CHANGELOG_PARTITION_RELEASE_NOTES = "RELEASE NOTES"
 CHANGELOG_PARTITION_LINKS = "LINKS"
 
 
-def _get_changelog_parition(delimiter: str) -> str:
+def _get_changelog_parition(partition: str) -> str:
     changelog_content = settings.CHANGELOG_PATH.read_text()
 
-    start_partition = f"<!-- BEGIN {delimiter} -->"
-    end_partition = f"<!-- END {delimiter} -->"
+    start_partition = f"<!-- BEGIN {partition} -->"
+    end_partition = f"<!-- END {partition} -->"
     partition_re = cached_compile(
         rf"{start_partition}([\s\S]*){end_partition}"
     )
@@ -32,7 +32,7 @@ def _get_changelog_parition(delimiter: str) -> str:
     match = partition_re.search(changelog_content)
     if not match:
         raise CommandException(
-            f"Expected patition with delimiter `{delimiter}`; None found."
+            f"Expected partition for `{partition}`; None found."
         )
     return match[1]
 

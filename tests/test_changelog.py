@@ -4,7 +4,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from changelogger import changelog
-from changelogger.exceptions import RollbackException, UpgradeException
+from changelogger.exceptions import (
+    CommandException,
+    RollbackException,
+    UpgradeException,
+)
 from changelogger.models.domain_models import VersionInfo
 
 
@@ -31,7 +35,6 @@ class TestChangelog:
 
     def test_get_all_links(
         self,
-        mock_settings: MagicMock,
         mock_get_changelog_partition: MagicMock,
     ) -> None:
         v420 = VersionInfo(4, 2)
@@ -44,7 +47,6 @@ class TestChangelog:
         Not a link with a link
         """
         mock_get_changelog_partition.side_effect = (content,)
-        mock_settings.CHANGELOG_PATH.read_text.side_effect = (content,)
         links = changelog.get_all_links()
         versions = [v420, v410, v400]
         for v in versions:
@@ -230,3 +232,57 @@ class TestChangelog:
 
         mock_update_with_jinja.assert_called_once_with(versioned_file)
         mock_rollback.assert_not_called()
+
+    @pytest.mark.parametrize(
+        "delimiter,func_name",
+        [
+            (
+                changelog.CHANGELOG_PARTITION_RELEASE_NOTES,
+                "_get_release_notes_parition",
+            ),
+            (changelog.CHANGELOG_PARTITION_LINKS, "_get_links_parition"),
+        ],
+    )
+    def test_partition_getters(
+        self,
+        delimiter,
+        func_name,
+        mock_get_changelog_partition: MagicMock,
+    ):
+        getattr(changelog, func_name)()
+        mock_get_changelog_partition.assert_called_once_with(
+            delimiter,
+        )
+
+    def test_get_changelog_partition(
+        self,
+        mock_settings: MagicMock,
+    ):
+        expected = "I am expected 👀"
+        partition = "PARTITION"
+        content = f"""
+        <!-- BEGIN {partition} -->
+        {expected}
+        <!-- END {partition} -->
+        """
+
+        mock_settings.CHANGELOG_PATH.read_text.side_effect = (content,)
+
+        actual = changelog._get_changelog_parition(partition)
+
+        assert expected == actual.strip()
+
+    def test_get_changelog_partition_does_not_exist(
+        self,
+        mock_settings: MagicMock,
+    ):
+        partition = "PARTITION"
+        content = ""
+
+        mock_settings.CHANGELOG_PATH.read_text.side_effect = (content,)
+
+        with pytest.raises(CommandException) as excinfo:
+            changelog._get_changelog_parition(partition)
+
+        assert excinfo.value.args
+        assert f"Expected partition for `{partition}`" in excinfo.value.args[0]
