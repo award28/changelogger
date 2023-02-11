@@ -13,7 +13,6 @@ from rich.syntax import Syntax
 
 from changelogger import changelog
 from changelogger.conf import settings
-from changelogger.conf.defaults import DEFAULT_CHANGELOG_PATH
 from changelogger.conf.git import get_git_repo
 from changelogger.conf.models import VersionedFile
 from changelogger.templating import render_jinja
@@ -48,7 +47,7 @@ def _init_changelog(console: Console) -> None:
         return
 
     # Wants to replace/create a CHANGELOG.md
-    DEFAULT_CHANGELOG_PATH.write_text(
+    settings.DEFAULT_CHANGELOG_PATH.write_text(
         render_jinja(
             settings.CHANGELOG_JINJA.read_text(),
             dict(
@@ -69,10 +68,11 @@ def _init_changelogger(console: Console) -> None:
         if not typer.confirm(
             "It looks like you've already specified your changelogger "
             f'as "{settings.CHANGELOGGER_PATH}"; are you sure you want to '
-            "create a new one?"
+            "replace it?"
         ):
             return
-    elif not typer.confirm(
+
+    if not typer.confirm(
         "Would you like Changelogger to monitor and update any files in "
         'addition to "CHANGELOG.md"?'
     ):
@@ -83,7 +83,7 @@ def _init_changelogger(console: Console) -> None:
         if versioned_file := _prompt_versioned_file(console):
             versioned_files.append(versioned_file)
 
-        if not typer.confirm("Any other files?"):
+        if not typer.confirm("Any other versioned files?"):
             break
 
     settings.CHANGELOGGER_PATH.write_text(
@@ -104,7 +104,7 @@ def _init_changelogger(console: Console) -> None:
 def _prompt_versioned_file(console: Console) -> VersionedFile | None:
     console.clear()
     rel_path = typer.prompt(
-        "What is the relative path of this file?", type=Path
+        "What is the relative path of this versioned file?", type=Path
     )
     if not rel_path.exists():
         print(f'[bold]Could not find[/bold] "{rel_path}"; Skipping this file.')
