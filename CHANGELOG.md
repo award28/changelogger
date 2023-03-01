@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+### [0.7.0] - 2023-03-01
+
+#### Added
+- Created the `manage versions` command
+
 ### [0.6.0] - 2023-02-08
 
 #### Changed
@@ -79,7 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.7.0...HEAD
+[0.7.0]: https://github.com/award28/changelogger/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/award28/changelogger/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/award28/changelogger/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/award28/changelogger/compare/0.3.4...0.4.0
