@@ -19,7 +19,7 @@ app.command()(init)
 
 def version_callback(value: bool):
     if value:
-        print(f"{settings.CHANGELOGGER_VERSION}")
+        print(settings.CHANGELOGGER_VERSION)
         raise typer.Exit()
 
 
