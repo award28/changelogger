@@ -5,22 +5,29 @@ from git.exc import InvalidGitRepositoryError
 from git.repo import Repo
 from rich import print
 
-from changelogger.app._commands.init import init
-from changelogger.app.manage import app as manage_app
-from changelogger.app.unreleased import app as unrealeased_app
+from changelogger.app.commands.add import add
+from changelogger.app.commands.check import check
+from changelogger.app.commands.init import init
+from changelogger.app.commands.notes import notes
+from changelogger.app.commands.upgrade import upgrade
+from changelogger.app.commands.versions import versions
 from changelogger.conf import settings
 
 app = typer.Typer()
-app.add_typer(manage_app)
-app.add_typer(unrealeased_app)
-
+app.command()(add)
+app.command()(check)
 app.command()(init)
+app.command()(notes)
+app.command()(upgrade)
+app.command()(versions)
 
 
 def version_callback(value: bool):
-    if value:
-        print(settings.CHANGELOGGER_VERSION)
-        raise typer.Exit()
+    if not value:
+        return
+
+    print(settings.CHANGELOGGER_VERSION)
+    raise typer.Exit()
 
 
 @app.callback()
@@ -59,3 +66,4 @@ changelogger.__doc__ = f"""
 {settings.CHANGELOGGER_DESCRIPTION}\n
 version: {settings.CHANGELOGGER_VERSION}
 """
+changelogger.__doc__ += "\nIN DEBUG MODE" if settings.DEBUG else ""

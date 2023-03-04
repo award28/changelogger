@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from changelogger.app.unreleased._commands.add import add
+from changelogger.app.commands.add import add
 
 
 class TestUnreleasedAddCommand:
@@ -28,15 +28,13 @@ class TestUnreleasedAddCommand:
 
     @pytest.fixture
     def mock_changelog(self):
-        with patch(
-            "changelogger.app.unreleased._commands.add.changelog"
-        ) as mock:
+        with patch("changelogger.app.commands.add.changelog") as mock:
             yield mock
 
     @pytest.fixture
     def mock_prompt_unreleased_changelog(self):
         with patch(
-            "changelogger.app.unreleased._commands.add.prompt_unreleased_changelog"
+            "changelogger.app.commands.add.prompt_unreleased_changelog"
         ) as mock:
             yield mock
 

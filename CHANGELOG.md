@@ -14,6 +14,20 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+### [0.9.0] - 2023-03-04
+
+#### Changed
+- Added `cl` as an alias for `changelogger`.
+- Moved all commands under the top level `changelogger` app.
+- Removed the `unreleased content` and `manage content` commands in favor of `notes`.
+- Changed `num_versions` flag with the `start` and `offset` flags in the `versions` command.
+
+#### Removed
+- Removed the `manage` and `unreleased` sub apps in favor of top level commands.
+
+#### Fixed
+- Release notes with dashes resulted in a single note getting split.
+
 ### [0.8.0] - 2023-03-04
 
 #### Added
@@ -96,7 +110,8 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.8.0...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.9.0...HEAD
+[0.9.0]: https://github.com/award28/changelogger/compare/0.8.0...0.9.0
 [0.8.0]: https://github.com/award28/changelogger/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/award28/changelogger/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/award28/changelogger/compare/0.5.0...0.6.0

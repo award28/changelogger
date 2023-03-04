@@ -1,8 +1,9 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from click.exceptions import Exit
 
-from changelogger.app.manage._commands.check import _check, check
+from changelogger.app.commands.check import _check, check
 from changelogger.exceptions import ValidationException
 from changelogger.models.domain_models import ReleaseNotes
 
@@ -10,19 +11,17 @@ from changelogger.models.domain_models import ReleaseNotes
 class TestManageCheckCommand:
     @pytest.fixture
     def mock_check(self):
-        with patch("changelogger.app.manage._commands.check._check") as mock:
+        with patch("changelogger.app.commands.check._check") as mock:
             yield mock
 
     @pytest.fixture
     def mock_changelog(self):
-        with patch(
-            "changelogger.app.manage._commands.check.changelog"
-        ) as mock:
+        with patch("changelogger.app.commands.check.changelog") as mock:
             yield mock
 
     @pytest.fixture
     def mock_print(self):
-        with patch("changelogger.app.manage._commands.check.print") as mock:
+        with patch("changelogger.app.commands.check.print") as mock:
             yield mock
 
     def test_check_no_errors(
@@ -42,7 +41,7 @@ class TestManageCheckCommand:
     ) -> None:
         exc_note = "Some validation exception"
         mock_check.side_effect = ValidationException(exc_note)
-        check()
+        check(sys_exit=False)
         mock_print.assert_called_once()
         assert exc_note in mock_print.call_args.args[0]
 
@@ -54,7 +53,7 @@ class TestManageCheckCommand:
         exc_note = "Some validation exception"
         mock_check.side_effect = ValidationException(exc_note)
 
-        with pytest.raises(SystemExit):
+        with pytest.raises(Exit):
             check(sys_exit=True)
 
         mock_print.assert_called_once()

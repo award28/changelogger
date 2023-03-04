@@ -26,15 +26,15 @@ def add(
     security: list[str] = typer.Option([], help=SECURITY_HELP),
 ) -> None:
     """Add changes to the unreleased section of your changelog file. If no
-    section options are provided, the user will be prompted for any changes.
+    options are provided, you will be prompted for changes.
     """
     all_versions = changelog.get_all_versions()
-    topmost_version = all_versions[0]
-    release_notes = changelog.get_release_notes("Unreleased", topmost_version)
+    old_version = all_versions[0]
+    release_notes = changelog.get_release_notes("Unreleased", old_version)
 
     update = ChangelogUpdate(
         new_version=None,
-        old_version=topmost_version,
+        old_version=old_version,
         release_notes=release_notes,
     )
 

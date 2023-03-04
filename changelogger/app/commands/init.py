@@ -22,6 +22,10 @@ def init(
     prompt_changelog: bool = True,
     prompt_versioned_files: bool = True,
 ):
+    """Setup a git repository to work with Changelogger or reinitialize
+    an existing one.
+    """
+
     console = Console()
     if prompt_changelog:
         _init_changelog(console)

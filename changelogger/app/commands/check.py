@@ -1,3 +1,4 @@
+import typer
 from rich import print
 
 from changelogger import changelog
@@ -5,18 +6,22 @@ from changelogger.exceptions import ValidationException
 
 
 def check(
-    sys_exit: bool = False,
+    sys_exit: bool = typer.Option(
+        False,
+        "--sys-exit",
+        "--fail",
+        help="Exit with a status of 2 if any versioned files are invalid.",
+    ),
 ) -> None:
-    """Checks the Changelog file for any parts which do not meet changelogger's
-    expectations and reports them to the user. Can optionally system exit
-    for CI/CD failure.
+    """Checks the versioned files for any unparsable sections which do not match
+    the Changelogger configuration and reports them.
     """
     try:
         _check()
     except ValidationException as e:
         print(f"[bold red]Error:[/bold red] {str(e)}")
         if sys_exit:
-            exit(1)
+            raise typer.Exit(code=2)
     else:
         print(
             ":white_heavy_check_mark: [bold green]All versioned files are valid![/bold green]"
