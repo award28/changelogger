@@ -38,5 +38,6 @@ def versions(
     all_versions = changelog.get_all_versions()
     if show_all:
         print("\n".join(map(str, all_versions)))
+        return
 
     print("\n".join(map(str, all_versions[start : start + offset])))
