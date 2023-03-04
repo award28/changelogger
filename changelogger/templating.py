@@ -27,6 +27,10 @@ def _render_variables(
     )
 
 
+def render_jinja(tmpl: str, variables: dict[str, Any]) -> str:
+    return _tmpl(tmpl).render(**variables)
+
+
 def update_with_jinja(
     file: VersionedFile,
 ) -> Callable:
@@ -40,8 +44,8 @@ def update_with_jinja(
         assert replacement_str
         render_kwargs = _render_variables(file, update)
 
-        pattern = _tmpl(file.pattern).render(**render_kwargs)
-        replacement = _tmpl(replacement_str).render(**render_kwargs)
+        pattern = render_jinja(file.pattern, render_kwargs)
+        replacement = render_jinja(replacement_str, render_kwargs)
 
         return cached_compile(pattern).sub(replacement, content)
 

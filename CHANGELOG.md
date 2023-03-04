@@ -1,12 +1,15 @@
 <!--
-  !! THIS FILE IS MAINTAINED USING THE CHANGELOGGER TOOL.
-  !! MODIFICATION OF THIS FILE BY HAND MAY BREAK USAGE WITH THE CHANGELOGGER TOOL.
+  !! THIS FILE IS MAINTAINED USING CHANGELOGGER.
+  !! MODIFICATION OF THIS FILE BY HAND MAY BREAK USAGE WITH CHANGELOGGER.
+
+  Learn more: https://github.com/award28/changelogger
 -->
 # Changelog
 *All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The [Changelogger tool](https://pypi.org/project/changelogged) is used for automated management of this file.
 
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
@@ -96,5 +99,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.3.0]: https://github.com/award28/changelogger/compare/0.2.0...0.3.0
 [0.2.1]: https://github.com/award28/changelogger/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/award28/changelogger/compare/0.1.0...0.2.0
-[0.1.0]: https://github.com/award28/changelogger/commit/fc688488620df4fe014c9d1b55782b75a674fa15
+[0.1.0]: https://github.com/award28/changelogger/compare/b89ca3a520...0.1.0
 <!-- END LINKS -->

@@ -1,8 +1,18 @@
+from importlib import resources
+
+from changelogger.conf.defaults import *
 from changelogger.conf.models import ChangeloggerConfig
 
 _config = ChangeloggerConfig.from_config_or_default()
 
+CHANGELOGGER_VERSION = _config.metadata.version
+CHANGELOGGER_DESCRIPTION = _config.metadata.description
+
 CHANGELOG_PATH = _config.changelog.rel_path
+
+CHANGELOG_JINJA = resources.files("changelogger").joinpath(
+    "assets/changelog.jinja2",
+)
 
 OVERVIEW_JINJA_PATTERN = _config.changelog.overview.pattern
 OVERVIEW_JINJA_PATH = _config.changelog.overview.jinja_rel_path

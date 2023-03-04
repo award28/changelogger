@@ -2,21 +2,21 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from changelogger.app.unreleased.commands.content import content
+from changelogger.app.unreleased._commands.content import content
 
 
 class TestUnreleasedContentCommand:
     @pytest.fixture
     def mock_changelog(self):
         with patch(
-            "changelogger.app.unreleased.commands.content.changelog"
+            "changelogger.app.unreleased._commands.content.changelog"
         ) as mock:
             yield mock
 
     @pytest.fixture
     def mock_print(self):
         with patch(
-            "changelogger.app.unreleased.commands.content.print"
+            "changelogger.app.unreleased._commands.content.print"
         ) as mock:
             yield mock
 

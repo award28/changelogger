@@ -1,4 +1,4 @@
 versioned_files:
-  - rel_path: "pyproject.toml"
-    pattern: 'version = "{{ old_version }}"'
-    jinja: 'version = "{{ new_version }}"'
+- rel_path: pyproject.toml
+  jinja: version = "{{ new_version }}"
+  pattern: version = "{{ old_version }}"
