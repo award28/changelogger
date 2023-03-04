@@ -1,6 +1,7 @@
 # Changelogger
 
 [![Continuous Deployment](https://github.com/award28/changelogger/actions/workflows/continuous_deployment.yml/badge.svg)](https://github.com/award28/changelogger/actions/workflows/continuous_deployment.yml)
+[![codecov](https://codecov.io/gh/award28/changelogger/branch/main/graph/badge.svg?token=M0I9MA4ZNW)](https://codecov.io/gh/award28/changelogger)
 
 Automated management of your CHANGELOG.md and other versioned files, following
 the principles of [Keep a Changelog](https://keepachangelog.com) and
