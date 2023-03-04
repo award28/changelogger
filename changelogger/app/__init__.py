@@ -4,8 +4,6 @@ import typer
 from git.exc import InvalidGitRepositoryError
 from git.repo import Repo
 from rich import print
-from rich.console import Console
-from rich.style import Style
 
 from changelogger.app._commands.init import init
 from changelogger.app.manage import app as manage_app
@@ -17,11 +15,15 @@ from changelogger.app.unreleased import app as unrealeased_app
 from changelogger.conf import settings
 
 app = typer.Typer()
+
+# TODO: Remove this in version 0.12.0
 app.add_typer(manage_app)
 app.add_typer(unrealeased_app)
 
+
 # Initialization Commands
 app.command()(init)
+
 
 # Management Commands
 app.command()(upgrade)
@@ -74,8 +76,3 @@ changelogger.__doc__ = f"""
 {settings.CHANGELOGGER_DESCRIPTION}\n
 version: {settings.CHANGELOGGER_VERSION}
 """
-
-if settings.DEBUG:
-    style = Style(color="red", bgcolor="white", bold=True)
-    console = Console()
-    console.print("DEBUG MODE ON", style=style)
