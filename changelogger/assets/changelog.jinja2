@@ -4,7 +4,6 @@
 
   Learn more: https://github.com/award28/changelogger
 -->
-
 # Changelog
 *All notable changes to this project will be documented in this file.
 
