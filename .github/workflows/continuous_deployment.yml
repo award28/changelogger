@@ -1,5 +1,5 @@
-name: Continuous Deploy
-run-name: "Continuous Deploy"
+name: Continuous Deployment
+run-name: "Continuous Deployment"
 on:
   push:
     branches:
