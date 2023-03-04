@@ -1,9 +1,11 @@
+import tomllib
 from collections import defaultdict
 from pathlib import Path
 from typing import DefaultDict
 
 import yaml  # type: ignore
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
+from semver import VersionInfo
 
 from changelogger.conf.defaults import (
     CHANGELOGGER_PATH,
@@ -73,9 +75,29 @@ class Changelog(BaseModel):
         ]
 
 
+class ProjectMetadata(BaseModel):
+    version: VersionInfo
+    description: str
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    @validator("version", pre=True)
+    def to_version_info(cls, v: str) -> VersionInfo:
+        return VersionInfo.parse(v)
+
+    @classmethod
+    def build(cls) -> "ProjectMetadata":
+        metadata = tomllib.loads(
+            Path("pyproject.toml").read_text(),
+        )
+        return cls(**metadata["tool"]["poetry"])
+
+
 class ChangeloggerConfig(BaseModel):
     changelog: Changelog = Changelog()
     versioned_files: list[VersionedFile] = []
+    metadata: ProjectMetadata = ProjectMetadata.build()
 
     @classmethod
     def from_config_or_default(cls) -> "ChangeloggerConfig":
