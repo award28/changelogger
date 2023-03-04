@@ -2,6 +2,8 @@
 
 [![Continuous Deployment](https://github.com/award28/changelogger/actions/workflows/continuous_deployment.yml/badge.svg)](https://github.com/award28/changelogger/actions/workflows/continuous_deployment.yml)
 [![codecov](https://codecov.io/gh/award28/changelogger/branch/main/graph/badge.svg?token=M0I9MA4ZNW)](https://codecov.io/gh/award28/changelogger)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
 
 Automated management of your CHANGELOG.md and other versioned files, following
 the principles of [Keep a Changelog](https://keepachangelog.com) and

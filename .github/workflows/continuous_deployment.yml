@@ -1,5 +1,5 @@
-name: Main Release
-run-name: "Main Release"
+name: Continuous Deploy
+run-name: "Continuous Deploy"
 on:
   push:
     branches:
