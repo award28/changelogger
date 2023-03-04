@@ -5,12 +5,12 @@ from git.exc import InvalidGitRepositoryError
 from git.repo import Repo
 from rich import print
 
-from changelogger.app._commands.init import init
-from changelogger.app.manage._commands.check import check
-from changelogger.app.manage._commands.notes import notes
-from changelogger.app.manage._commands.upgrade import upgrade
-from changelogger.app.manage._commands.versions import versions
-from changelogger.app.unreleased._commands.add import add
+from changelogger.app.commands.add import add
+from changelogger.app.commands.check import check
+from changelogger.app.commands.init import init
+from changelogger.app.commands.notes import notes
+from changelogger.app.commands.upgrade import upgrade
+from changelogger.app.commands.versions import versions
 from changelogger.conf import settings
 
 app = typer.Typer()
