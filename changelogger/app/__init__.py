@@ -4,6 +4,8 @@ import typer
 from git.exc import InvalidGitRepositoryError
 from git.repo import Repo
 from rich import print
+from rich.console import Console
+from rich.style import Style
 
 from changelogger.app._commands.init import init
 from changelogger.app.manage import app as manage_app
@@ -18,9 +20,11 @@ app.command()(init)
 
 
 def version_callback(value: bool):
-    if value:
-        print(settings.CHANGELOGGER_VERSION)
-        raise typer.Exit()
+    if not value:
+        return
+
+    print(settings.CHANGELOGGER_VERSION)
+    raise typer.Exit()
 
 
 @app.callback()
@@ -59,3 +63,8 @@ changelogger.__doc__ = f"""
 {settings.CHANGELOGGER_DESCRIPTION}\n
 version: {settings.CHANGELOGGER_VERSION}
 """
+
+if settings.DEBUG:
+    style = Style(color="red", bgcolor="white", bold=True)
+    console = Console()
+    console.print("DEBUG MODE ON", style=style)
