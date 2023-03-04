@@ -100,5 +100,5 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 [0.3.0]: https://github.com/award28/changelogger/compare/0.2.0...0.3.0
 [0.2.1]: https://github.com/award28/changelogger/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/award28/changelogger/compare/0.1.0...0.2.0
-[0.1.0]: https://github.com/award28/changelogger/commit/fc6884886...0.1.0
+[0.1.0]: https://github.com/award28/changelogger/compare/b89ca3a520...0.1.0
 <!-- END LINKS -->
