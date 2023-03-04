@@ -1,4 +1,4 @@
-name: "Continuous Deployment"
+name: Manual Release
 
 on:
   release:
