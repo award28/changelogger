@@ -76,3 +76,4 @@ changelogger.__doc__ = f"""
 {settings.CHANGELOGGER_DESCRIPTION}\n
 version: {settings.CHANGELOGGER_VERSION}
 """
+changelogger.__doc__ += "\nIN DEBUG MODE" if settings.DEBUG else ""
