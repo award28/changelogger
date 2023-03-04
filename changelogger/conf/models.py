@@ -7,6 +7,7 @@ import yaml  # type: ignore
 from pydantic import BaseModel, validator
 from semver import VersionInfo
 
+from changelogger.conf import git
 from changelogger.conf.defaults import (
     CHANGELOGGER_PATH,
     DEFAULT_CHANGELOG_PATH,
@@ -15,7 +16,6 @@ from changelogger.conf.defaults import (
     DEFAULT_OVERVIEW_JINJA_PATH,
     DEFAULT_OVERVIEW_JINJA_PATTERN,
 )
-from changelogger.conf.git import get_git_repo
 
 
 class VersionedFile(BaseModel):
@@ -62,7 +62,7 @@ class Changelog(BaseModel):
     def as_versioned_files(self) -> list[VersionedFile]:
         context: DefaultDict = defaultdict(dict)
         if self.has_defaults():
-            context["git"]["repo"] = get_git_repo()
+            context["git"] = git.get_ctx()
 
         return [
             VersionedFile(

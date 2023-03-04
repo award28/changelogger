@@ -12,8 +12,7 @@ from rich.panel import Panel
 from rich.syntax import Syntax
 
 from changelogger import changelog
-from changelogger.conf import settings
-from changelogger.conf.git import get_git_repo
+from changelogger.conf import git, settings
 from changelogger.conf.models import VersionedFile
 from changelogger.templating import render_jinja
 from changelogger.utils import cached_compile
@@ -52,7 +51,7 @@ def _init_changelog(console: Console) -> None:
             settings.CHANGELOG_JINJA.read_text(),
             dict(
                 today=date.today(),
-                context=dict(git=dict(repo=get_git_repo())),
+                context=dict(git=git.get_ctx()),
             ),
         )
     )
