@@ -5,6 +5,8 @@ from changelogger.conf.models import ChangeloggerConfig
 
 _config = ChangeloggerConfig.from_config_or_default()
 
+DEBUG = False
+
 CHANGELOGGER_VERSION = _config.metadata.version
 CHANGELOGGER_DESCRIPTION = _config.metadata.description
 
@@ -24,3 +26,9 @@ VERSIONED_FILES = _config.versioned_files
 VERSIONED_FILES.extend(_config.changelog.as_versioned_files())
 
 HAS_DEFAULTS = _config.changelog.has_defaults()
+
+# THIS MUST BE IMPORTED LAST
+try:
+    from changelogger.conf._settings_override import *  # nopycln: import
+except:
+    pass
