@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import semver
 
-from changelogger.app.manage.commands.versions import versions
+from changelogger.app.manage._commands.versions import versions
 
 
 class TestManageVersionsCommand:
