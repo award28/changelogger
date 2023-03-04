@@ -134,13 +134,21 @@ def get_release_notes(
 
     release_notes = ReleaseNotes()
     for section in raw_sections:
-        section = section.replace("\n", "").lstrip()
-        if not section:
+        section_name, *notes = section.split("\n")
+        if not section_name:
             continue
 
-        section_name, *notes = section.split("-")
-        attr = section_name.lower()
-        notes = [note.lstrip() for note in notes]
+        notes = [
+            match[1].strip()
+            for note in notes
+            if (
+                match := cached_compile(
+                    r"\- (.*)",
+                ).search(note)
+            )
+        ]
+
+        attr = section_name.strip().lower()
         release_notes[attr] = notes
 
     return release_notes
