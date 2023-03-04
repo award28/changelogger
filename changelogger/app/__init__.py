@@ -52,7 +52,7 @@ def changelogger(
                 "[bold red]Error: [/bold red]"
                 "Must be in a git repo to use the default behavior."
             )
-        raise typer.Abort()
+            raise typer.Abort()
 
 
 changelogger.__doc__ = f"""
