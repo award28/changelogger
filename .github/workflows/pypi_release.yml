@@ -5,8 +5,42 @@ on:
     types: [published]
 
 jobs:
+  determine-if-deploy:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.tag_exists.outputs.exists  == 'false' }}
+      version: ${{ steps.latest_version.outputs.version }}
+    steps:
+    #----------------------------------------------
+    #       check-out repo and set-up python
+    #----------------------------------------------
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4.4.0
+      with:
+        python-version: "3.11"
+
+    #----------------------------------------------
+    # install changelogger and get latest version
+    #----------------------------------------------
+    - name: Install Changelogger
+      run: pip install changelogged==0.9.0
+    - name: Get Latest Version
+      id: latest_version
+      run: |
+        VERSION=$(changelogger versions --latest)
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+    #----------------------------------------------
+    #             check if tag exists
+    #----------------------------------------------
+    - uses: mukunku/tag-exists-action@v1.2.0
+      id: tag_exists
+      with:
+        tag: ${{ steps.latest_version.outputs.version }}
+
   deploy:
     runs-on: ubuntu-latest
+    if: needs.determine-if-deploy.outputs.deploy == 'true'
     steps:
     #----------------------------------------------
     #       check-out repo and set-up python

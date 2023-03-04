@@ -29,11 +29,11 @@ jobs:
     # install changelogger and get latest version
     #----------------------------------------------
     - name: Install Changelogger
-      run: pip install changelogged==0.8.0
+      run: pip install changelogged==0.9.0
     - name: Get Latest Version
       id: latest_version
       run: |
-        VERSION=$(changelogger manage versions --latest)
+        VERSION=$(changelogger versions --latest)
         echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
     #----------------------------------------------
@@ -62,7 +62,7 @@ jobs:
     # install changelogger and get release notes
     #----------------------------------------------
     - name: Install Changelogger
-      run: pip install changelogged==0.8.0
+      run: pip install changelogged==0.9.0
     - name: Get Release Notes
       id: changelog
       run: |
@@ -71,7 +71,7 @@ jobs:
         # Need to capture multiline output in env to preserve newlines
         echo "content<<${DELIMITER}" >> $GITHUB_ENV
         # Add changelog content to the env for release notes
-        changelogger manage content $VERSION --no-pretty >> $GITHUB_ENV
+        changelogger notes $VERSION --no-pretty >> $GITHUB_ENV
         echo ${DELIMITER} >> $GITHUB_ENV
 
     #----------------------------------------------
@@ -84,3 +84,53 @@ jobs:
         commit: ${{ github.sha }}
         name: Release ${{ needs.determine-if-deploy.outputs.version }}
         body: ${{ env.content }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: github-tag-and-release
+    steps:
+    #----------------------------------------------
+    #       check-out repo and set-up python
+    #----------------------------------------------
+    - name: Check out repository
+      uses: actions/checkout@v3
+    - name: Set up python
+      id: setup-python
+      uses: actions/setup-python@v4.4.0
+      with:
+        python-version: '3.11'
+
+    #----------------------------------------------
+    #             load cached poetry
+    #----------------------------------------------
+    - name: Load cached Poetry installation
+      id: cached-poetry
+      uses: actions/cache@v3
+      with:
+        path: ~/.local  # the path depends on the OS
+        key: poetry-0  # increment to reset cache
+
+    #----------------------------------------------
+    #  -----  install & configure poetry  -----
+    #----------------------------------------------
+    - name: Install Poetry
+      if: steps.cached-poetry.outputs.cache-hit != 'true'
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        installer-parallel: true
+
+    #----------------------------------------------
+    #            build the package
+    #----------------------------------------------
+    - name: Build Changelogger
+      run: poetry build
+
+    #----------------------------------------------
+    #             publish to pypi
+    #----------------------------------------------
+    - name: Publish Python distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_SECRET_TOKEN }}
