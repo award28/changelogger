@@ -13,10 +13,11 @@ packages = [
 include = [
     { path = "assets" },
 ]
-keywords = ["changelog", "version", "semver", "changelogger"]
+keywords = ["changelog", "version", "semver", "changelogger", "changelogged"]
 
 [tool.poetry.scripts]
 changelogger = "changelogger.__main__:app"
+cl = "changelogger.__main__:app"
 
 [tool.poetry.dependencies]
 python = "^3.11"
