@@ -1,55 +1,81 @@
-name: "Continuous Deployment"
-
+name: Main Release
+run-name: "Main Release"
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - 'main'
 
 jobs:
-  deploy:
+  determine-if-deploy:
     runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.tag_exists.outputs.exists  == 'false' }}
+      version: ${{ steps.latest_version.outputs.version }}
     steps:
     #----------------------------------------------
     #       check-out repo and set-up python
     #----------------------------------------------
-    - name: Check out repository
-      uses: actions/checkout@v3
-    - name: Set up python
-      id: setup-python
-      uses: actions/setup-python@v4
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4.4.0
+      with:
+        python-version: "3.11"
+
+    #----------------------------------------------
+    # install changelogger and get latest version
+    #----------------------------------------------
+    - name: Install Changelogger
+      run: pip install changelogged
+    - name: Get Latest Version
+      id: latest_version
+      run: |
+        VERSION=$(changelogger manage versions --latest)
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+    #----------------------------------------------
+    #             check if tag exists
+    #----------------------------------------------
+    - uses: mukunku/tag-exists-action@v1.2.0
+      id: tag_exists
+      with:
+        tag: ${{ steps.latest_version.outputs.version }}
+
+  github-tag-and-release:
+    runs-on: ubuntu-latest
+    needs: determine-if-deploy
+    if: needs.determine-if-deploy.outputs.deploy == 'true'
+    steps:
+    #----------------------------------------------
+    #       check-out repo and set-up python
+    #----------------------------------------------
+    - uses: actions/checkout@v3
+    - name: Setup Python 3.11
+      uses: actions/setup-python@v4.4.0
       with:
         python-version: '3.11'
 
     #----------------------------------------------
-    #             load cached poetry
+    # install changelogger and get release notes
     #----------------------------------------------
-    - name: Load cached Poetry installation
-      id: cached-poetry
-      uses: actions/cache@v3
-      with:
-        path: ~/.local  # the path depends on the OS
-        key: poetry-0  # increment to reset cache
+    - name: Install Changelogger
+      run: pip install changelogged
+    - name: Get Release Notes
+      id: changelog
+      run: |
+        DELIMITER=$(openssl rand -base64 12)
+        VERSION=${{ needs.determine-if-deploy.outputs.version }}
+        # Need to capture multiline output in env to preserve newlines
+        echo "content<<${DELIMITER}" >> $GITHUB_ENV
+        # Add changelog content to the env for release notes
+        changelogger manage content $VERSION --no-pretty >> $GITHUB_ENV
+        echo ${DELIMITER} >> $GITHUB_ENV
 
     #----------------------------------------------
-    #  -----  install & configure poetry  -----
+    #        create tag and submit release
     #----------------------------------------------
-    - name: Install Poetry
-      if: steps.cached-poetry.outputs.cache-hit != 'true'
-      uses: snok/install-poetry@v1
+    - name: Create GitHub Tag & Release
+      uses: ncipollo/release-action@v1
       with:
-        virtualenvs-create: true
-        virtualenvs-in-project: true
-        installer-parallel: true
-
-    #----------------------------------------------
-    #            build the package
-    #----------------------------------------------
-    - name: Build Changelogger
-      run: poetry build
-
-    #----------------------------------------------
-    #             publish to pypi
-    #----------------------------------------------
-    - name: Publish Python distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_SECRET_TOKEN }}
+        tag: ${{ needs.determine-if-deploy.outputs.version }}
+        commit: ${{ github.sha }}
+        name: Release ${{ needs.determine-if-deploy.outputs.version }}
+        body: ${{ env.content }}
