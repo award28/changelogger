@@ -14,6 +14,9 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+#### Fixed
+- Release notes with dashes resulted in a single note getting split.
+
 ### [0.8.0] - 2023-03-04
 
 #### Added
