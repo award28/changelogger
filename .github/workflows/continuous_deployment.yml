@@ -1,6 +1,9 @@
 name: Main Release
 run-name: "Main Release"
-on: [push]
+on:
+  push:
+    branches:
+      - 'main'
 
 permissions:
   # Need permission to write to the Releases tab now.
