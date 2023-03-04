@@ -12,13 +12,13 @@ class TestManageVersionsCommand:
     @pytest.fixture
     def mock_changelog(self):
         with patch(
-            "changelogger.app.manage.commands.versions.changelog"
+            "changelogger.app.manage._commands.versions.changelog"
         ) as mock:
             yield mock
 
     @pytest.fixture
     def mock_print(self):
-        with patch("changelogger.app.manage.commands.versions.print") as mock:
+        with patch("changelogger.app.manage._commands.versions.print") as mock:
             yield mock
 
     def test_versions(
