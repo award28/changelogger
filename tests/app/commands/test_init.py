@@ -2,34 +2,34 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from changelogger.app._commands import init as init_cmd
+from changelogger.app.commands import init as init_cmd
 
 
 class TestInitCommand:
     @pytest.fixture
     def mock_render_jinja(self):
-        with patch("changelogger.app._commands.init.render_jinja") as mock:
+        with patch("changelogger.app.commands.init.render_jinja") as mock:
             yield mock
 
     @pytest.fixture
     def mock_typer(self):
-        with patch("changelogger.app._commands.init.typer") as mock:
+        with patch("changelogger.app.commands.init.typer") as mock:
             yield mock
 
     @pytest.fixture
     def mock_settings(self):
-        with patch("changelogger.app._commands.init.settings") as mock:
+        with patch("changelogger.app.commands.init.settings") as mock:
             yield mock
 
     @pytest.fixture
     def mock_init_changelog(self):
-        with patch("changelogger.app._commands.init._init_changelog") as mock:
+        with patch("changelogger.app.commands.init._init_changelog") as mock:
             yield mock
 
     @pytest.fixture
     def mock_init_changelogger(self):
         with patch(
-            "changelogger.app._commands.init._init_changelogger"
+            "changelogger.app.commands.init._init_changelogger"
         ) as mock:
             yield mock
 

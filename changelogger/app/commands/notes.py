@@ -65,5 +65,5 @@ def _released_notes(version: VersionInfo) -> ReleaseNotes:
         raise typer.Abort()
 
     i = all_versions.index(version)
-    (prev_version,) = all_versions[i : i + 1] or (None,)
+    (prev_version,) = all_versions[i + 1 : i + 2] or (None,)
     return changelog.get_release_notes(version, prev_version)

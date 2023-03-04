@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import semver
 
-from changelogger.app.manage._commands.versions import versions
+from changelogger.app.commands.versions import versions
 
 
 class TestManageVersionsCommand:
@@ -11,14 +11,12 @@ class TestManageVersionsCommand:
 
     @pytest.fixture
     def mock_changelog(self):
-        with patch(
-            "changelogger.app.manage._commands.versions.changelog"
-        ) as mock:
+        with patch("changelogger.app.commands.versions.changelog") as mock:
             yield mock
 
     @pytest.fixture
     def mock_print(self):
-        with patch("changelogger.app.manage._commands.versions.print") as mock:
+        with patch("changelogger.app.commands.versions.print") as mock:
             yield mock
 
     def test_versions(
@@ -27,7 +25,7 @@ class TestManageVersionsCommand:
         mock_print: MagicMock,
     ) -> None:
         mock_changelog.get_all_versions.side_effect = (self.VERSIONS,)
-        versions(latest=False, show_all=False, num_versions=10)
+        versions(latest=False, show_all=False, start=0, offset=10)
         mock_print.assert_called_once_with(
             "\n".join(map(str, self.VERSIONS[:10]))
         )
@@ -38,7 +36,7 @@ class TestManageVersionsCommand:
         mock_print: MagicMock,
     ) -> None:
         mock_changelog.get_latest_version.side_effect = (self.VERSIONS[0],)
-        versions(latest=True, show_all=False, num_versions=10)
+        versions(latest=True, show_all=False, start=0, offset=10)
         mock_print.assert_called_once_with(self.VERSIONS[0])
 
     def test_versions_show_all(
@@ -47,5 +45,5 @@ class TestManageVersionsCommand:
         mock_print: MagicMock,
     ) -> None:
         mock_changelog.get_all_versions.side_effect = (self.VERSIONS,)
-        versions(latest=False, show_all=True, num_versions=10)
+        versions(latest=False, show_all=True, start=0, offset=10)
         mock_print.assert_called_once_with("\n".join(map(str, self.VERSIONS)))

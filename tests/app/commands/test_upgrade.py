@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from changelogger.app.manage._commands.upgrade import upgrade
+from changelogger.app.commands.upgrade import upgrade
 from changelogger.models.domain_models import (
     ChangelogUpdate,
     ReleaseNotes,
@@ -15,26 +15,24 @@ class TestManageUpgradeCommand:
 
     @pytest.fixture
     def mock_changelog(self):
-        with patch(
-            "changelogger.app.manage._commands.upgrade.changelog"
-        ) as mock:
+        with patch("changelogger.app.commands.upgrade.changelog") as mock:
             yield mock
 
     @pytest.fixture
     def mock_print(self):
-        with patch("changelogger.app.manage._commands.upgrade.print") as mock:
+        with patch("changelogger.app.commands.upgrade.print") as mock:
             yield mock
 
     @pytest.fixture
     def mock_prompt_unreleased_changelog(self):
         with patch(
-            "changelogger.app.manage._commands.upgrade.prompt_unreleased_changelog"
+            "changelogger.app.commands.upgrade.prompt_unreleased_changelog"
         ) as mock:
             yield mock
 
     @pytest.fixture
     def mock_typer(self):
-        with patch("changelogger.app.manage._commands.upgrade.typer") as mock:
+        with patch("changelogger.app.commands.upgrade.typer") as mock:
             yield mock
 
     @pytest.mark.parametrize(
