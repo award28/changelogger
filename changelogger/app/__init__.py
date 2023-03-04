@@ -14,16 +14,12 @@ from changelogger.app.commands.versions import versions
 from changelogger.conf import settings
 
 app = typer.Typer()
-
-# Initialization Commands
-app.command()(init)
-
-# Management Commands
-app.command()(upgrade)
-app.command()(check)
-app.command()(notes)
-app.command()(versions)
 app.command()(add)
+app.command()(check)
+app.command()(init)
+app.command()(notes)
+app.command()(upgrade)
+app.command()(versions)
 
 
 def version_callback(value: bool):
