@@ -8,7 +8,7 @@ from rich import print
 from changelogger.app._commands.init import init
 from changelogger.app.manage import app as manage_app
 from changelogger.app.manage._commands.check import check
-from changelogger.app.manage._commands.content import content
+from changelogger.app.manage._commands.notes import notes
 from changelogger.app.manage._commands.upgrade import upgrade
 from changelogger.app.manage._commands.versions import versions
 from changelogger.app.unreleased import app as unrealeased_app
@@ -28,7 +28,7 @@ app.command()(init)
 # Management Commands
 app.command()(upgrade)
 app.command()(check)
-app.command()(content)
+app.command()(notes)
 app.command()(versions)
 
 
