@@ -135,4 +135,4 @@ jobs:
       run: |
         source .venv/bin/activate
         pip install .
-        changelogger manage check
+        cl check --fail

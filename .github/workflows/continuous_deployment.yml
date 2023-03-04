@@ -29,7 +29,7 @@ jobs:
     # install changelogger and get latest version
     #----------------------------------------------
     - name: Install Changelogger
-      run: pip install changelogged
+      run: pip install changelogged==0.8.0
     - name: Get Latest Version
       id: latest_version
       run: |
@@ -62,7 +62,7 @@ jobs:
     # install changelogger and get release notes
     #----------------------------------------------
     - name: Install Changelogger
-      run: pip install changelogged
+      run: pip install changelogged==0.8.0
     - name: Get Release Notes
       id: changelog
       run: |
