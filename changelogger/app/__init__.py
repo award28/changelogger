@@ -6,30 +6,24 @@ from git.repo import Repo
 from rich import print
 
 from changelogger.app._commands.init import init
-from changelogger.app.manage import app as manage_app
 from changelogger.app.manage._commands.check import check
 from changelogger.app.manage._commands.notes import notes
 from changelogger.app.manage._commands.upgrade import upgrade
 from changelogger.app.manage._commands.versions import versions
-from changelogger.app.unreleased import app as unrealeased_app
+from changelogger.app.unreleased._commands.add import add
 from changelogger.conf import settings
 
 app = typer.Typer()
 
-# TODO: Remove this in version 0.12.0
-app.add_typer(manage_app)
-app.add_typer(unrealeased_app)
-
-
 # Initialization Commands
 app.command()(init)
-
 
 # Management Commands
 app.command()(upgrade)
 app.command()(check)
 app.command()(notes)
 app.command()(versions)
+app.command()(add)
 
 
 def version_callback(value: bool):
