@@ -1,6 +1,7 @@
 # Changelogger
 
 [![Continuous Deployment](https://github.com/award28/changelogger/actions/workflows/continuous_deployment.yml/badge.svg)](https://github.com/award28/changelogger/actions/workflows/continuous_deployment.yml)
+[![Continuous Integration](https://github.com/award28/changelogger/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/award28/changelogger/actions/workflows/continuous_integration.yml)
 [![codecov](https://codecov.io/gh/award28/changelogger/branch/main/graph/badge.svg?token=M0I9MA4ZNW)](https://codecov.io/gh/award28/changelogger)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
