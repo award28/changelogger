@@ -6,10 +6,29 @@ from changelogger import changelog
 
 def versions(
     latest: bool = Option(
-        False, help="Gets the latest version in the changelog file"
+        False,
+        "--latest",
+        "-l",
+        help="Gets the latest version in the changelog file",
     ),
-    show_all: bool = Option(False, help="Get all versions."),
-    num_versions: int = Option(10, help="The number of versions to get."),
+    show_all: bool = Option(
+        False,
+        "--all",
+        "-a",
+        help="Get all versions.",
+    ),
+    start: int = Option(
+        0,
+        "--start",
+        "-s",
+        help="What version number to start on.",
+    ),
+    offset: int = Option(
+        10,
+        "--offset",
+        "-o",
+        help="The offset from the start.",
+    ),
 ) -> None:
     """Retrieves the versions found in the changelog file."""
     if latest:
@@ -17,5 +36,7 @@ def versions(
         return
 
     all_versions = changelog.get_all_versions()
-    end = len(all_versions) if show_all else num_versions
-    print("\n".join(map(str, all_versions[:end])))
+    if show_all:
+        print("\n".join(map(str, all_versions)))
+
+    print("\n".join(map(str, all_versions[start : start + offset])))
