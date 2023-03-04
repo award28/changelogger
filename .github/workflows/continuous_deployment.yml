@@ -5,11 +5,12 @@ on:
     branches:
       - 'main'
 
+permissions:
+  # Need permission to write to the Releases tab now.
+  # https://github.com/ncipollo/release-action/issues/208.
+  contents: write
+
 jobs:
-  permissions:
-    # Need permission to write to the Releases tab now.
-    # https://github.com/ncipollo/release-action/issues/208.
-    contents: write
   determine-if-deploy:
     runs-on: ubuntu-latest
     outputs:
