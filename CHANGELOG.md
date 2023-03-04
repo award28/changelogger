@@ -14,6 +14,15 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+### [0.8.0] - 2023-03-04
+
+#### Added
+- Added the `init` command, which will perform guided initialization on new projects.
+- Added the `-v` or `--version` flag to get the installed changelogger version.
+
+#### Changed
+- The git context now contains the first commit hash.
+
 ### [0.7.0] - 2023-03-01
 
 #### Added
@@ -87,7 +96,8 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.7.0...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.8.0...HEAD
+[0.8.0]: https://github.com/award28/changelogger/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/award28/changelogger/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/award28/changelogger/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/award28/changelogger/compare/0.4.0...0.5.0
