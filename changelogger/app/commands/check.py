@@ -5,7 +5,6 @@ from rich import print
 from rich.progress import Progress
 
 from changelogger import changelog, templating
-from changelogger.app.commands.notes import _unreleased_notes
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.exceptions import ValidationException
@@ -68,7 +67,7 @@ def _check_versioned_files(versioned_files: list[VersionedFile]) -> None:
     update = ChangelogUpdate(
         new_version=old_version.bump_minor(),
         old_version=old_version,
-        release_notes=_unreleased_notes(),
+        release_notes=changelog.get_release_notes("Unreleased", old_version),
     )
 
     counts = Counter(file.rel_path for file in versioned_files)
