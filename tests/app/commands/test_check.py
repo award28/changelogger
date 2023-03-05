@@ -3,7 +3,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.exceptions import Exit
 
-from changelogger.app.commands.check import _check_changelog, check
+from changelogger.app.commands.check import (
+    _check_changelog,
+    _check_versioned_file,
+    check,
+)
 from changelogger.exceptions import ValidationException
 from changelogger.models.domain_models import ReleaseNotes
 
@@ -22,6 +26,16 @@ class TestManageCheckCommand:
     @pytest.fixture
     def mock_print(self):
         with patch("changelogger.app.commands.check.print") as mock:
+            yield mock
+
+    @pytest.fixture
+    def mock_cached_compile(self):
+        with patch("changelogger.app.commands.check.cached_compile") as mock:
+            yield mock
+
+    @pytest.fixture
+    def mock_templating(self):
+        with patch("changelogger.app.commands.check.templating") as mock:
             yield mock
 
     def test_check_changelog_no_errors(
@@ -59,6 +73,20 @@ class TestManageCheckCommand:
         mock_print.assert_called_once()
         assert exc_note in mock_print.call_args.args[0]
 
+    def test_check_versioned_file(
+        self,
+        mock_templating: MagicMock,
+        mock_cached_compile: MagicMock,
+    ) -> None:
+        mock_search = mock_cached_compile().search
+        mock_search.side_effect = (None,)
+
+        with pytest.raises(ValidationException):
+            _check_versioned_file(
+                MagicMock(),
+                MagicMock(),
+            )
+
     @pytest.mark.parametrize(
         "point_of_failure,exc_note",
         enumerate(
@@ -72,7 +100,6 @@ class TestManageCheckCommand:
                 "Could not find the link for version",
             ]
         ),
-        # range(5),
     )
     def test_check_changelog_point_of_failure(
         self,
