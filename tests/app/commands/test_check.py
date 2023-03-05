@@ -75,11 +75,9 @@ class TestCheckCommand(CheckCommandFixtures):
         self,
         mock_check_versioned_files: MagicMock,
         mock_versioned_files: MagicMock,
-        mock_check_changelog: MagicMock,
         mock_print: MagicMock,
     ) -> None:
         check(files=[])
-        mock_check_changelog.assert_called_once_with()
         mock_print.assert_called_once()
         assert "Versioned files are valid!" in mock_print.call_args.args[0]
 
@@ -87,11 +85,10 @@ class TestCheckCommand(CheckCommandFixtures):
         self,
         mock_check_versioned_files: MagicMock,
         mock_versioned_files: MagicMock,
-        mock_check_changelog: MagicMock,
         mock_print: MagicMock,
     ) -> None:
         exc_note = "Some validation exception"
-        mock_check_changelog.side_effect = ValidationException(exc_note)
+        mock_check_versioned_files.side_effect = ValidationException(exc_note)
         check(sys_exit=False, files=[])
         mock_print.assert_called_once()
         assert exc_note in mock_print.call_args.args[0]
@@ -100,11 +97,10 @@ class TestCheckCommand(CheckCommandFixtures):
         self,
         mock_check_versioned_files: MagicMock,
         mock_versioned_files: MagicMock,
-        mock_check_changelog: MagicMock,
         mock_print: MagicMock,
     ) -> None:
         exc_note = "Some validation exception"
-        mock_check_changelog.side_effect = ValidationException(exc_note)
+        mock_check_versioned_files.side_effect = ValidationException(exc_note)
 
         with pytest.raises(Exit):
             check(sys_exit=True, files=[])
@@ -173,7 +169,7 @@ class TestCheckCommand(CheckCommandFixtures):
     ):
         validation_stepper(mock_changelog, point_of_failure)
         with pytest.raises(ValidationException) as exc_info:
-            _check_changelog()
+            _check_changelog(MagicMock())
 
         assert exc_note in exc_info.value.args[0]
 
@@ -182,7 +178,7 @@ class TestCheckCommand(CheckCommandFixtures):
         mock_changelog: MagicMock,
     ):
         validation_stepper(mock_changelog, 7)
-        _check_changelog()
+        _check_changelog(MagicMock())
 
 
 def validation_stepper(mock_changelog: MagicMock, pof: int):

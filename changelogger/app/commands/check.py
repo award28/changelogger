@@ -1,4 +1,5 @@
 from collections import Counter
+from typing import Callable
 
 import typer
 from rich import print
@@ -39,13 +40,6 @@ def check(
     )
     try:
         _check_versioned_files(versioned_files)
-
-        if any(
-            file.rel_path == settings.CHANGELOG_PATH
-            for file in versioned_files
-        ):
-            _check_changelog()
-
     except ValidationException as e:
         print(f"[bold red]Error:[/bold red] {str(e)}")
         if sys_exit:
@@ -72,6 +66,9 @@ def _check_versioned_files(versioned_files: list[VersionedFile]) -> None:
 
     counts = Counter(file.rel_path for file in versioned_files)
     with Progress() as progress:
+        if settings.CHANGELOG_PATH in counts:
+            counts[settings.CHANGELOG_PATH] += 6
+
         tasks = {
             path: progress.add_task(
                 f'Checking [green]"{path}"[/green]',
@@ -83,6 +80,15 @@ def _check_versioned_files(versioned_files: list[VersionedFile]) -> None:
         for file in versioned_files:
             _check_versioned_file(file, update)
             progress.advance(tasks[file.rel_path])
+
+        if any(
+            file.rel_path == settings.CHANGELOG_PATH
+            for file in versioned_files
+        ):
+            advancer = lambda: progress.advance(
+                tasks[settings.CHANGELOG_PATH],
+            )
+            _check_changelog(advancer)
 
 
 def _check_versioned_file(
@@ -104,7 +110,7 @@ def _check_versioned_file(
     )
 
 
-def _check_changelog() -> None:
+def _check_changelog(advance: Callable) -> None:
     """Validates the specified versioned files are parsable and updatable."""
     # Validate there's at least 1 version
     # Point of Failure 0
@@ -113,6 +119,7 @@ def _check_changelog() -> None:
         raise ValidationException(
             "Expected there to be at least 1 version; None found."
         )
+    advance()
 
     # Validate all release notes are parseable for all versions
     # Point of Failure 1
@@ -126,6 +133,7 @@ def _check_changelog() -> None:
             raise ValidationException(
                 f"Failed to validate notes for version {new_version}: {str(e)}."
             )
+    advance()
 
     # Validate there are links in the expected format for all versions
     # Point of Failure 2
@@ -143,6 +151,7 @@ def _check_changelog() -> None:
             raise ValidationException(
                 f"Link is incorrect for version {version}"
             )
+    advance()
 
     link = all_links.get("Unreleased")
     # Point of Failure 4
@@ -150,15 +159,18 @@ def _check_changelog() -> None:
         raise ValidationException(
             "Could not find the link for unreleased changes."
         )
+    advance()
 
     # Point of Failure 5
     if f"{all_versions[0]}...HEAD" not in link:
         raise ValidationException(
             "Link is incorrect for the unreleased changes."
         )
+    advance()
 
     # Point of Failure 6
     if sorted_versions[0] not in all_links:
         raise ValidationException(
             f"Could not find the link for version {sorted_versions[0]}"
         )
+    advance()
