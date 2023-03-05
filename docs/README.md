@@ -4,8 +4,9 @@
 [![Continuous Integration](https://github.com/award28/changelogger/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/award28/changelogger/actions/workflows/continuous_integration.yml)
 [![codecov](https://codecov.io/gh/award28/changelogger/branch/main/graph/badge.svg?token=M0I9MA4ZNW)](https://codecov.io/gh/award28/changelogger)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![changelogger](https://img.shields.io/pypi/v/changelogged?color=%2334D058&label=pypi%20package)](https://pypi.org/project/changelogged/)
+[![PyPI - Link](https://img.shields.io/pypi/v/changelogged?color=%2334D058&label=pypi%20package)](https://pypi.org/project/changelogged/)
 [![Downloads](https://static.pepy.tech/badge/changelogged/month)](https://pepy.tech/project/changelogged)
+[![PyPI - License](https://img.shields.io/pypi/l/changelogged)](https://pypi.org/project/changelogged/)
 
 Automated management of your CHANGELOG.md and other versioned files, following
 the principles of [Keep a Changelog](https://keepachangelog.com) and
