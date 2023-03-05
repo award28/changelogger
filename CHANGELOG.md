@@ -14,9 +14,12 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
-#### Added
-- Something
+### [0.10.0] - 2023-03-05
 
+#### Added
+- Alias commands `up` and `ch` for `upgrade` and `check`, respectively.
+- Add the `--file` option to the check command, allowing users to specify which files to check.
+- Added progress feedback as versioned files are checked.
 
 ### [0.9.1] - 2023-03-05
 
@@ -119,7 +122,8 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.9.1...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.10.0...HEAD
+[0.10.0]: https://github.com/award28/changelogger/compare/0.9.1...0.10.0
 [0.9.1]: https://github.com/award28/changelogger/compare/0.9.0...0.9.1
 [0.9.0]: https://github.com/award28/changelogger/compare/0.8.0...0.9.0
 [0.8.0]: https://github.com/award28/changelogger/compare/0.7.0...0.8.0
