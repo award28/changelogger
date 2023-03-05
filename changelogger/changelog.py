@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Literal
 
+from changelogger import templating
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.exceptions import (
@@ -13,7 +14,6 @@ from changelogger.models.domain_models import (
     ReleaseNotes,
     VersionInfo,
 )
-from changelogger.templating import update_with_jinja
 from changelogger.utils import cached_compile
 
 CHANGELOG_PARTITION_RELEASE_NOTES = "RELEASE NOTES"
@@ -166,10 +166,9 @@ def update_versioned_files(
     rollback: list[tuple[Path, str]] = []
     try:
         for file in versioned_files:
-            update_fn = update_with_jinja(file)
             content = file.rel_path.read_text()
             rollback.append((file.rel_path, content))
-            new_content = update_fn(content, update)
+            new_content = templating.update(file, update, content)
             file.rel_path.write_text(new_content)
     except Exception as upgrade_exc:
         try:
