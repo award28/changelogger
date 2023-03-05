@@ -1,4 +1,6 @@
+from functools import partial, wraps
 from pathlib import Path
+from typing import Callable
 
 import typer
 from git.exc import InvalidGitRepositoryError
@@ -13,13 +15,39 @@ from changelogger.app.commands.upgrade import upgrade
 from changelogger.app.commands.versions import versions
 from changelogger.conf import settings
 
-app = typer.Typer()
-app.command()(add)
-app.command()(check)
-app.command()(init)
-app.command()(notes)
-app.command()(upgrade)
-app.command()(versions)
+
+class App(typer.Typer):
+    def add_command(
+        self,
+        cmd: Callable,
+        alias: str | None = None,
+    ) -> None:
+        """Adds the provided callable as command on this App instance.
+        If an alias is provided, the command can be invoked with that
+        name as well.
+        """
+        self.command()(cmd)
+
+        if not alias:
+            return
+
+        alias_cmd = wraps(cmd)(partial(cmd))
+        alias_cmd.__doc__ = (
+            f"Alias for the `{cmd.__name__}` command. {cmd.__doc__}"
+        )
+
+        # Alias commands
+        self.command(alias, rich_help_panel="Aliases")(alias_cmd)
+
+
+app = App()
+
+app.add_command(add)
+app.add_command(check, "ch")
+app.add_command(init)
+app.add_command(notes)
+app.add_command(upgrade, "up")
+app.add_command(versions)
 
 
 def version_callback(value: bool):

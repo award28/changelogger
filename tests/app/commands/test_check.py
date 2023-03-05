@@ -6,16 +6,31 @@ from click.exceptions import Exit
 from changelogger.app.commands.check import (
     _check_changelog,
     _check_versioned_file,
+    _check_versioned_files,
     check,
 )
 from changelogger.exceptions import ValidationException
-from changelogger.models.domain_models import ReleaseNotes
+from changelogger.models.domain_models import ReleaseNotes, VersionInfo
 
 
-class TestManageCheckCommand:
+class CheckCommandFixtures:
     @pytest.fixture
     def mock_check_changelog(self):
         with patch("changelogger.app.commands.check._check_changelog") as mock:
+            yield mock
+
+    @pytest.fixture
+    def mock_check_versioned_files(self):
+        with patch(
+            "changelogger.app.commands.check._check_versioned_files"
+        ) as mock:
+            yield mock
+
+    @pytest.fixture
+    def mock_check_versioned_file(self):
+        with patch(
+            "changelogger.app.commands.check._check_versioned_file"
+        ) as mock:
             yield mock
 
     @pytest.fixture
@@ -38,54 +53,99 @@ class TestManageCheckCommand:
         with patch("changelogger.app.commands.check.templating") as mock:
             yield mock
 
+    @pytest.fixture
+    def mock_settings(self):
+        with patch("changelogger.app.commands.check.settings") as mock:
+            yield mock
+
+    @pytest.fixture
+    def mock_versioned_files(self, mock_settings: MagicMock):
+        mock_versioned_file = MagicMock()
+        mock_versioned_file.rel_path = mock_settings.CHANGELOG_PATH
+        mock_settings.VERSIONED_FILES = [mock_versioned_file]
+
+    @pytest.fixture
+    def mock_progress(self, mock_settings: MagicMock):
+        with patch("changelogger.app.commands.check.Progress") as mock:
+            yield mock
+
+
+class TestCheckCommand(CheckCommandFixtures):
     def test_check_changelog_no_errors(
         self,
-        mock_check_changelog: MagicMock,
+        mock_check_versioned_files: MagicMock,
+        mock_versioned_files: MagicMock,
         mock_print: MagicMock,
     ) -> None:
-        check()
-        mock_check_changelog.assert_called_once_with()
+        check(files=[])
         mock_print.assert_called_once()
-        assert "All versioned files are valid!" in mock_print.call_args.args[0]
+        assert "Versioned files are valid!" in mock_print.call_args.args[0]
 
     def test_check_changelog_with_errors(
         self,
-        mock_check_changelog: MagicMock,
+        mock_check_versioned_files: MagicMock,
+        mock_versioned_files: MagicMock,
         mock_print: MagicMock,
     ) -> None:
         exc_note = "Some validation exception"
-        mock_check_changelog.side_effect = ValidationException(exc_note)
-        check(sys_exit=False)
+        mock_check_versioned_files.side_effect = ValidationException(exc_note)
+        check(sys_exit=False, files=[])
         mock_print.assert_called_once()
         assert exc_note in mock_print.call_args.args[0]
 
     def test_check_changelog_with_error_and_exit(
         self,
-        mock_check_changelog: MagicMock,
+        mock_check_versioned_files: MagicMock,
+        mock_versioned_files: MagicMock,
         mock_print: MagicMock,
     ) -> None:
         exc_note = "Some validation exception"
-        mock_check_changelog.side_effect = ValidationException(exc_note)
+        mock_check_versioned_files.side_effect = ValidationException(exc_note)
 
         with pytest.raises(Exit):
-            check(sys_exit=True)
+            check(sys_exit=True, files=[])
 
         mock_print.assert_called_once()
         assert exc_note in mock_print.call_args.args[0]
 
-    def test_check_versioned_file(
+    def test_check_versioned_files(
+        self,
+        mock_progress: MagicMock,
+        mock_changelog: MagicMock,
+        mock_check_versioned_file: MagicMock,
+    ) -> None:
+        mock_changelog.get_latest_version.side_effect = (VersionInfo(1),)
+        mock_changelog.get_release_notes.side_effect = (ReleaseNotes(),)
+        versioned_files = [MagicMock(), MagicMock()]
+        _check_versioned_files(versioned_files)
+        assert len(mock_check_versioned_file.call_args_list) == len(
+            versioned_files
+        )
+
+    def test_check_versioned_file_pattern_found(
+        self,
+        mock_templating: MagicMock,
+        mock_cached_compile: MagicMock,
+    ) -> None:
+        file, update = MagicMock(), MagicMock()
+        _check_versioned_file(file, update)
+        mock_templating.render_pattern.assert_called_once_with(file, update)
+        mock_cached_compile.assert_called()
+
+    def test_check_versioned_file_validation_error(
         self,
         mock_templating: MagicMock,
         mock_cached_compile: MagicMock,
     ) -> None:
         mock_search = mock_cached_compile().search
         mock_search.side_effect = (None,)
+        file, update = MagicMock(), MagicMock()
 
         with pytest.raises(ValidationException):
-            _check_versioned_file(
-                MagicMock(),
-                MagicMock(),
-            )
+            _check_versioned_file(file, update)
+
+        mock_templating.render_pattern.assert_called_once_with(file, update)
+        mock_cached_compile.assert_called()
 
     @pytest.mark.parametrize(
         "point_of_failure,exc_note",
@@ -109,7 +169,7 @@ class TestManageCheckCommand:
     ):
         validation_stepper(mock_changelog, point_of_failure)
         with pytest.raises(ValidationException) as exc_info:
-            _check_changelog()
+            _check_changelog(MagicMock())
 
         assert exc_note in exc_info.value.args[0]
 
@@ -118,7 +178,7 @@ class TestManageCheckCommand:
         mock_changelog: MagicMock,
     ):
         validation_stepper(mock_changelog, 7)
-        _check_changelog()
+        _check_changelog(MagicMock())
 
 
 def validation_stepper(mock_changelog: MagicMock, pof: int):
