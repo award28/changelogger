@@ -19,8 +19,8 @@ class TestChangelog:
             yield mock
 
     @pytest.fixture
-    def mock_update_with_jinja(self):
-        with patch("changelogger.changelog.update_with_jinja") as mock:
+    def mock_templating(self):
+        with patch("changelogger.changelog.templating") as mock:
             yield mock
 
     @pytest.fixture
@@ -188,10 +188,9 @@ class TestChangelog:
 
     def test_upgrade_versioned_files_raises_upgrade_exc(
         self,
-        mock_update_with_jinja,
+        mock_templating: MagicMock,
     ):
-        update_fn = mock_update_with_jinja()
-        update_fn.side_effect = Exception("oops")
+        mock_templating.update.side_effect = Exception("oops")
 
         update = MagicMock()
         versioned_file = MagicMock()
@@ -203,11 +202,10 @@ class TestChangelog:
 
     def test_upgrade_versioned_files_raises_rollback_exc(
         self,
-        mock_update_with_jinja,
-        mock_rollback,
+        mock_templating: MagicMock,
+        mock_rollback: MagicMock,
     ):
-        update_fn = mock_update_with_jinja()
-        update_fn.side_effect = Exception("oops")
+        mock_templating.update.side_effect = Exception("oops")
         mock_rollback.side_effect = Exception("double oops")
 
         update = MagicMock()
@@ -220,8 +218,8 @@ class TestChangelog:
 
     def test_upgrade_versioned_files(
         self,
-        mock_update_with_jinja,
-        mock_rollback,
+        mock_templating: MagicMock,
+        mock_rollback: MagicMock,
     ):
         update = MagicMock()
         versioned_file = MagicMock()
@@ -230,7 +228,11 @@ class TestChangelog:
             update=update, versioned_files=[versioned_file]
         )
 
-        mock_update_with_jinja.assert_called_once_with(versioned_file)
+        mock_templating.update.assert_called_once_with(
+            versioned_file,
+            update,
+            versioned_file.rel_path.read_text(),
+        )
         mock_rollback.assert_not_called()
 
     @pytest.mark.parametrize(

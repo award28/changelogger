@@ -3,15 +3,15 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.exceptions import Exit
 
-from changelogger.app.commands.check import _check, check
+from changelogger.app.commands.check import _check_changelog, check
 from changelogger.exceptions import ValidationException
 from changelogger.models.domain_models import ReleaseNotes
 
 
 class TestManageCheckCommand:
     @pytest.fixture
-    def mock_check(self):
-        with patch("changelogger.app.commands.check._check") as mock:
+    def mock_check_changelog(self):
+        with patch("changelogger.app.commands.check._check_changelog") as mock:
             yield mock
 
     @pytest.fixture
@@ -24,34 +24,34 @@ class TestManageCheckCommand:
         with patch("changelogger.app.commands.check.print") as mock:
             yield mock
 
-    def test_check_no_errors(
+    def test_check_changelog_no_errors(
         self,
-        mock_check: MagicMock,
+        mock_check_changelog: MagicMock,
         mock_print: MagicMock,
     ) -> None:
         check()
-        mock_check.assert_called_once_with()
+        mock_check_changelog.assert_called_once_with()
         mock_print.assert_called_once()
         assert "All versioned files are valid!" in mock_print.call_args.args[0]
 
-    def test_check_with_errors(
+    def test_check_changelog_with_errors(
         self,
-        mock_check: MagicMock,
+        mock_check_changelog: MagicMock,
         mock_print: MagicMock,
     ) -> None:
         exc_note = "Some validation exception"
-        mock_check.side_effect = ValidationException(exc_note)
+        mock_check_changelog.side_effect = ValidationException(exc_note)
         check(sys_exit=False)
         mock_print.assert_called_once()
         assert exc_note in mock_print.call_args.args[0]
 
-    def test_check_with_error_and_exit(
+    def test_check_changelog_with_error_and_exit(
         self,
-        mock_check: MagicMock,
+        mock_check_changelog: MagicMock,
         mock_print: MagicMock,
     ) -> None:
         exc_note = "Some validation exception"
-        mock_check.side_effect = ValidationException(exc_note)
+        mock_check_changelog.side_effect = ValidationException(exc_note)
 
         with pytest.raises(Exit):
             check(sys_exit=True)
@@ -74,7 +74,7 @@ class TestManageCheckCommand:
         ),
         # range(5),
     )
-    def test_check_point_of_failure(
+    def test_check_changelog_point_of_failure(
         self,
         point_of_failure: int,
         exc_note: str,
@@ -82,16 +82,16 @@ class TestManageCheckCommand:
     ):
         validation_stepper(mock_changelog, point_of_failure)
         with pytest.raises(ValidationException) as exc_info:
-            _check()
+            _check_changelog()
 
         assert exc_note in exc_info.value.args[0]
 
-    def test_check_valid(
+    def test_check_changelog_valid(
         self,
         mock_changelog: MagicMock,
     ):
         validation_stepper(mock_changelog, 7)
-        _check()
+        _check_changelog()
 
 
 def validation_stepper(mock_changelog: MagicMock, pof: int):
