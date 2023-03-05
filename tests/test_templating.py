@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from changelogger import templating
 
 
-class TestTemplating:
+class TemplatingFixtures:
     @pytest.fixture
     def mock_jinja_environment(self):
         with patch(
@@ -29,6 +29,13 @@ class TestTemplating:
             yield mock
 
     @pytest.fixture
+    def mock_render_jinja(self):
+        with patch(
+            "changelogger.templating.render_jinja",
+        ) as mock:
+            yield mock
+
+    @pytest.fixture
     def mock_tmpl(self):
         with patch(
             "changelogger.templating._tmpl",
@@ -42,6 +49,8 @@ class TestTemplating:
         ) as mock:
             yield mock
 
+
+class TestTemplating(TemplatingFixtures):
     def test_tmpl(
         self,
         mock_jinja_environment: MagicMock,
@@ -73,6 +82,22 @@ class TestTemplating:
         assert str(tmpl_variables["today"]) == self.FROZEN_DATE
         assert tmpl_variables["sections"] == update.release_notes.dict()
         assert tmpl_variables["context"] == versioned_file.context
+
+    def test_render_pattern(
+        self,
+        mock_get_variables: MagicMock,
+        mock_render_jinja: MagicMock,
+    ) -> None:
+        file, update = MagicMock(), MagicMock()
+        templating.render_pattern(
+            file,
+            update,
+        )
+        mock_get_variables.assert_called_once_with(
+            file,
+            update,
+        )
+        mock_render_jinja.assert_called_once()
 
     def test_update_neither_jinja_raises(
         self,
