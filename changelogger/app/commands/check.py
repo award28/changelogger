@@ -1,5 +1,8 @@
+from collections import Counter
+
 import typer
 from rich import print
+from rich.progress import Progress
 
 from changelogger import changelog, templating
 from changelogger.app.commands.notes import _unreleased_notes
@@ -17,21 +20,86 @@ def check(
         "--fail",
         help="Exit with a status of 2 if any versioned files are invalid.",
     ),
+    files: list[str] = typer.Option(
+        [],
+        "--file",
+        help="Only check the specified file(s).",
+    ),
 ) -> None:
     """Checks the versioned files for any unparsable sections which do not match
     the Changelogger configuration and reports them.
     """
+    versioned_files = (
+        settings.VERSIONED_FILES
+        if not (files_set := set(files))
+        else [
+            file
+            for file in settings.VERSIONED_FILES
+            if str(file.rel_path) in files_set
+        ]
+    )
+    check_changelog = str(settings.CHANGELOG_PATH) in files
     try:
-        _check_changelog()
-        _check_versioned_files()
+        _check_versioned_files(versioned_files)
+        if check_changelog:
+            _check_changelog()
+
     except ValidationException as e:
         print(f"[bold red]Error:[/bold red] {str(e)}")
         if sys_exit:
             raise typer.Exit(code=2)
     else:
         print(
-            ":white_heavy_check_mark: [bold green]All versioned files are valid![/bold green]"
+            ":white_heavy_check_mark: [bold green]Versioned files are valid![/bold green]"
         )
+
+
+def _check_versioned_files(versioned_files: list[VersionedFile]) -> None:
+    """For each of the user-specified and default versioned files, check
+    that a search for the pattern over the files content results in a find.
+    """
+
+    # Contrive a fake update so we can check if the pattern would have been
+    # found.
+    old_version = changelog.get_latest_version()
+    update = ChangelogUpdate(
+        new_version=old_version.bump_minor(),
+        old_version=old_version,
+        release_notes=_unreleased_notes(),
+    )
+
+    counts = Counter(file.rel_path for file in versioned_files)
+    with Progress() as progress:
+        tasks = {
+            path: progress.add_task(
+                f'Checking [green]"{path}"[/green]',
+                total=total,
+            )
+            for path, total in counts.items()
+        }
+
+        for file in versioned_files:
+            _check_versioned_file(file, update)
+            progress.advance(tasks[file.rel_path])
+
+
+def _check_versioned_file(
+    file: VersionedFile, update: ChangelogUpdate
+) -> None:
+    """Renders the versioned files pattern with an update and confirms
+    there's a match.
+    """
+
+    pattern = templating.render_pattern(file, update)
+    content = file.rel_path.read_text()
+    if cached_compile(pattern).search(content):
+        return
+
+    raise ValidationException(
+        f"Could not find the pattern `[bright_blue]{file.pattern}[/bright_blue]` "
+        f'in "{file.rel_path}".\n\n'
+        f"Rendered pattern used when searching: `[bright_blue]{pattern}[/bright_blue]`."
+    )
 
 
 def _check_changelog() -> None:
@@ -92,40 +160,3 @@ def _check_changelog() -> None:
         raise ValidationException(
             f"Could not find the link for version {sorted_versions[0]}"
         )
-
-
-def _check_versioned_files() -> None:
-    """For each of the user-specified and default versioned files, check
-    that a search for the pattern over the files content results in a find.
-    """
-
-    # Contrive a fake update so we can check if the pattern would have been
-    # found.
-    old_version = changelog.get_latest_version()
-    update = ChangelogUpdate(
-        new_version=old_version.bump_minor(),
-        old_version=old_version,
-        release_notes=_unreleased_notes(),
-    )
-
-    for version_file in settings.VERSIONED_FILES:
-        _check_versioned_file(version_file, update)
-
-
-def _check_versioned_file(
-    file: VersionedFile, update: ChangelogUpdate
-) -> None:
-    """Renders the versioned files pattern with an update and confirms
-    there's a match.
-    """
-
-    pattern = templating.render_pattern(file, update)
-    content = file.rel_path.read_text()
-    if cached_compile(pattern).search(content):
-        return
-
-    raise ValidationException(
-        f"Could not find the pattern `[bright_blue]{file.pattern}[/bright_blue]` "
-        f'in the versioned file "{file.rel_path}".\n\n'
-        f"Rendered pattern used when searching: [bright_blue]{pattern}[/bright_blue]."
-    )
