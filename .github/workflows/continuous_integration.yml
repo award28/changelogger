@@ -74,9 +74,8 @@ jobs:
     #----------------------------------------------
     - name: Run tests
       run: |
-        poetry shell
-        coverage run -m pytest
-        coverage xml
+        poetry run coverage run -m pytest
+        poetry run coverage xml
 
     #----------------------------------------------
     #              get coverage
@@ -143,6 +142,4 @@ jobs:
     #----------------------------------------------
     - name: Check Versioned Files
       run: |
-        poetry shell
-        pip install .
-        cl check --fail
+        poetry run cl check --fail
