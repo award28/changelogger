@@ -22,9 +22,9 @@ class TestTemplating:
             yield mock
 
     @pytest.fixture
-    def mock_render_variables(self):
+    def mock_get_variables(self):
         with patch(
-            "changelogger.templating._render_variables",
+            "changelogger.templating._get_variables",
         ) as mock:
             yield mock
 
@@ -64,7 +64,7 @@ class TestTemplating:
     ):
         versioned_file = MagicMock()
         update = MagicMock()
-        tmpl_variables = templating._render_variables(
+        tmpl_variables = templating._get_variables(
             versioned_file=versioned_file,
             update=update,
         )
@@ -74,7 +74,7 @@ class TestTemplating:
         assert tmpl_variables["sections"] == update.release_notes.dict()
         assert tmpl_variables["context"] == versioned_file.context
 
-    def test_update_with_jinja_neither_jinja_raises(
+    def test_update_neither_jinja_raises(
         self,
     ):
         file = MagicMock()
@@ -82,13 +82,13 @@ class TestTemplating:
         file.jinja_rel_path = None
 
         with pytest.raises(AssertionError) as excinfo:
-            templating.update_with_jinja(file)
+            templating.update(file, MagicMock(), MagicMock())
 
         assert excinfo.value.args == ("No valid jinja template found.",)
 
-    def test_update_with_jinja_from_jinja_string(
+    def test_update_from_jinja_string(
         self,
-        mock_render_variables,
+        mock_get_variables,
         mock_tmpl,
         mock_cached_compile,
     ):
@@ -96,13 +96,15 @@ class TestTemplating:
         file.jinja = "jinja"
         file.jinja_rel_path = None
 
-        update_fn = templating.update_with_jinja(file)
-
         content = "Some content"
         update = MagicMock()
-        update_fn(content, update)
+        templating.update(
+            file,
+            update,
+            content,
+        )
 
-        mock_render_variables.assert_called_once_with(file, update)
+        mock_get_variables.assert_called_once_with(file, update)
         mock_tmpl.assert_has_calls(
             [
                 call(file.pattern),
@@ -113,7 +115,7 @@ class TestTemplating:
         )
 
         mock_tmpl().render.assert_has_calls(
-            [call(**mock_render_variables())] * 2,
+            [call(**mock_get_variables())] * 2,
         )
 
         mock_cached_compile.assert_called_once_with(mock_tmpl().render())
@@ -122,22 +124,24 @@ class TestTemplating:
             content,
         )
 
-    def test_update_with_jinja_from_jinja_file(
+    def test_update_from_jinja_file(
         self,
-        mock_render_variables,
+        mock_get_variables,
         mock_tmpl,
         mock_cached_compile,
     ):
         file = MagicMock()
         file.jinja = None
 
-        update_fn = templating.update_with_jinja(file)
-
         content = "Some content"
         update = MagicMock()
-        update_fn(content, update)
+        templating.update(
+            file,
+            update,
+            content,
+        )
 
-        mock_render_variables.assert_called_once_with(file, update)
+        mock_get_variables.assert_called_once_with(file, update)
         mock_tmpl.assert_has_calls(
             [
                 call(file.pattern),
@@ -148,7 +152,7 @@ class TestTemplating:
         )
 
         mock_tmpl().render.assert_has_calls(
-            [call(**mock_render_variables())] * 2,
+            [call(**mock_get_variables())] * 2,
         )
 
         mock_cached_compile.assert_called_once_with(mock_tmpl().render())
