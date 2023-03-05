@@ -14,6 +14,10 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+#### Added
+- Something
+
+
 ### [0.9.1] - 2023-03-05
 
 #### Changed
