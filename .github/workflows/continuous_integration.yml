@@ -74,7 +74,7 @@ jobs:
     #----------------------------------------------
     - name: Run tests
       run: |
-        source .venv/bin/activate
+        poetry shell
         coverage run -m pytest
         coverage xml
 
@@ -143,6 +143,6 @@ jobs:
     #----------------------------------------------
     - name: Check Versioned Files
       run: |
-        source .venv/bin/activate
+        poetry shell
         pip install .
         cl check --fail
