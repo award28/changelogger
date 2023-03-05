@@ -38,10 +38,13 @@ def check(
             if str(file.rel_path) in files_set
         ]
     )
-    check_changelog = str(settings.CHANGELOG_PATH) in files
     try:
         _check_versioned_files(versioned_files)
-        if check_changelog:
+
+        if any(
+            file.rel_path == settings.CHANGELOG_PATH
+            for file in versioned_files
+        ):
             _check_changelog()
 
     except ValidationException as e:
