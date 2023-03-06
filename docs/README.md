@@ -7,6 +7,7 @@
 [![PyPI - Link](https://img.shields.io/pypi/v/changelogged?color=%2334D058&label=pypi%20package)](https://pypi.org/project/changelogged/)
 [![Downloads](https://static.pepy.tech/badge/changelogged/month)](https://pepy.tech/project/changelogged)
 [![PyPI - License](https://img.shields.io/pypi/l/changelogged)](https://pypi.org/project/changelogged/)
+[![Github Project - Changelogger](https://img.shields.io/badge/Project-Changelogger-blue?logo=github)](https://github.com/users/award28/projects/2)
 
 Automated management of your CHANGELOG.md and other versioned files, following
 the principles of [Keep a Changelog](https://keepachangelog.com) and
