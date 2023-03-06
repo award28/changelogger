@@ -5,7 +5,7 @@ import semver
 from pydantic import BaseModel, validator
 
 
-class SemVerType(Enum):
+class BumpTarget(Enum):
     MAJOR = "major"
     MINOR = "minor"
     PATCH = "patch"
