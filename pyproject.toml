@@ -28,14 +28,13 @@ semver = "2.13.0"
 jinja2 = "3.1.2"
 pyyaml = "6.0"
 gitpython = "3.1.31"
-coverage = "^7.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
-coverage = "^7.2.1"
 mypy = "^1.0.1"
 freezegun = "^1.2.2"
 pytest = "^7.2.2"
+coverage = "^7.2.1"
 
 [build-system]
 requires = ["poetry-core"]
