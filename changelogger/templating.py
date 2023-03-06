@@ -1,4 +1,6 @@
 from datetime import date
+from functools import partial
+from re import Match
 from typing import Any
 
 from jinja2 import BaseLoader, Environment, Template
@@ -22,9 +24,13 @@ def update(
 
     variables = _get_variables(file, update)
     pattern = render_jinja(file.pattern, variables)
-    replacement = render_jinja(replacement_str, variables)
+    render = partial(render_jinja, replacement_str)
 
-    return cached_compile(pattern).sub(replacement, content)
+    def replacer(m: Match) -> str:
+        variables["context"]["match"] = m
+        return render(variables)
+
+    return cached_compile(pattern).sub(replacer, content)
 
 
 def render_pattern(
