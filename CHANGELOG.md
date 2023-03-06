@@ -14,6 +14,11 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+### [0.11.0] - 2023-03-05
+
+#### Added
+- Jinja templates now have access to the `match` variable. This allows access to match groups.
+
 ### [0.10.2] - 2023-03-05
 
 #### Changed
@@ -132,7 +137,8 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.10.2...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.11.0...HEAD
+[0.11.0]: https://github.com/award28/changelogger/compare/0.10.2...0.11.0
 [0.10.2]: https://github.com/award28/changelogger/compare/0.10.1...0.10.2
 [0.10.1]: https://github.com/award28/changelogger/compare/0.10.0...0.10.1
 [0.10.0]: https://github.com/award28/changelogger/compare/0.9.1...0.10.0
