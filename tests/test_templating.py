@@ -99,6 +99,35 @@ class TestTemplating(TemplatingFixtures):
         )
         mock_render_jinja.assert_called_once()
 
+    def test_update(
+        self,
+    ) -> None:
+        file = MagicMock()
+        file.pattern = r"# This (?P<word>\w+)(?P<rest>.*)"
+        file.jinja = r"# This {{ match.rest | reverse }}{{ match.word }}"
+        file.context = {}
+        file.jinja_rel_path = None
+
+        content = """
+        # This is a test
+        # Not being tested
+        # This should be tested
+        """
+
+        expected = """
+        # This tset a is
+        # Not being tested
+        # This detset eb should
+        """
+
+        update = MagicMock()
+        actual = templating.update(
+            file,
+            update,
+            content,
+        )
+        assert actual == expected
+
     def test_update_neither_jinja_raises(
         self,
     ):
