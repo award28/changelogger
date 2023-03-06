@@ -19,6 +19,11 @@ keywords = ["changelog", "version", "semver", "changelogger", "changelogged"]
 changelogger = "changelogger.__main__:app"
 cl = "changelogger.__main__:app"
 
+[tool.poetry.urls]
+"Changelog" = "https://github.com/award28/changelogger/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/award28/changelogger/issues"
+"Road Map" = "https://github.com/users/award28/projects/2"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 typer = "0.7.0"
