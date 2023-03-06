@@ -8,11 +8,11 @@ from changelogger.app.prompts import (
     rollback_handler,
 )
 from changelogger.conf import settings
-from changelogger.models.domain_models import ChangelogUpdate, SemVerType
+from changelogger.models.domain_models import BumpTarget, ChangelogUpdate
 
 
 def upgrade(
-    version_to_bump: SemVerType,
+    version_to_bump: BumpTarget,
     confirm: bool = typer.Option(
         True,
         help="Confirm the release notes before applying them.",

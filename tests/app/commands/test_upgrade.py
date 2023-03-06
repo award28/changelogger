@@ -4,9 +4,9 @@ import pytest
 
 from changelogger.app.commands.upgrade import upgrade
 from changelogger.models.domain_models import (
+    BumpTarget,
     ChangelogUpdate,
     ReleaseNotes,
-    SemVerType,
 )
 
 
@@ -41,7 +41,7 @@ class TestManageUpgradeCommand:
             (new_version, version_to_bump, prompt_changelog, confirm, markdown)
             for new_version, version_to_bump in zip(
                 ["1.0.0", "0.2.0", "0.1.1"],
-                list(SemVerType),
+                list(BumpTarget),
             )
             for prompt_changelog in (True, False)
             for confirm in (True, False)
@@ -51,7 +51,7 @@ class TestManageUpgradeCommand:
     def test_upgrade(
         self,
         new_version: str,
-        version_to_bump: SemVerType,
+        version_to_bump: BumpTarget,
         prompt_changelog: bool,
         confirm: bool,
         markdown: str,
