@@ -7,9 +7,6 @@ _config = ChangeloggerConfig.from_config_or_default()
 
 DEBUG = False
 
-CHANGELOGGER_VERSION = _config.metadata.version
-CHANGELOGGER_DESCRIPTION = _config.metadata.description
-
 CHANGELOG_PATH = _config.changelog.rel_path
 
 CHANGELOG_JINJA = resources.files("changelogger").joinpath(

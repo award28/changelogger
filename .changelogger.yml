@@ -2,3 +2,6 @@ versioned_files:
 - rel_path: pyproject.toml
   jinja: version = "{{ new_version }}"
   pattern: version = "{{ old_version }}"
+- rel_path: changelogger/conf/defaults.py
+  jinja: CHANGELOGGER_VERSION = "{{ new_version }}"
+  pattern: CHANGELOGGER_VERSION = "{{ old_version }}"

@@ -26,3 +26,5 @@ CHANGELOGGER_PATH = (
     and p3
     or p1
 )
+
+CHANGELOGGER_VERSION = "0.11.1"

@@ -91,7 +91,8 @@ def changelogger(
 
 
 changelogger.__doc__ = f"""
-{settings.CHANGELOGGER_DESCRIPTION}\n
+Automated management of your changelog and other versioned files, following the
+principles of Keep a Changelog and Semantic Versioning.\n
 version: {settings.CHANGELOGGER_VERSION}
 """
 changelogger.__doc__ += "\nIN DEBUG MODE" if settings.DEBUG else ""
