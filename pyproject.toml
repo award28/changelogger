@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "changelogged"
-version = "0.10.1"
+version = "0.10.2"
 description = "Automated management of your changelog and other versioned files, following the principles of Keep a Changelog and Semantic Versioning."
 license = "MIT"
 authors = ["award28 <austin.ward@klaviyo.com>"]
