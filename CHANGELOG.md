@@ -14,6 +14,11 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+### [0.11.2] - 2023-03-06
+
+#### Fixed
+- Removed dependency on "pyproject.toml", which doesn't get packaged with changelogger.
+
 ### [0.11.1] - 2023-03-06
 
 #### Added
@@ -142,7 +147,8 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.11.1...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.11.2...HEAD
+[0.11.2]: https://github.com/award28/changelogger/compare/0.11.1...0.11.2
 [0.11.1]: https://github.com/award28/changelogger/compare/0.11.0...0.11.1
 [0.11.0]: https://github.com/award28/changelogger/compare/0.10.2...0.11.0
 [0.10.2]: https://github.com/award28/changelogger/compare/0.10.1...0.10.2
