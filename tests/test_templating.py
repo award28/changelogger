@@ -134,20 +134,15 @@ class TestTemplating(TemplatingFixtures):
             [
                 call(file.pattern),
                 call().render(),
-                call(file.jinja),
-                call().render(),
             ]
         )
 
         mock_tmpl().render.assert_has_calls(
-            [call(**mock_get_variables())] * 2,
+            [call(**mock_get_variables())],
         )
 
         mock_cached_compile.assert_called_once_with(mock_tmpl().render())
-        mock_cached_compile().sub.assert_called_once_with(
-            mock_tmpl().render(),
-            content,
-        )
+        mock_cached_compile().sub.assert_called_once()
 
     def test_update_from_jinja_file(
         self,
@@ -171,17 +166,12 @@ class TestTemplating(TemplatingFixtures):
             [
                 call(file.pattern),
                 call().render(),
-                call(file.jinja_rel_path.read_text()),
-                call().render(),
             ]
         )
 
         mock_tmpl().render.assert_has_calls(
-            [call(**mock_get_variables())] * 2,
+            [call(**mock_get_variables())],
         )
 
         mock_cached_compile.assert_called_once_with(mock_tmpl().render())
-        mock_cached_compile().sub.assert_called_once_with(
-            mock_tmpl().render(),
-            content,
-        )
+        mock_cached_compile().sub.assert_called_once()
