@@ -1,0 +1,4 @@
+- id: changelogger
+  name: changelogger
+  entry: cl precommit
+  language: python

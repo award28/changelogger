@@ -11,6 +11,7 @@ from changelogger.app.commands.add import add
 from changelogger.app.commands.check import check
 from changelogger.app.commands.init import init
 from changelogger.app.commands.notes import notes
+from changelogger.app.commands.precommit import precommit
 from changelogger.app.commands.upgrade import upgrade
 from changelogger.app.commands.versions import versions
 from changelogger.conf import settings
@@ -21,12 +22,13 @@ class App(typer.Typer):
         self,
         cmd: Callable,
         alias: str | None = None,
+        **extra,
     ) -> None:
         """Adds the provided callable as command on this App instance.
         If an alias is provided, the command can be invoked with that
         name as well.
         """
-        self.command()(cmd)
+        self.command(**extra)(cmd)
 
         if not alias:
             return
@@ -37,7 +39,7 @@ class App(typer.Typer):
         )
 
         # Alias commands
-        self.command(alias, rich_help_panel="Aliases")(alias_cmd)
+        self.command(alias, rich_help_panel="Aliases", **extra)(alias_cmd)
 
 
 app = App()
@@ -48,6 +50,7 @@ app.add_command(init)
 app.add_command(notes)
 app.add_command(upgrade, "up")
 app.add_command(versions)
+app.add_command(precommit, hidden=True)
 
 
 def version_callback(value: bool):
