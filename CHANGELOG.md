@@ -14,6 +14,11 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+### [0.11.4] - 2023-03-17
+
+#### Added
+- Precommit hook to validate versioned files
+
 ### [0.11.3] - 2023-03-06
 
 #### Fixed
@@ -152,7 +157,8 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.11.3...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.11.4...HEAD
+[0.11.4]: https://github.com/award28/changelogger/compare/0.11.3...0.11.4
 [0.11.3]: https://github.com/award28/changelogger/compare/0.11.2...0.11.3
 [0.11.2]: https://github.com/award28/changelogger/compare/0.11.1...0.11.2
 [0.11.1]: https://github.com/award28/changelogger/compare/0.11.0...0.11.1
