@@ -18,6 +18,9 @@ jobs:
     - uses: pre-commit/action@v3.0.0
 
   test:
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
     runs-on: ubuntu-latest
     steps:
     #----------------------------------------------
@@ -29,7 +32,7 @@ jobs:
       id: setup-python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: ${{ matrix.python-version }}
 
     #----------------------------------------------
     #             load cached poetry
@@ -60,7 +63,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: .venv
-        key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
     #----------------------------------------------
     # install dependencies if cache does not exist
