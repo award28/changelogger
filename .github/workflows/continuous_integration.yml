@@ -84,6 +84,7 @@ jobs:
     #              get coverage
     #----------------------------------------------
     - name: Get Coverage
+      if: matrix.python-version == '3.11'
       uses: codecov/codecov-action@v3
       with:
         files: ./coverage.xml
