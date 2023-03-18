@@ -3,8 +3,9 @@ from functools import partial
 from re import Match
 from typing import Any
 
-from jinja2 import BaseLoader, Environment, Template
+from jinja2 import Environment, FileSystemLoader, Template
 
+from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.models.domain_models import ChangelogUpdate
 from changelogger.utils import cached_compile
@@ -47,7 +48,11 @@ def render_jinja(tmpl: str, variables: dict[str, Any]) -> str:
 
 
 def _tmpl(jinja: str) -> Template:
-    template_env = Environment(loader=BaseLoader())
+    template_env = Environment(
+        loader=FileSystemLoader(
+            settings.TEMPLATES_DIR,
+        )
+    )
     return template_env.from_string(jinja)
 
 
