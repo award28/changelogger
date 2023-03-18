@@ -15,6 +15,7 @@ from changelogger.conf.defaults import (
     DEFAULT_LINKS_JINJA_PATTERN,
     DEFAULT_OVERVIEW_JINJA_PATH,
     DEFAULT_OVERVIEW_JINJA_PATTERN,
+    DEFAULT_TEMPLATES_DIR,
 )
 
 
@@ -78,6 +79,7 @@ class Changelog(BaseModel):
 class ChangeloggerConfig(BaseModel):
     changelog: Changelog = Changelog()
     versioned_files: list[VersionedFile] = []
+    templates_dir: Path = DEFAULT_TEMPLATES_DIR
 
     @classmethod
     def from_config_or_default(cls) -> "ChangeloggerConfig":

@@ -13,6 +13,8 @@ CHANGELOG_JINJA = resources.files("changelogger").joinpath(
     "assets/changelog.jinja2",
 )
 
+TEMPLATES_DIR = _config.templates_dir
+
 OVERVIEW_JINJA_PATTERN = _config.changelog.overview.pattern
 OVERVIEW_JINJA_PATH = _config.changelog.overview.jinja_rel_path
 

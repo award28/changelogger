@@ -15,6 +15,8 @@ DEFAULT_LINKS_JINJA_PATH = resources.files("changelogger").joinpath(
     "assets/.cl.links.jinja2"
 )
 
+DEFAULT_TEMPLATES_DIR = Path(".changelogger/templates/")
+
 CHANGELOGGER_NAME = ".changelogger.yml"
 
 CHANGELOGGER_PATH = (
