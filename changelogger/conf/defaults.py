@@ -9,10 +9,10 @@ DEFAULT_OVERVIEW_JINJA_PATTERN = (
 DEFAULT_LINKS_JINJA_PATTERN = r"\[Unreleased\]:.*\n"
 
 DEFAULT_OVERVIEW_JINJA_PATH = resources.files("changelogger").joinpath(
-    "assets/.cl.overview.jinja2"
+    "templates/.cl.overview.jinja2"
 )
 DEFAULT_LINKS_JINJA_PATH = resources.files("changelogger").joinpath(
-    "assets/.cl.links.jinja2"
+    "templates/.cl.links.jinja2"
 )
 
 DEFAULT_TEMPLATES_DIR = Path(".changelogger/templates/")

@@ -148,7 +148,7 @@ release_date = "{{ today }}"
 
 Now we have our multiline Jinja outside of our configuration file and, with
 the right IDE support, we can get Jinja syntax highlighting. Examples of Jinja
-templates used by this project can be found in the [`./assets`](../assets)
+templates used by this project can be found in the [`templates`](../changelogger/templates)
 directory.
 
 ---
@@ -181,10 +181,10 @@ changelog:
   rel_path: "CHANGELOG.md"
   overview:
     pattern: '### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]'
-    jinja_rel_path: ./assets/.cl.overview.jinja2
+    jinja_rel_path: ./templates/.cl.overview.jinja2
   links:
     pattern: '\[Unreleased\]:.*\n'
-    jinja_rel_path: ./assets/.cl.links.jinja2
+    jinja_rel_path: ./templates/.cl.links.jinja2
 
 versioned_files:
   - rel_path: "pyproject.toml"

@@ -8,11 +8,11 @@
         "rel_path": "CHANGELOG.md",
         "overview": {
           "pattern": "### \\[Unreleased\\]([\\s\\S]*)### \\[{{ old_version }}]",
-          "jinja_rel_path": "./assets/.cl.overview.jinja2"
+          "jinja_rel_path": "./templates/.cl.overview.jinja2"
         },
         "links": {
           "pattern": "\\[Unreleased\\]:.*\\n",
-          "jinja_rel_path": "./assets/.cl.links.jinja2"
+          "jinja_rel_path": "./templates/.cl.links.jinja2"
         }
       },
       "allOf": [
@@ -64,7 +64,7 @@
           "title": "Overview",
           "default": {
             "pattern": "### \\[Unreleased\\]([\\s\\S]*)### \\[{{ old_version }}]",
-            "jinja_rel_path": "./assets/.cl.overview.jinja2"
+            "jinja_rel_path": "./templates/.cl.overview.jinja2"
           },
           "allOf": [
             {
@@ -76,7 +76,7 @@
           "title": "Links",
           "default": {
             "pattern": "\\[Unreleased\\]:.*\\n",
-            "jinja_rel_path": "./assets/.cl.links.jinja2"
+            "jinja_rel_path": "./templates/.cl.links.jinja2"
           },
           "allOf": [
             {

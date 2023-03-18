@@ -10,7 +10,7 @@ DEBUG = False
 CHANGELOG_PATH = _config.changelog.rel_path
 
 CHANGELOG_JINJA = resources.files("changelogger").joinpath(
-    "assets/changelog.jinja2",
+    "templates/changelog.jinja2",
 )
 
 TEMPLATES_DIR = _config.templates_dir
