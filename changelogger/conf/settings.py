@@ -18,12 +18,12 @@ CHANGELOG_JINJA = resources.files("changelogger").joinpath(
 TEMPLATES_DIR = _config.templates_dir
 
 OVERVIEW_JINJA_PATTERN = _config.changelog.overview.pattern
-OVERVIEW_JINJA_PATH = _config.changelog.overview.jinja_rel_path
+OVERVIEW_TEMPLATE = _config.changelog.overview.template
 
 LINKS_JINJA_PATTERN = _config.changelog.links.pattern
-LINKS_JINJA_PATH = _config.changelog.links.jinja_rel_path
+LINKS_TEMPLATE = _config.changelog.links.template
 
-RELEASE_NOTES_JINJA_PATH = _config.changelog.release_notes.jinja_rel_path
+RELEASE_NOTES_TEMPLATE = _config.changelog.release_notes.template
 
 VERSIONED_FILES = _config.versioned_files
 VERSIONED_FILES.extend(_config.changelog.as_versioned_files())

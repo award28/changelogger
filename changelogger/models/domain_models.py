@@ -43,7 +43,7 @@ class ReleaseNotes(BaseModel):
 
     def markdown(self) -> str:
         return settings.TMPL_ENV.get_template(
-            str(settings.RELEASE_NOTES_JINJA_PATH),
+            str(settings.RELEASE_NOTES_TEMPLATE),
         ).render(
             sections=self.dict(),
         )

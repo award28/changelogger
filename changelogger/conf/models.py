@@ -11,11 +11,11 @@ from changelogger.conf import git
 from changelogger.conf.defaults import (
     CHANGELOGGER_PATH,
     DEFAULT_CHANGELOG_PATH,
-    DEFAULT_LINKS_JINJA_PATH,
     DEFAULT_LINKS_JINJA_PATTERN,
-    DEFAULT_OVERVIEW_JINJA_PATH,
+    DEFAULT_LINKS_TEMPLATE,
     DEFAULT_OVERVIEW_JINJA_PATTERN,
-    DEFAULT_RELEASE_NOTES_JINJA_PATH,
+    DEFAULT_OVERVIEW_TEMPLATE,
+    DEFAULT_RELEASE_NOTES_TEMPLATE,
     DEFAULT_TEMPLATES_DIR,
 )
 
@@ -24,7 +24,7 @@ class VersionedFile(BaseModel):
     rel_path: Path
     pattern: str
     jinja: str | None = None
-    jinja_rel_path: Path | None = None
+    template: Path | None = None
     context: dict = {}
 
     def simple_dict(self) -> dict:
@@ -37,22 +37,22 @@ class VersionedFile(BaseModel):
 
 class ChangelogSegment(BaseModel):
     pattern: str
-    jinja_rel_path: Path
+    template: Path
 
 
 _default_overview = ChangelogSegment(
     pattern=DEFAULT_OVERVIEW_JINJA_PATTERN,
-    jinja_rel_path=DEFAULT_OVERVIEW_JINJA_PATH,
+    template=DEFAULT_OVERVIEW_TEMPLATE,
 )
 
 _default_release_notes = ChangelogSegment(
     pattern="",
-    jinja_rel_path=DEFAULT_RELEASE_NOTES_JINJA_PATH,
+    template=DEFAULT_RELEASE_NOTES_TEMPLATE,
 )
 
 _default_links = ChangelogSegment(
     pattern=DEFAULT_LINKS_JINJA_PATTERN,
-    jinja_rel_path=DEFAULT_LINKS_JINJA_PATH,
+    template=DEFAULT_LINKS_TEMPLATE,
 )
 
 
@@ -76,7 +76,7 @@ class Changelog(BaseModel):
             VersionedFile(
                 rel_path=self.rel_path,
                 pattern=segment.pattern,
-                jinja_rel_path=segment.jinja_rel_path,
+                template=segment.template,
                 context=context,
             )
             for segment in (self.overview, self.links)

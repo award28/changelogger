@@ -17,8 +17,8 @@ def update(
     """Replaces the versioned files rendered pattern in the supplied content."""
 
     render = None
-    if file.jinja_rel_path:
-        render = partial(render_template, str(file.jinja_rel_path))
+    if file.template:
+        render = partial(render_template, str(file.template))
     elif file.jinja:
         render = partial(render_jinja, file.jinja)
 
