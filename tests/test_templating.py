@@ -8,16 +8,9 @@ from changelogger import templating
 
 class TemplatingFixtures:
     @pytest.fixture
-    def mock_jinja_environment(self):
+    def mock_settings(self):
         with patch(
-            "changelogger.templating.Environment",
-        ) as mock:
-            yield mock
-
-    @pytest.fixture
-    def mock_jinja_base_loader(self):
-        with patch(
-            "changelogger.templating.BaseLoader",
+            "changelogger.templating.settings",
         ) as mock:
             yield mock
 
@@ -119,44 +112,79 @@ class TestTemplating(TemplatingFixtures):
 
         assert excinfo.value.args == ("No valid jinja template found.",)
 
-    # def test_update_from_jinja_string(
-    #     self,
-    #     mock_get_variables,
-    #     mock_cached_compile,
-    # ):
-    #     file = MagicMock()
-    #     file.jinja = "jinja"
-    #     file.template = None
+    def test_update_from_string(
+        self,
+        mock_settings: MagicMock,
+        mock_get_variables: MagicMock,
+        mock_cached_compile: MagicMock,
+    ):
+        file = MagicMock()
+        file.jinja = "jinja"
+        file.template = None
 
-    #     content = "Some content"
-    #     update = MagicMock()
-    #     templating.update(
-    #         file,
-    #         update,
-    #         content,
-    #     )
+        content = "Some content"
+        update = MagicMock()
+        templating.update(
+            file,
+            update,
+            content,
+        )
 
-    #     mock_get_variables.assert_called_once_with(file, update)
+        mock_get_variables.assert_called_once_with(file, update)
 
-    #     mock_cached_compile.assert_called_once_with()
-    #     mock_cached_compile().sub.assert_called_once()
+        mock_cached_compile.assert_called_once_with(
+            mock_settings.TMPL_ENV.from_string().render(),
+        )
+        mock_cached_compile().sub.assert_called_once()
 
-    # def test_update_from_jinja_file(
-    #     self,
-    #     mock_get_variables,
-    #     mock_cached_compile,
-    # ):
-    #     file = MagicMock()
-    #     file.jinja = None
+    def test_update_from_template(
+        self,
+        mock_settings: MagicMock,
+        mock_get_variables: MagicMock,
+        mock_cached_compile: MagicMock,
+    ):
+        file = MagicMock()
+        file.jinja = None
+        file.template = "some_tmpl.jinja2"
 
-    #     content = "Some content"
-    #     update = MagicMock()
-    #     templating.update(
-    #         file,
-    #         update,
-    #         content,
-    #     )
+        content = "Some content"
+        update = MagicMock()
+        templating.update(
+            file,
+            update,
+            content,
+        )
 
-    #     mock_get_variables.assert_called_once_with(file, update)
-    #     mock_cached_compile.assert_called_once_with()
-    #     mock_cached_compile().sub.assert_called_once()
+        mock_get_variables.assert_called_once_with(file, update)
+
+        mock_cached_compile().sub.assert_called_once()
+
+    def test_render_jinja(
+        self,
+        mock_settings: MagicMock,
+    ):
+        s = "some string"
+        variables = dict(hello="world")
+        actual = templating.render_jinja(s, variables)
+        mock_settings.TMPL_ENV.from_string.assert_called_once_with(
+            s,
+        )
+        mock_settings.TMPL_ENV.from_string().render.assert_called_once_with(
+            **variables,
+        )
+        assert actual == mock_settings.TMPL_ENV.from_string().render()
+
+    def test_render_template(
+        self,
+        mock_settings: MagicMock,
+    ):
+        template = "template.jinja2"
+        variables = dict(hello="world")
+        actual = templating.render_template(template, variables)
+        mock_settings.TMPL_ENV.get_template.assert_called_once_with(
+            template,
+        )
+        mock_settings.TMPL_ENV.get_template().render.assert_called_once_with(
+            **variables,
+        )
+        assert actual == mock_settings.TMPL_ENV.get_template().render()
