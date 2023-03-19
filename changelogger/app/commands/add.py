@@ -52,7 +52,7 @@ def add(
     changelog_file = VersionedFile(
         rel_path=settings.CHANGELOG_PATH,
         pattern=settings.OVERVIEW_JINJA_PATTERN,
-        jinja_rel_path=settings.OVERVIEW_JINJA_PATH,
+        template=settings.OVERVIEW_TEMPLATE,
     )
 
     with rollback_handler():

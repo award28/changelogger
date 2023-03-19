@@ -183,28 +183,30 @@ def _prompt_versioned_file(console: Console) -> VersionedFile | None:
         return None
 
     console.clear()
-    jinja_rel_path = None
+    template = None
     if "\n" in jinja:
         if typer.confirm(
             "It looks like your jinja is multiple lines; "
             "do you want to save this in its own file?"
         ):
-            default_path = Path(f"./.changelogger/{rel_path}.jinja2")
-            jinja_rel_path = typer.prompt(
+            default_path = settings.TEMPLATES_DIR.joinpath(
+                f"{rel_path}.jinja2"
+            )
+            template = typer.prompt(
                 "Where do you want to save the template?",
                 default=default_path,
                 type=Path,
             )
 
-            jinja_rel_path.parent.mkdir(parents=True, exist_ok=True)
-            jinja_rel_path.write_text(jinja)
-            print(f'Successfully saved jinja to "{jinja_rel_path}"!')
+            template.parent.mkdir(parents=True, exist_ok=True)
+            template.write_text(jinja)
+            print(f'Successfully saved jinja to "{template}"!')
 
     return VersionedFile(
         rel_path=rel_path,
         pattern=pattern,
-        jinja=jinja if not jinja_rel_path else None,
-        jinja_rel_path=jinja_rel_path,
+        jinja=jinja if not template else None,
+        template=template,
         context=context,
     )
 

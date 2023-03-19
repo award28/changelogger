@@ -126,7 +126,7 @@ versioned_files:
 
 While this approach is great for a simple use case like the one above, it
 falls short for more complex jinja templates. To help deal with this
-limitation, the `jinja_rel_path` field can be used. This allows us to move
+limitation, the `template` field can be used. This allows us to move
 our code to a jinja file and reference said file relative to the
 `.changelogger.yml` file.
 
@@ -148,7 +148,7 @@ release_date = "{{ today }}"
 
 Now we have our multiline Jinja outside of our configuration file and, with
 the right IDE support, we can get Jinja syntax highlighting. Examples of Jinja
-templates used by this project can be found in the [`./assets`](../assets)
+templates used by this project can be found in the [`templates`](../changelogger/templates)
 directory.
 
 ---
@@ -181,10 +181,10 @@ changelog:
   rel_path: "CHANGELOG.md"
   overview:
     pattern: '### \[Unreleased\]([\s\S]*)### \[{{ old_version }}]'
-    jinja_rel_path: ./assets/.cl.overview.jinja2
+    template: ./templates/.cl.overview.jinja2
   links:
     pattern: '\[Unreleased\]:.*\n'
-    jinja_rel_path: ./assets/.cl.links.jinja2
+    template: ./templates/.cl.links.jinja2
 
 versioned_files:
   - rel_path: "pyproject.toml"
@@ -263,7 +263,7 @@ both the pattern and jinja through dot notation.
 versioned_files:
   - rel_path: "pyproject.toml"
     pattern: 'version = "{{ old_version }}"'
-    jinja_rel_path: '.pyproject.toml.jinja2'
+    template: '.pyproject.toml.jinja2'
     context:
       git:
         org: award28

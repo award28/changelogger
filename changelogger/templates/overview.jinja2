@@ -1,0 +1,6 @@
+### [Unreleased]
+{% if new_version %}
+### [{{ new_version }}] - {{ today }}
+{% endif %}
+{% include 'release_notes.md.jinja2' -%}
+### [{{ old_version }}]
