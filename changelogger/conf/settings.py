@@ -1,6 +1,5 @@
 from importlib import resources
 
-from changelogger.conf.defaults import *
 from changelogger.conf.models import ChangeloggerConfig
 
 _config = ChangeloggerConfig.from_config_or_default()
@@ -10,7 +9,7 @@ DEBUG = False
 CHANGELOG_PATH = _config.changelog.rel_path
 
 CHANGELOG_JINJA = resources.files("changelogger").joinpath(
-    "templates/changelog.jinja2",
+    "templates/changelog.md.jinja2",
 )
 
 TEMPLATES_DIR = _config.templates_dir

@@ -9,8 +9,8 @@ DEFAULT_OVERVIEW_JINJA_PATTERN = (
 )
 DEFAULT_LINKS_JINJA_PATTERN = r"\[Unreleased\]:.*\n"
 
-DEFAULT_OVERVIEW_JINJA_PATH = Path(".cl.overview.jinja2")
-DEFAULT_LINKS_JINJA_PATH = Path(".cl.links.jinja2")
+DEFAULT_OVERVIEW_JINJA_PATH = Path("overview.jinja2")
+DEFAULT_LINKS_JINJA_PATH = Path("links.jinja2")
 
 DEFAULT_TEMPLATES_DIR = Path(".changelogger/templates/")
 
