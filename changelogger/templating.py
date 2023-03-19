@@ -1,14 +1,27 @@
 from datetime import date
 from functools import partial
+from importlib import resources
 from re import Match
 from typing import Any
 
-from jinja2 import Environment, FileSystemLoader, Template
+from jinja2 import Environment, FileSystemLoader
 
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.models.domain_models import ChangelogUpdate
 from changelogger.utils import cached_compile
+
+with resources.as_file(
+    resources.files("changelogger").joinpath("templates"),
+) as package_templates:
+    TMPL_ENV = Environment(
+        loader=FileSystemLoader(
+            [
+                settings.TEMPLATES_DIR,
+                package_templates,
+            ]
+        )
+    )
 
 
 def update(
@@ -18,10 +31,13 @@ def update(
 ) -> str:
     """Replaces the versioned files rendered pattern in the supplied content."""
 
-    replacement_str = file.jinja
-    if not replacement_str:
-        assert file.jinja_rel_path, "No valid jinja template found."
-        replacement_str = file.jinja_rel_path.read_text()
+    render = None
+    if file.jinja_rel_path:
+        render = partial(render_template, str(file.jinja_rel_path))
+    elif file.jinja:
+        render = partial(render_jinja, file.jinja)
+
+    assert render, "No valid jinja template found."
 
     var_getter = partial(_get_variables, file, update)
     pattern = render_jinja(file.pattern, var_getter())
@@ -31,7 +47,7 @@ def update(
     # match which is found, re.sub will call repl with the match, and
     # replace the found pattern with the output string of the user supplied
     # repl function.
-    repl = lambda m: render_jinja(replacement_str, var_getter(m))
+    repl = lambda m: render(var_getter(m))
     return cached_compile(pattern).sub(repl, content)
 
 
@@ -43,17 +59,13 @@ def render_pattern(
     return render_jinja(file.pattern, variables)
 
 
-def render_jinja(tmpl: str, variables: dict[str, Any]) -> str:
-    return _tmpl(tmpl).render(**variables)
+def render_jinja(tmpl_str: str, variables: dict[str, Any]) -> str:
+    return TMPL_ENV.from_string(tmpl_str).render(**variables)
 
 
-def _tmpl(jinja: str) -> Template:
-    template_env = Environment(
-        loader=FileSystemLoader(
-            settings.TEMPLATES_DIR,
-        )
-    )
-    return template_env.from_string(jinja)
+def render_template(template: str, variables: dict[str, Any]) -> str:
+    breakpoint()
+    return TMPL_ENV.get_template(template).render(**variables)
 
 
 def _get_variables(

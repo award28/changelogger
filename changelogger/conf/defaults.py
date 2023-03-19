@@ -1,4 +1,3 @@
-from importlib import resources
 from pathlib import Path
 
 DEFAULT_CHANGELOG_PATH = Path("CHANGELOG.md")
@@ -8,12 +7,8 @@ DEFAULT_OVERVIEW_JINJA_PATTERN = (
 )
 DEFAULT_LINKS_JINJA_PATTERN = r"\[Unreleased\]:.*\n"
 
-DEFAULT_OVERVIEW_JINJA_PATH = resources.files("changelogger").joinpath(
-    "templates/.cl.overview.jinja2"
-)
-DEFAULT_LINKS_JINJA_PATH = resources.files("changelogger").joinpath(
-    "templates/.cl.links.jinja2"
-)
+DEFAULT_OVERVIEW_JINJA_PATH = Path(".cl.overview.jinja2")
+DEFAULT_LINKS_JINJA_PATH = Path(".cl.links.jinja2")
 
 DEFAULT_TEMPLATES_DIR = Path(".changelogger/templates/")
 

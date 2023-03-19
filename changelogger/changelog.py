@@ -179,6 +179,7 @@ def update_versioned_files(
                 "An exception occured while upgrading; rollback unsuccessful."
             ) from rollback_exc
 
+        breakpoint()
         raise UpgradeException(
-            "An exception occured while upgrading; rollback successful."
+            f"An exception occured while upgrading; rollback successful.\n\nException: {repr(upgrade_exc)}"
         ) from upgrade_exc
