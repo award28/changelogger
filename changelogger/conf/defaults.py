@@ -1,5 +1,7 @@
 from pathlib import Path
 
+CHANGELOGGER_VERSION = "0.11.4"
+
 DEFAULT_CHANGELOG_PATH = Path("CHANGELOG.md")
 
 DEFAULT_OVERVIEW_JINJA_PATTERN = (
@@ -23,5 +25,3 @@ CHANGELOGGER_PATH = (
     and p3
     or p1
 )
-
-CHANGELOGGER_VERSION = "0.11.4"

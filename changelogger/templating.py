@@ -64,7 +64,6 @@ def render_jinja(tmpl_str: str, variables: dict[str, Any]) -> str:
 
 
 def render_template(template: str, variables: dict[str, Any]) -> str:
-    breakpoint()
     return TMPL_ENV.get_template(template).render(**variables)
 
 
