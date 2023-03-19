@@ -4,6 +4,8 @@ from typing import Union
 import semver
 from pydantic import BaseModel, validator
 
+from changelogger.conf import settings
+
 
 class BumpTarget(Enum):
     MAJOR = "major"
@@ -40,19 +42,12 @@ class ReleaseNotes(BaseModel):
         return list(cls.__fields__.keys())
 
     def markdown(self) -> str:
-        sections = self.dict()
-        md = ""
-        for name, notes in sections.items():
-            if not notes:
-                continue
+        from changelogger.templating import render_template
 
-            formatted_notes = "- " + "\n- ".join(notes)
-            md += f"""#### {name.title()}
-
-            {formatted_notes}
-
-            """
-        return "\n".join(s.lstrip() for s in md.split("\n"))
+        return render_template(
+            str(settings.RELEASE_NOTES_JINJA_PATH),
+            dict(sections=self.dict()),
+        )
 
 
 class VersionInfo(semver.VersionInfo):

@@ -15,6 +15,7 @@ from changelogger.conf.defaults import (
     DEFAULT_LINKS_JINJA_PATTERN,
     DEFAULT_OVERVIEW_JINJA_PATH,
     DEFAULT_OVERVIEW_JINJA_PATTERN,
+    DEFAULT_RELEASE_NOTES_JINJA_PATH,
     DEFAULT_TEMPLATES_DIR,
 )
 
@@ -44,6 +45,11 @@ _default_overview = ChangelogSegment(
     jinja_rel_path=DEFAULT_OVERVIEW_JINJA_PATH,
 )
 
+_default_release_notes = ChangelogSegment(
+    pattern="",
+    jinja_rel_path=DEFAULT_RELEASE_NOTES_JINJA_PATH,
+)
+
 _default_links = ChangelogSegment(
     pattern=DEFAULT_LINKS_JINJA_PATTERN,
     jinja_rel_path=DEFAULT_LINKS_JINJA_PATH,
@@ -52,6 +58,7 @@ _default_links = ChangelogSegment(
 
 class Changelog(BaseModel):
     rel_path: Path = Path(DEFAULT_CHANGELOG_PATH)
+    release_notes: ChangelogSegment = _default_release_notes
     overview: ChangelogSegment = _default_overview
     links: ChangelogSegment = _default_links
 

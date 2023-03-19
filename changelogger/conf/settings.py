@@ -21,6 +21,8 @@ OVERVIEW_JINJA_PATH = _config.changelog.overview.jinja_rel_path
 LINKS_JINJA_PATTERN = _config.changelog.links.pattern
 LINKS_JINJA_PATH = _config.changelog.links.jinja_rel_path
 
+RELEASE_NOTES_JINJA_PATH = _config.changelog.release_notes.jinja_rel_path
+
 VERSIONED_FILES = _config.versioned_files
 VERSIONED_FILES.extend(_config.changelog.as_versioned_files())
 
