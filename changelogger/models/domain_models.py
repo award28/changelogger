@@ -56,9 +56,7 @@ class VersionInfo(semver.VersionInfo):
 
     @validator("*")
     def validate(cls, v: Union[str, "VersionInfo"]) -> "VersionInfo":
-        if isinstance(v, VersionInfo):
-            return v
-        return cls.parse(v)
+        return isinstance(v, VersionInfo) and v or cls.parse(v)
 
 
 class ChangelogUpdate(BaseModel):
