@@ -14,6 +14,16 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+### [0.12.0] - 2023-03-18
+
+#### Added
+- The `template_dir` option in the `.changelogger.yml` config file. This option allows users to override the default template location.
+- Jinja templates now have full funcitonality, as the BaseLoader has been deprecated in favor of the FileSystemLoader.
+- Exception information is now provided to help understand the cause of an upgrade exception.
+
+#### Changed
+- The `jinja_rel_path` versioned file key has been replaced with the `template` key.
+
 ### [0.11.4] - 2023-03-17
 
 #### Added
@@ -157,7 +167,8 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.11.4...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.12.0...HEAD
+[0.12.0]: https://github.com/award28/changelogger/compare/0.11.4...0.12.0
 [0.11.4]: https://github.com/award28/changelogger/compare/0.11.3...0.11.4
 [0.11.3]: https://github.com/award28/changelogger/compare/0.11.2...0.11.3
 [0.11.2]: https://github.com/award28/changelogger/compare/0.11.1...0.11.2
