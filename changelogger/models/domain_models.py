@@ -42,11 +42,10 @@ class ReleaseNotes(BaseModel):
         return list(cls.__fields__.keys())
 
     def markdown(self) -> str:
-        from changelogger.templating import render_template
-
-        return render_template(
+        return settings.TMPL_ENV.get_template(
             str(settings.RELEASE_NOTES_JINJA_PATH),
-            dict(sections=self.dict()),
+        ).render(
+            sections=self.dict(),
         )
 
 
