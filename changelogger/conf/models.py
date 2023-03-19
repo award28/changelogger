@@ -40,17 +40,17 @@ class ChangelogSegment(BaseModel):
     template: Path
 
 
-_default_overview = ChangelogSegment(
+_default_overview_segment = ChangelogSegment(
     pattern=DEFAULT_OVERVIEW_JINJA_PATTERN,
     template=DEFAULT_OVERVIEW_TEMPLATE,
 )
 
-_default_release_notes = ChangelogSegment(
+_default_release_notes_segment = ChangelogSegment(
     pattern="",
     template=DEFAULT_RELEASE_NOTES_TEMPLATE,
 )
 
-_default_links = ChangelogSegment(
+_default_links_segment = ChangelogSegment(
     pattern=DEFAULT_LINKS_JINJA_PATTERN,
     template=DEFAULT_LINKS_TEMPLATE,
 )
@@ -58,13 +58,14 @@ _default_links = ChangelogSegment(
 
 class Changelog(BaseModel):
     rel_path: Path = Path(DEFAULT_CHANGELOG_PATH)
-    release_notes: ChangelogSegment = _default_release_notes
-    overview: ChangelogSegment = _default_overview
-    links: ChangelogSegment = _default_links
+    release_notes: ChangelogSegment = _default_release_notes_segment
+    overview: ChangelogSegment = _default_overview_segment
+    links: ChangelogSegment = _default_links_segment
 
     def has_defaults(self) -> bool:
         return (
-            self.overview == _default_overview or self.links == _default_links
+            self.overview == _default_overview_segment
+            or self.links == _default_links_segment
         )
 
     def as_versioned_files(self) -> list[VersionedFile]:
