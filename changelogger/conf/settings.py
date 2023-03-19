@@ -1,5 +1,6 @@
 from importlib import resources
 
+from changelogger.conf.defaults import *  # nopycln: import
 from changelogger.conf.models import ChangeloggerConfig
 
 _config = ChangeloggerConfig.from_config_or_default()
