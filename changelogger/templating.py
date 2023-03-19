@@ -1,27 +1,12 @@
 from datetime import date
 from functools import partial
-from importlib import resources
 from re import Match
 from typing import Any
-
-from jinja2 import Environment, FileSystemLoader
 
 from changelogger.conf import settings
 from changelogger.conf.models import VersionedFile
 from changelogger.models.domain_models import ChangelogUpdate
 from changelogger.utils import cached_compile
-
-with resources.as_file(
-    resources.files("changelogger").joinpath("templates"),
-) as package_templates:
-    TMPL_ENV = Environment(
-        loader=FileSystemLoader(
-            [
-                settings.TEMPLATES_DIR,
-                package_templates,
-            ]
-        )
-    )
 
 
 def update(
@@ -60,11 +45,11 @@ def render_pattern(
 
 
 def render_jinja(tmpl_str: str, variables: dict[str, Any]) -> str:
-    return TMPL_ENV.from_string(tmpl_str).render(**variables)
+    return settings.TMPL_ENV.from_string(tmpl_str).render(**variables)
 
 
 def render_template(template: str, variables: dict[str, Any]) -> str:
-    return TMPL_ENV.get_template(template).render(**variables)
+    return settings.TMPL_ENV.get_template(template).render(**variables)
 
 
 def _get_variables(

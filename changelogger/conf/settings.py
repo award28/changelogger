@@ -1,5 +1,7 @@
 from importlib import resources
 
+from jinja2 import Environment, FileSystemLoader
+
 from changelogger.conf.defaults import *  # nopycln: import
 from changelogger.conf.models import ChangeloggerConfig
 
@@ -27,6 +29,20 @@ VERSIONED_FILES = _config.versioned_files
 VERSIONED_FILES.extend(_config.changelog.as_versioned_files())
 
 HAS_DEFAULTS = _config.changelog.has_defaults()
+
+
+with resources.as_file(
+    resources.files("changelogger").joinpath("templates"),
+) as package_templates:
+    TMPL_ENV = Environment(
+        loader=FileSystemLoader(
+            [
+                TEMPLATES_DIR,
+                package_templates,
+            ]
+        )
+    )
+
 
 # THIS MUST BE IMPORTED LAST
 try:
