@@ -9,6 +9,7 @@ from rich import print
 
 from changelogger.app.commands.add import add
 from changelogger.app.commands.check import check
+from changelogger.app.commands.force import force
 from changelogger.app.commands.init import init
 from changelogger.app.commands.notes import notes
 from changelogger.app.commands.precommit import precommit
@@ -49,6 +50,7 @@ app.add_command(check, "ch")
 app.add_command(init)
 app.add_command(notes)
 app.add_command(upgrade, "up")
+app.add_command(force)
 app.add_command(versions)
 app.add_command(precommit, hidden=True)
 

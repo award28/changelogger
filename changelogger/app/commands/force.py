@@ -8,11 +8,11 @@ from changelogger.app.prompts import (
     rollback_handler,
 )
 from changelogger.conf import settings
-from changelogger.models.domain_models import BumpTarget, ChangelogUpdate
+from changelogger.models.domain_models import ChangelogUpdate, VersionInfo
 
 
-def upgrade(
-    version_to_bump: BumpTarget,
+def force(
+    forced_version: str,
     confirm: bool = typer.Option(
         True,
         help="Confirm the release notes before applying them.",
@@ -22,10 +22,9 @@ def upgrade(
         help="Prompt for additional release notes before applying them.",
     ),
 ) -> None:
-    """Upgrades all versioned files, as specified in the changelogger config file."""
+    """Force a version override for the upgrade. This is especially useful when ..."""
     old_version = changelog.get_latest_version()
-    bump = getattr(old_version, f"bump_{version_to_bump.value}")
-    new_version = bump()
+    new_version = VersionInfo.parse(forced_version)
 
     release_notes = changelog.get_release_notes("Unreleased", old_version)
     update = ChangelogUpdate(
