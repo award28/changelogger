@@ -14,6 +14,11 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 <!-- BEGIN RELEASE NOTES -->
 ### [Unreleased]
 
+### [0.13.0] - 2023-07-05
+
+#### Added
+- The `force` command, allowing users to override the next version of their release.
+
 ### [0.12.0] - 2023-03-18
 
 #### Added
@@ -167,7 +172,8 @@ The [Changelogger tool](https://pypi.org/project/changelogged) is used for autom
 - `unreleased add`, which allows inline or prompted adding of unreleased changes.
 <!-- END RELEASE NOTES -->
 <!-- BEGIN LINKS -->
-[Unreleased]: https://github.com/award28/changelogger/compare/0.12.0...HEAD
+[Unreleased]: https://github.com/award28/changelogger/compare/0.13.0...HEAD
+[0.13.0]: https://github.com/award28/changelogger/compare/0.12.0...0.13.0
 [0.12.0]: https://github.com/award28/changelogger/compare/0.11.4...0.12.0
 [0.11.4]: https://github.com/award28/changelogger/compare/0.11.3...0.11.4
 [0.11.3]: https://github.com/award28/changelogger/compare/0.11.2...0.11.3
