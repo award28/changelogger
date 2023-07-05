@@ -22,7 +22,7 @@ def force(
         help="Prompt for additional release notes before applying them.",
     ),
 ) -> None:
-    """Force a version override for the upgrade. This is especially useful when ..."""
+    """Force a version override for the upgrade."""
     old_version = changelog.get_latest_version()
     new_version = VersionInfo.parse(forced_version)
 
