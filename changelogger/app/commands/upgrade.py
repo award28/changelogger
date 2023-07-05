@@ -1,3 +1,5 @@
+from typing import Callable
+
 import typer
 from rich import print
 from rich.markdown import Markdown
@@ -8,7 +10,11 @@ from changelogger.app.prompts import (
     rollback_handler,
 )
 from changelogger.conf import settings
-from changelogger.models.domain_models import BumpTarget, ChangelogUpdate
+from changelogger.models.domain_models import (
+    BumpTarget,
+    ChangelogUpdate,
+    VersionInfo,
+)
 
 
 def upgrade(
@@ -21,11 +27,17 @@ def upgrade(
         True,
         help="Prompt for additional release notes before applying them.",
     ),
+    force_version: str = typer.Option(
+        "",
+        help="Force a version override for the upgrade. This is especially useful when ...",
+    ),
 ) -> None:
     """Upgrades all versioned files, as specified in the changelogger config file."""
     old_version = changelog.get_latest_version()
-    bump = getattr(old_version, f"bump_{version_to_bump.value}")
-    new_version = bump()
+    bump: Callable[[], VersionInfo] = getattr(
+        old_version, f"bump_{version_to_bump.value}"
+    )
+    new_version = VersionInfo.parse(force_version) if force_version else bump()
 
     release_notes = changelog.get_release_notes("Unreleased", old_version)
     update = ChangelogUpdate(
